@@ -12,3 +12,114 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
+model Usuario {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  nome        String    
+  matricula   String
+  avatarUrl   String?
+  email       String
+  cpf         String
+  phone       String
+  birth       DateTime?
+  password    String
+
+  agendamentos  Agendamento[]
+
+  brindes  BrindesInPrestadoresEUsuarios[]
+
+  deleted     Boolean   @default(false)
+  created_at  DateTime  @default(now())
+
+  @@map("usuarios")
+}
+
+model Prestador {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  razaoSocial String    
+  login       String
+  avatarUrl   String?
+  latitude    Float
+  longitude   Float
+  inscricao   Float
+  endereco    String
+  cidade      String
+  estado      String
+  bairro      String
+  cep         String
+  ativo       Boolean   @default(true)
+
+  agendamentos Agendamento[]
+  servicos     Servico[]
+
+  brindes  BrindesInPrestadoresEUsuarios[]
+
+  deleted     Boolean   @default(false)
+  created_at  DateTime  @default(now())
+
+  @@map("prestadores")
+}
+
+model Servico {
+  id          String      @id @default(uuid()) @map("_id") @db.ObjectId
+  nome        String
+  imageUrl    String?
+
+  prestador   Prestador   @relation(fields: [prestadorId], references: [id])
+  prestadorId String      @db.ObjectId
+
+  agendamentos  Agendamento[]
+
+  ativo       Boolean     @default(true)
+  deleted     Boolean     @default(false)
+  created_at  DateTime    @default(now())
+
+  @@map("servicos")
+}
+
+model Agendamento {
+  id          String    @id @default(uuid()) @map("_id") @db.ObjectId
+
+  prestador   Prestador @relation(fields: [prestadorId], references: [id])
+  prestadorId String    @db.ObjectId
+  usuario     Usuario   @relation(fields: [usuarioId], references: [id])
+  usuarioId   String    @db.ObjectId
+
+  servico     Servico  @relation(fields: [servicoId], references: [id])
+  servicoId   String    @db.ObjectId
+
+  qrcode      String?
+  data        DateTime
+  ativo       Boolean   @default(true)
+
+  deleted     Boolean   @default(false)
+  created_at  DateTime  @default(now())
+
+  @@map("agendamentos")
+}
+
+model Brinde{
+  id      String    @id @default(uuid()) @map("_id") @db.ObjectId
+  nome    String 
+
+  qrcode      String?
+  dataLimite        DateTime
+
+  prestadores  BrindesInPrestadoresEUsuarios[]
+
+  ativo       Boolean   @default(true)
+  created_at  DateTime  @default(now())
+}
+
+model BrindesInPrestadoresEUsuarios{
+  brinde      Brinde  @relation(fields: [brindeId], references: [id])
+  brindeId    String @db.ObjectId @map("_id")
+
+  prestador   Prestador  @relation(fields: [prestadorId], references: [id])
+  prestadorId String @db.ObjectId
+  
+  usuario     Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId   String @db.ObjectId
+  
+  @@id([brindeId])
+}
