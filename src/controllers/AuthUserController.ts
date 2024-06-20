@@ -3,13 +3,14 @@ import { AuthUserService } from '../services/AuthUserService'
 
 class AuthUserController {
   async handle(request: Request, response: Response) {
-    const { matricula, password } = request.body
+    const { login, password, accessType } = request.body
 
     const authUserService = new AuthUserService()
 
     const token = await authUserService.execute({
-      matricula,
+      matricula: login,
       password,
+      accessType,
     })
 
     return response.json(token)

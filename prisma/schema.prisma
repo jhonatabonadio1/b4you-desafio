@@ -23,6 +23,7 @@ model Usuario {
   phone       String
   birth       DateTime?
   password    String
+  tipoAcesso  String?   @default("associado")
 
   agendamentos  Agendamento[]
 
@@ -37,17 +38,18 @@ model Usuario {
 model Prestador {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   razaoSocial String    
-  login       String
   avatarUrl   String?
   latitude    Float
   longitude   Float
   inscricao   Float
+  tipoInscricao   String?     @default("cnpj")
   endereco    String
   cidade      String
   estado      String
   bairro      String
   cep         String
   ativo       Boolean   @default(true)
+  password    String
 
   agendamentos Agendamento[]
   servicos     Servico[]

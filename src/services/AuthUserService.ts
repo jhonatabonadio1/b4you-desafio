@@ -5,6 +5,7 @@ import { prismaClient } from '../database/prismaClient'
 interface IAuthenticateRequest {
   matricula: string
   password: string
+  accessType: number
 }
 
 // Exclude keys from user
@@ -18,50 +19,100 @@ function exclude<User, Key extends keyof User>(
 }
 
 class AuthUserService {
-  async execute({ matricula, password }: IAuthenticateRequest) {
+  async execute({ matricula, password, accessType }: IAuthenticateRequest) {
     if (!matricula) {
-      throw new Error('Matrícula é obrigatória.')
+      throw new Error('Login é obrigatório.')
     }
 
     if (!password) {
       throw new Error('Senha é obrigatória.')
     }
 
-    const user = await prismaClient.usuario.findFirst({
-      where: {
-        matricula,
-        deleted: false,
-      },
-    })
-
-    if (!user) {
-      throw new Error('Matrícula/Senha incorretos.')
+    if (!accessType) {
+      throw new Error('Tipo de acesso é obrigatório.')
     }
 
-    const passwordMatch = await compare(password, user.password)
-
-    if (!passwordMatch) {
-      throw new Error('Matrícula/Senha incorretos.')
+    if (accessType !== 1 && accessType !== 2) {
+      throw new Error('Tipo de acesso inválido.')
     }
 
-    const token = sign(
-      {
-        matricula: user.matricula,
-      },
-      '44697ae110c97c0a7b0eba9568f9c0aa',
-      {
-        subject: user.id,
-      },
-    )
+    if (accessType === 1) {
+      const user = await prismaClient.usuario.findFirst({
+        where: {
+          matricula,
+          deleted: false,
+        },
+      })
 
-    const userWithoutSensiveKeys = exclude(user, ['password'])
+      if (!user) {
+        throw new Error('Matrícula/Senha incorretos.')
+      }
 
-    const response = {
-      token,
-      user: userWithoutSensiveKeys,
+      const passwordMatch = await compare(password, user.password)
+
+      if (!passwordMatch) {
+        throw new Error('Matrícula/Senha incorretos.')
+      }
+
+      const token = sign(
+        {
+          matricula: user.matricula,
+        },
+        '44697ae110c97c0a7b0eba9568f9c0aa',
+        {
+          subject: user.id,
+        },
+      )
+
+      const userWithoutSensiveKeys = exclude(user, ['password'])
+
+      const response = {
+        token,
+        user: userWithoutSensiveKeys,
+        accessType,
+      }
+
+      return response
     }
 
-    return response
+    if (accessType === 2) {
+      const user = await prismaClient.prestador.findFirst({
+        where: {
+          inscricao: parseInt(matricula),
+          deleted: false,
+        },
+      })
+
+      if (!user) {
+        throw new Error('Inscrição/Senha incorretos.')
+      }
+
+      const passwordMatch = await compare(password, user.password)
+
+      if (!passwordMatch) {
+        throw new Error('Inscrição/Senha incorretos.')
+      }
+
+      const token = sign(
+        {
+          inscricao: user.inscricao,
+        },
+        '44697ae110c97c0a7b0eba9568f9c0aa',
+        {
+          subject: user.id,
+        },
+      )
+
+      const userWithoutSensiveKeys = exclude(user, ['password'])
+
+      const response = {
+        token,
+        user: userWithoutSensiveKeys,
+        accessType,
+      }
+
+      return response
+    }
   }
 }
 
