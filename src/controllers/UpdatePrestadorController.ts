@@ -1,8 +1,10 @@
 import { Request, Response } from 'express'
-import { CreatePrestadorService } from '../services/CreatePrestadorService'
 
-class CreatePrestadorController {
+import { UpdatePrestadorService } from '../services/UpdatePrestadorService'
+
+class UpdatePrestadorController {
   async handle(request: Request, response: Response) {
+    const { prestadorId } = request.params
     const {
       bairro,
       cep,
@@ -18,9 +20,10 @@ class CreatePrestadorController {
       email,
     } = request.body
 
-    const createPrestadorService = new CreatePrestadorService()
+    const updatePrestadorService = new UpdatePrestadorService()
 
-    const user = await createPrestadorService.execute({
+    const user = await updatePrestadorService.execute({
+      prestadorId,
       bairro,
       cep,
       cidade,
@@ -39,4 +42,4 @@ class CreatePrestadorController {
   }
 }
 
-export { CreatePrestadorController }
+export { UpdatePrestadorController }

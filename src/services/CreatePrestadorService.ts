@@ -14,6 +14,7 @@ interface IRequest {
   password: string
   razaoSocial: string
   tipoInscricao: string
+  email: string
 }
 
 // Exclude keys from user
@@ -39,6 +40,7 @@ class CreatePrestadorService {
     password,
     razaoSocial,
     tipoInscricao,
+    email,
   }: IRequest) {
     if (!inscricao) {
       throw new Error('Inscrição inválida.')
@@ -56,7 +58,11 @@ class CreatePrestadorService {
       throw new Error('Tipo inscrição inválido')
     }
 
-    const inscricaoString = inscricao.toString()
+    if (!email) {
+      throw new Error('E-mail é obrigatório')
+    }
+
+    const inscricaoString = inscricao.toString().replace(/\D/g, '')
 
     if (tipoInscricao === 'cpf') {
       const validateCpf = validate.isValid(inscricaoString, true)
@@ -76,7 +82,7 @@ class CreatePrestadorService {
 
     const inscricaoAlreadyExists = await prismaClient.prestador.findFirst({
       where: {
-        inscricao,
+        inscricao: inscricaoString,
         deleted: false,
       },
     })
@@ -94,12 +100,13 @@ class CreatePrestadorService {
         cidade,
         endereco,
         estado,
-        inscricao,
+        inscricao: inscricaoString,
         latitude,
         longitude,
         password: passwordHash,
         tipoInscricao,
         razaoSocial,
+        email,
       },
     })
 

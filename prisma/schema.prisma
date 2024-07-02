@@ -21,7 +21,7 @@ model Usuario {
   email       String
   cpf         String
   phone       String
-  birth       DateTime?
+  birth       DateTime
   password    String
   tipoAcesso  String?   @default("associado")
 
@@ -41,7 +41,7 @@ model Prestador {
   avatarUrl   String?
   latitude    Float
   longitude   Float
-  inscricao   Float
+  inscricao   String
   tipoInscricao   String?     @default("cnpj")
   endereco    String
   cidade      String
@@ -50,6 +50,7 @@ model Prestador {
   cep         String
   ativo       Boolean   @default(true)
   password    String
+  email       String
 
   agendamentos Agendamento[]
   servicos     Servico[]

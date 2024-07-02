@@ -68,17 +68,22 @@ class AuthUserService {
 
       const response = {
         token,
-        user: userWithoutSensiveKeys,
+        user: {
+          ...userWithoutSensiveKeys,
+          nascimento: user.birth,
+        },
         accessType,
       }
 
       return response
     }
 
+    const inscricaoString = matricula.toString().replace(/\D/g, '')
+
     if (accessType === 2) {
       const user = await prismaClient.prestador.findFirst({
         where: {
-          inscricao: parseInt(matricula),
+          inscricao: inscricaoString,
           deleted: false,
         },
       })

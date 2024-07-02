@@ -9,6 +9,7 @@ interface IRequest {
   cpf: string
   phone: string
   password: string
+  birth: Date
 }
 
 // Exclude keys from user
@@ -22,7 +23,15 @@ function exclude<User, Key extends keyof User>(
 }
 
 class CreateUserService {
-  async execute({ nome, matricula, email, cpf, phone, password }: IRequest) {
+  async execute({
+    nome,
+    matricula,
+    email,
+    cpf,
+    phone,
+    password,
+    birth,
+  }: IRequest) {
     if (!matricula) {
       throw new Error('Matrícula inválido.')
     }
@@ -78,6 +87,7 @@ class CreateUserService {
         phone,
         cpf: formattedDoc,
         password: passwordHash,
+        birth,
       },
     })
 
