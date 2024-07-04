@@ -11,6 +11,8 @@ import { ReadPrestadorController } from '../controllers/ReadPrestadorController'
 import { DeletePrestadorController } from '../controllers/DeletePrestadorController'
 import { FetchPrestadoresController } from '../controllers/FetchPrestadoresController'
 import { ensureAuthenticated } from '../middlewares/ensureIsAuthenticated'
+import { AuthAdminController } from '../controllers/AuthAdminController'
+import { FetchAdminController } from '../controllers/FetchAdminController'
 
 const authRoutes = Router()
 
@@ -23,6 +25,9 @@ const updatePrestadorController = new UpdatePrestadorController()
 const readPrestadorController = new ReadPrestadorController()
 const deletePrestadorController = new DeletePrestadorController()
 const fetchPrestadoresController = new FetchPrestadoresController()
+
+const authAdminController = new AuthAdminController()
+const fetchAdminController = new FetchAdminController()
 
 authRoutes.post('/users', ensureIsAdmin, createUserController.handle)
 authRoutes.post('/sessions', authUserController.handle)
@@ -49,5 +54,8 @@ authRoutes.get(
   ensureAuthenticated,
   fetchPrestadoresController.handle,
 )
+
+authRoutes.post('/admin/sessions', authAdminController.handle)
+authRoutes.get('/admin/me', ensureIsAdmin, fetchAdminController.handle)
 
 export { authRoutes }

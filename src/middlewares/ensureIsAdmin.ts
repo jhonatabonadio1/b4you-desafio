@@ -24,10 +24,7 @@ export async function ensureIsAdmin(
 
   try {
     // Validar se token é válido
-    const { sub } = verify(
-      token,
-      '44697ae110c97c0a7b0eba9568f9c0aa',
-    ) as IPayload
+    const { sub } = verify(token, process.env.AUTH_TOKEN as string) as IPayload
 
     // Recuperar informações do usuário
     request.userId = sub

@@ -58,7 +58,7 @@ class AuthUserService {
         {
           matricula: user.matricula,
         },
-        '44697ae110c97c0a7b0eba9568f9c0aa',
+        process.env.AUTH_TOKEN as string,
         {
           subject: user.id,
         },
@@ -102,7 +102,7 @@ class AuthUserService {
         {
           inscricao: user.inscricao,
         },
-        '44697ae110c97c0a7b0eba9568f9c0aa',
+        process.env.AUTH_TOKEN as string,
         {
           subject: user.id,
         },
