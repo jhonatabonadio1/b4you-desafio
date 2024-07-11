@@ -3,7 +3,8 @@ import { CreateUserService } from '../services/CreateUserService'
 
 class CreateUserController {
   async handle(request: Request, response: Response) {
-    const { cpf, email, matricula, nome, password, phone, birth } = request.body
+    const { cpf, email, matricula, nome, password, phone, birth, tipoAcesso } =
+      request.body
 
     const createUserService = new CreateUserService()
 
@@ -15,6 +16,7 @@ class CreateUserController {
       password,
       phone,
       birth,
+      tipoAcesso,
     })
 
     return response.json(user)

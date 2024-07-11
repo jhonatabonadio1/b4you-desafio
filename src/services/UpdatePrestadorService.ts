@@ -69,7 +69,11 @@ class UpdatePrestadorService {
         }
 
         const verifyDocAlreadyExists = await prismaClient.prestador.findFirst({
-          where: { inscricao: inscricaoString, deleted: false },
+          where: {
+            inscricao: inscricaoString,
+            deleted: false,
+            NOT: { id: prestadorId },
+          },
         })
 
         if (verifyDocAlreadyExists) {
@@ -80,7 +84,7 @@ class UpdatePrestadorService {
       if (email) {
         const verifyEmailAlreadyExists = await prismaClient.prestador.findFirst(
           {
-            where: { email, deleted: false },
+            where: { email, deleted: false, NOT: { id: prestadorId } },
           },
         )
 

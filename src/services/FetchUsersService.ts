@@ -14,7 +14,7 @@ function exclude<Prestador, Key extends keyof Prestador>(
   return userCopy
 }
 
-class FetchPrestadoresService {
+class FetchUsersService {
   async execute({ page, search }: IUser, pageSize = 10) {
     const baseWhere = { deleted: false }
     const searchWhere = search
@@ -23,12 +23,14 @@ class FetchPrestadoresService {
             { deleted: false },
             {
               OR: [
+                { phone: { contains: search, mode: 'insensitive' as const } },
+                { nome: { contains: search, mode: 'insensitive' as const } },
                 {
-                  inscricao: { contains: search, mode: 'insensitive' as const },
+                  matricula: { contains: search, mode: 'insensitive' as const },
                 },
                 { email: { contains: search, mode: 'insensitive' as const } },
                 {
-                  razaoSocial: {
+                  cpf: {
                     contains: search,
                     mode: 'insensitive' as const,
                   },
@@ -39,13 +41,13 @@ class FetchPrestadoresService {
         }
       : baseWhere
 
-    const totalUsers = await prismaClient.prestador.count({
+    const totalUsers = await prismaClient.usuario.count({
       where: searchWhere,
     })
     const totalPages = Math.max(Math.ceil(totalUsers / pageSize), 1)
     page = Math.min(Math.max(page, 1), totalPages)
 
-    const users = await prismaClient.prestador.findMany({
+    const users = await prismaClient.usuario.findMany({
       where: searchWhere,
       skip: (page - 1) * pageSize,
       take: pageSize,
@@ -57,7 +59,7 @@ class FetchPrestadoresService {
     )
 
     return {
-      prestadores: usersWithoutPassword,
+      users: usersWithoutPassword,
       currentPage: page,
       totalPages,
       totalUsers,
@@ -65,4 +67,4 @@ class FetchPrestadoresService {
   }
 }
 
-export { FetchPrestadoresService }
+export { FetchUsersService }

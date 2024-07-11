@@ -9,6 +9,7 @@ interface IRequest {
   cpf: string
   phone: string
   password: string
+  tipoAcesso: string
   birth: Date
 }
 
@@ -30,6 +31,7 @@ class CreateUserService {
     cpf,
     phone,
     password,
+    tipoAcesso,
     birth,
   }: IRequest) {
     if (!matricula) {
@@ -42,6 +44,14 @@ class CreateUserService {
 
     if (!email) {
       throw new Error('E-mail é obrigatório')
+    }
+
+    if (!tipoAcesso) {
+      throw new Error('Tipo de acesso é obrigatório')
+    }
+
+    if (!birth) {
+      throw new Error('Data de nascimento é obrigatório')
     }
 
     const formattedDoc = cpf.replace(/\D/g, '')
@@ -79,6 +89,9 @@ class CreateUserService {
 
     const passwordHash = await hash(password, 8)
 
+    const birthDate = new Date(birth)
+    birthDate.setUTCHours(6, 0, 0, 0)
+
     const user = await prismaClient.usuario.create({
       data: {
         nome,
@@ -87,7 +100,8 @@ class CreateUserService {
         phone,
         cpf: formattedDoc,
         password: passwordHash,
-        birth,
+        tipoAcesso,
+        birth: birthDate,
       },
     })
 

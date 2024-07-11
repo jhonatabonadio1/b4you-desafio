@@ -1,12 +1,12 @@
 import { Request, Response } from 'express'
 
-import { ReadPrestadorService } from '../services/ReadPrestadorSevice'
+import { FetchPrestadorService } from '../services/FetchPrestadorService'
 
-class ReadPrestadorController {
+class FetchPrestadorController {
   async handle(request: Request, response: Response) {
     const { prestadorId } = request.params
 
-    const updatePrestadorService = new ReadPrestadorService()
+    const updatePrestadorService = new FetchPrestadorService()
 
     const user = await updatePrestadorService.execute({
       prestadorId,
@@ -16,4 +16,4 @@ class ReadPrestadorController {
   }
 }
 
-export { ReadPrestadorController }
+export { FetchPrestadorController }

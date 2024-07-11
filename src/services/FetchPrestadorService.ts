@@ -14,7 +14,7 @@ function exclude<Prestador, Key extends keyof Prestador>(
   return userCopy
 }
 
-class ReadPrestadorService {
+class FetchPrestadorService {
   async execute({ prestadorId }: IRequest) {
     const user = await prismaClient.prestador.findUnique({
       where: { id: prestadorId, deleted: false },
@@ -28,4 +28,4 @@ class ReadPrestadorService {
   }
 }
 
-export { ReadPrestadorService }
+export { FetchPrestadorService }

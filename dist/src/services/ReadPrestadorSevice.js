@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ReadPrestadorService = void 0;
+exports.FetchPrestadorService = void 0;
 const prismaClient_1 = require("../database/prismaClient");
 // Exclude keys from user
 function exclude(user, keys) {
@@ -8,7 +8,7 @@ function exclude(user, keys) {
     keys.forEach((key) => delete userCopy[key]);
     return userCopy;
 }
-class ReadPrestadorService {
+class FetchPrestadorService {
     async execute({ prestadorId }) {
         const user = await prismaClient_1.prismaClient.prestador.findUnique({
             where: { id: prestadorId, deleted: false },
@@ -19,4 +19,4 @@ class ReadPrestadorService {
         }
     }
 }
-exports.ReadPrestadorService = ReadPrestadorService;
+exports.FetchPrestadorService = FetchPrestadorService;
