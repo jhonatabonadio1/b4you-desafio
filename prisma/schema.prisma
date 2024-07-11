@@ -126,3 +126,32 @@ model BrindesInPrestadoresEUsuarios{
   
   @@id([brindeId])
 }
+
+model Informativos {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  titulo      String
+  texto       String?
+  bannerUrl   String?
+  url         String?
+
+  deleted     Boolean     @default(false)
+  created_at  DateTime    @default(now())
+
+  @@map("informativos")
+}
+
+
+model Convenios {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  titulo      String
+  texto       String?
+  bannerUrl   String
+  url         String
+  html        String?
+  categoria   String
+
+  deleted     Boolean     @default(false)
+  created_at  DateTime    @default(now())
+
+  @@map("convenios")
+}

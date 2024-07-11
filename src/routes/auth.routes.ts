@@ -14,6 +14,12 @@ import { ensureAuthenticated } from '../middlewares/ensureIsAuthenticated'
 import { AuthAdminController } from '../controllers/AuthAdminController'
 import { FetchAdminController } from '../controllers/FetchAdminController'
 
+import { CreateInformativoController } from '../controllers/CreateInformativoController'
+import { UpdateInformativoController } from '../controllers/UpdateInformativoController'
+import { DeleteInformativoController } from '../controllers/DeleteInformativoController'
+import { FetchInformativoController } from '../controllers/FetchInformativoController'
+import { FetchInformativosController } from '../controllers/FetchInformativosController'
+
 const authRoutes = Router()
 
 const verifyAuthMatriculaController = new VerifyAuthMatriculaController()
@@ -28,6 +34,12 @@ const fetchPrestadoresController = new FetchPrestadoresController()
 
 const authAdminController = new AuthAdminController()
 const fetchAdminController = new FetchAdminController()
+
+const createInformativoController = new CreateInformativoController()
+const updateInformativoController = new UpdateInformativoController()
+const deleteInformativoController = new DeleteInformativoController()
+const fetchInformativoController = new FetchInformativoController()
+const fetchInformativosController = new FetchInformativosController()
 
 authRoutes.post('/users', ensureIsAdmin, createUserController.handle)
 authRoutes.post('/sessions', authUserController.handle)
@@ -57,5 +69,31 @@ authRoutes.get(
 
 authRoutes.post('/admin/sessions', authAdminController.handle)
 authRoutes.get('/admin/me', ensureIsAdmin, fetchAdminController.handle)
+
+authRoutes.post(
+  '/admin/informativos',
+  ensureIsAdmin,
+  createInformativoController.handle,
+)
+authRoutes.delete(
+  '/admin/informativos/:id',
+  ensureIsAdmin,
+  deleteInformativoController.handle,
+)
+authRoutes.put(
+  '/admin/informativos/:id',
+  ensureIsAdmin,
+  updateInformativoController.handle,
+)
+authRoutes.get(
+  '/admin/informativos',
+  ensureAuthenticated,
+  fetchInformativosController.handle,
+)
+authRoutes.get(
+  '/admin/informativos/:id',
+  ensureAuthenticated,
+  fetchInformativoController.handle,
+)
 
 export { authRoutes }
