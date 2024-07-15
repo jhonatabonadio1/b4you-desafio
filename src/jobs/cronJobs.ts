@@ -9,6 +9,7 @@ async function updateBrindesAtivos() {
   try {
     const result = await prismaClient.brinde.updateMany({
       where: {
+        deleted: false,
         dataDisponibilidade: {
           gte: new Date(`${hojeBrasilStr}T00:00:00.000Z`),
           lt: new Date(`${hojeBrasilStr}T23:59:59.999Z`),
@@ -32,6 +33,7 @@ async function reexecutarJobsPerdidos() {
   try {
     const brindesPerdidos = await prismaClient.brinde.findMany({
       where: {
+        deleted: false,
         dataDisponibilidade: {
           lte: new Date(`${hoje}T23:59:59.999Z`),
         },

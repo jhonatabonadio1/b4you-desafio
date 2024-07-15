@@ -33,6 +33,9 @@ import { DeleteBrindeController } from '../controllers/DeleteBrindeController'
 import { FetchBrindeController } from '../controllers/FetchBrindeController'
 import { FetchBrindesController } from '../controllers/FetchBrindesController'
 
+import { FetchUsuarioBrindesController } from '../controllers/FetchUsuarioBrindesController'
+import { ensureAuthenticated } from '../middlewares/ensureIsAuthenticated'
+
 const authRoutes = Router()
 
 const verifyAuthMatriculaController = new VerifyAuthMatriculaController()
@@ -64,6 +67,8 @@ const updateBrindeController = new UpdateBrindeController()
 const deleteBrindeController = new DeleteBrindeController()
 const fetchBrindeController = new FetchBrindeController()
 const fetchBrindesController = new FetchBrindesController()
+
+const fetchUsuarioBrindesController = new FetchUsuarioBrindesController()
 
 authRoutes.post('/admin/users', ensureIsAdmin, createUserController.handle)
 authRoutes.put(
@@ -157,6 +162,12 @@ authRoutes.get(
   '/admin/brindes/:id',
   ensureIsAdmin,
   fetchBrindeController.handle,
+)
+
+authRoutes.get(
+  '/brindes',
+  ensureAuthenticated,
+  fetchUsuarioBrindesController.handle,
 )
 
 export { authRoutes }
