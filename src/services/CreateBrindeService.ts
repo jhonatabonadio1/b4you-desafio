@@ -1,5 +1,7 @@
 import { prismaClient } from '../database/prismaClient'
 
+import { toDataURL } from 'qrcode'
+
 interface IRequest {
   titulo: string
   imageUrl?: string
@@ -103,7 +105,14 @@ class CreateBrindeService {
       },
     })
 
-    return brinde
+    const qrCodeData = await toDataURL(brinde.id)
+
+    const updatedBrinde = await prismaClient.brinde.update({
+      where: { id: brinde.id },
+      data: { qrcode: qrCodeData },
+    })
+
+    return updatedBrinde
   }
 }
 
