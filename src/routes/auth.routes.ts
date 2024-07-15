@@ -18,7 +18,6 @@ import { FetchPrestadorController } from '../controllers/FetchPrestadorControlle
 import { DeletePrestadorController } from '../controllers/DeletePrestadorController'
 import { FetchPrestadoresController } from '../controllers/FetchPrestadoresController'
 
-import { ensureAuthenticated } from '../middlewares/ensureIsAuthenticated'
 import { AuthAdminController } from '../controllers/AuthAdminController'
 import { FetchAdminController } from '../controllers/FetchAdminController'
 
@@ -27,6 +26,12 @@ import { UpdateInformativoController } from '../controllers/UpdateInformativoCon
 import { DeleteInformativoController } from '../controllers/DeleteInformativoController'
 import { FetchInformativoController } from '../controllers/FetchInformativoController'
 import { FetchInformativosController } from '../controllers/FetchInformativosController'
+
+import { CreateBrindeController } from '../controllers/CreateBrindeController'
+import { UpdateBrindeController } from '../controllers/UpdateBrindeController'
+import { DeleteBrindeController } from '../controllers/DeleteBrindeController'
+import { FetchBrindeController } from '../controllers/FetchBrindeController'
+import { FetchBrindesController } from '../controllers/FetchBrindesController'
 
 const authRoutes = Router()
 
@@ -53,6 +58,12 @@ const updateInformativoController = new UpdateInformativoController()
 const deleteInformativoController = new DeleteInformativoController()
 const fetchInformativoController = new FetchInformativoController()
 const fetchInformativosController = new FetchInformativosController()
+
+const createBrindeController = new CreateBrindeController()
+const updateBrindeController = new UpdateBrindeController()
+const deleteBrindeController = new DeleteBrindeController()
+const fetchBrindeController = new FetchBrindeController()
+const fetchBrindesController = new FetchBrindesController()
 
 authRoutes.post('/admin/users', ensureIsAdmin, createUserController.handle)
 authRoutes.put(
@@ -120,13 +131,32 @@ authRoutes.put(
 )
 authRoutes.get(
   '/admin/informativos',
-  ensureAuthenticated,
+  ensureIsAdmin,
   fetchInformativosController.handle,
 )
 authRoutes.get(
   '/admin/informativos/:id',
-  ensureAuthenticated,
+  ensureIsAdmin,
   fetchInformativoController.handle,
+)
+
+authRoutes.post('/admin/brindes', ensureIsAdmin, createBrindeController.handle)
+
+authRoutes.delete(
+  '/admin/brindes/:id',
+  ensureIsAdmin,
+  deleteBrindeController.handle,
+)
+authRoutes.put(
+  '/admin/brindes/:id',
+  ensureIsAdmin,
+  updateBrindeController.handle,
+)
+authRoutes.get('/admin/brindes', ensureIsAdmin, fetchBrindesController.handle)
+authRoutes.get(
+  '/admin/brindes/:id',
+  ensureIsAdmin,
+  fetchBrindeController.handle,
 )
 
 export { authRoutes }

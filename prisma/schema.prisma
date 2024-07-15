@@ -12,7 +12,6 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
-
 model Usuario {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   nome        String    
@@ -26,8 +25,6 @@ model Usuario {
   tipoAcesso  String?   @default("associado")
 
   agendamentos  Agendamento[]
-
-  brindes  BrindesInPrestadoresEUsuarios[]
 
   deleted     Boolean   @default(false)
   created_at  DateTime  @default(now())
@@ -55,12 +52,33 @@ model Prestador {
   agendamentos Agendamento[]
   servicos     Servico[]
 
-  brindes  BrindesInPrestadoresEUsuarios[]
-
   deleted     Boolean   @default(false)
   created_at  DateTime  @default(now())
 
   @@map("prestadores")
+}
+
+model Brinde {
+  id                    String          @id @default(auto()) @map("_id") @db.ObjectId
+  nome                  String 
+  qrcode                String?
+  dataLimite            DateTime?
+  imageUrl              String?
+  data                  String?
+  dataDisponibilidade   DateTime
+  ativo                 Boolean         @default(false)
+  
+  created_at            DateTime        @default(now())
+
+  todosUsuarios         Boolean
+  todosPrestadores      Boolean
+
+  usuariosEspecificos              String[]
+  prestadoresEspecificos           String[]
+
+  deleted     Boolean   @default(false)
+
+  @@map("brindes")
 }
 
 model Servico {
@@ -99,32 +117,6 @@ model Agendamento {
   created_at  DateTime  @default(now())
 
   @@map("agendamentos")
-}
-
-model Brinde{
-  id      String    @id @default(uuid()) @map("_id") @db.ObjectId
-  nome    String 
-
-  qrcode      String?
-  dataLimite        DateTime
-
-  prestadores  BrindesInPrestadoresEUsuarios[]
-
-  ativo       Boolean   @default(true)
-  created_at  DateTime  @default(now())
-}
-
-model BrindesInPrestadoresEUsuarios{
-  brinde      Brinde  @relation(fields: [brindeId], references: [id])
-  brindeId    String @db.ObjectId @map("_id")
-
-  prestador   Prestador  @relation(fields: [prestadorId], references: [id])
-  prestadorId String @db.ObjectId
-  
-  usuario     Usuario  @relation(fields: [usuarioId], references: [id])
-  usuarioId   String @db.ObjectId
-  
-  @@id([brindeId])
 }
 
 model Informativos {

@@ -4,6 +4,8 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import { authRoutes } from './routes/auth.routes'
 
+import './jobs/cronJobs'
+
 import helmet from 'helmet'
 
 const app = express()
