@@ -3,7 +3,7 @@ import { UpdateInformativoService } from '../services/UpdateInformativoService'
 
 class UpdateInformativoController {
   async handle(request: Request, response: Response) {
-    const { titulo, texto, bannerUrl, url } = request.body
+    const { titulo, texto, bannerUrl, url, html } = request.body
     const { id } = request.params
 
     const updateInformativoService = new UpdateInformativoService()
@@ -14,6 +14,7 @@ class UpdateInformativoController {
       texto,
       bannerUrl,
       url,
+      html,
     })
 
     return response.json(informativo)

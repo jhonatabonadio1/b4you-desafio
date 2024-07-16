@@ -3,20 +3,16 @@ import { prismaClient } from '../database/prismaClient'
 interface IRequest {
   titulo: string
   texto?: string
-  bannerUrl: string
+  bannerUrl?: string
   url: string
   html?: string
   categoria: string
 }
 
 class CreateConvenioService {
-  async execute({ titulo, texto, bannerUrl, url, html, categoria }: IRequest) {
+  async execute({ titulo, bannerUrl, texto, url, html, categoria }: IRequest) {
     if (!titulo) {
       throw new Error('Título é obrigatório')
-    }
-
-    if (!bannerUrl) {
-      throw new Error('URL do banner é obrigatório')
     }
 
     if (!categoria) {
@@ -31,9 +27,12 @@ class CreateConvenioService {
       data: {
         titulo,
         texto,
-        bannerUrl,
+        bannerUrl:
+          bannerUrl ||
+          'https://pip.global/static/1632e46a5c79d43f3125ca62c54189cb/ba986/hills_placeholder.png',
         url,
         html,
+        ativo: true,
         categoria,
       },
     })

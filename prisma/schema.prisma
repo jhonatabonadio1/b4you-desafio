@@ -25,6 +25,7 @@ model Usuario {
   tipoAcesso  String?   @default("associado")
 
   agendamentos  Agendamento[]
+  validacao_usuario_brinde ValidacaoUsuarioBrinde[]
 
   deleted     Boolean   @default(false)
   created_at  DateTime  @default(now())
@@ -51,6 +52,7 @@ model Prestador {
 
   agendamentos Agendamento[]
   servicos     Servico[]
+  validacao_prestador_brinde ValidacaoPrestadorBrinde[]
 
   deleted     Boolean   @default(false)
   created_at  DateTime  @default(now())
@@ -80,6 +82,27 @@ model Brinde {
 
   @@map("brindes")
 }
+
+model ValidacaoUsuarioBrinde{
+   id                    String          @id @default(auto()) @map("_id") @db.ObjectId
+   usuario   Usuario     @relation(fields: [usuarioId], references: [id])
+   usuarioId String      @db.ObjectId
+
+   created_at DateTime    @default(now())
+
+   @@map("validacao_usuario_brinde")
+}
+
+model ValidacaoPrestadorBrinde{
+   id                     String          @id @default(auto()) @map("_id") @db.ObjectId
+   prestador   Prestador     @relation(fields: [prestadorId], references: [id])
+   prestadorId String       @db.ObjectId
+
+   created_at DateTime    @default(now())
+
+   @@map("validacao_prestador_brinde")
+}
+
 
 model Servico {
   id          String      @id @default(uuid()) @map("_id") @db.ObjectId
@@ -125,6 +148,7 @@ model Informativos {
   texto       String?
   bannerUrl   String?
   url         String?
+  html        String?
 
   deleted     Boolean     @default(false)
   created_at  DateTime    @default(now())
@@ -141,6 +165,7 @@ model Convenios {
   url         String
   html        String?
   categoria   String
+  ativo       Boolean     @default(false)
 
   deleted     Boolean     @default(false)
   created_at  DateTime    @default(now())

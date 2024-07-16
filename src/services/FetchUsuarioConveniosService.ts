@@ -16,6 +16,7 @@ class FetchUsuarioConveniosService {
     const convenios = await prismaClient.convenios.findMany({
       where: {
         deleted: false,
+        ativo: true,
       },
     })
 

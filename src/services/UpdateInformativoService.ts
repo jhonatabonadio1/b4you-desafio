@@ -6,10 +6,11 @@ interface IRequest {
   texto?: string
   bannerUrl?: string
   url?: string
+  html?: string
 }
 
 class UpdateInformativoService {
-  async execute({ id, titulo, texto, bannerUrl, url }: IRequest) {
+  async execute({ id, titulo, html, texto, bannerUrl, url }: IRequest) {
     if (!titulo) {
       throw new Error('Título é obrigatório')
     }
@@ -34,6 +35,7 @@ class UpdateInformativoService {
         titulo: titulo || informativo.titulo,
         texto: texto || informativo.texto,
         bannerUrl: bannerUrl || informativo.bannerUrl,
+        html: html || informativo.html,
         url: url || informativo.url,
       },
     })

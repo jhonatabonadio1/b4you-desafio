@@ -8,6 +8,7 @@ interface IRequest {
   url?: string
   html?: string
   categoria?: string
+  ativo?: boolean
 }
 
 class UpdateConvenioService {
@@ -19,6 +20,7 @@ class UpdateConvenioService {
     url,
     html,
     categoria,
+    ativo,
   }: IRequest) {
     if (!id) {
       throw new Error('ID do convênio é obrigatório')
@@ -40,6 +42,7 @@ class UpdateConvenioService {
         bannerUrl: bannerUrl || existingConvenio.bannerUrl,
         url: url || existingConvenio.url,
         html: html || existingConvenio.html,
+        ativo,
         categoria: categoria || existingConvenio.categoria,
       },
     })
