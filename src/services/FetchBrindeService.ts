@@ -9,6 +9,7 @@ class FetchBrindeService {
     const brinde = await prismaClient.brinde.findFirst({
       where: {
         id,
+        deleted: false,
       },
     })
 
@@ -26,6 +27,7 @@ class FetchBrindeService {
         const dadosPrestadores = await prismaClient.prestador.findFirst({
           where: {
             id: busca,
+            deleted: false,
           },
         })
 
@@ -45,6 +47,7 @@ class FetchBrindeService {
         const dadosUsuarios = await prismaClient.usuario.findFirst({
           where: {
             id: busca,
+            deleted: false,
           },
         })
 

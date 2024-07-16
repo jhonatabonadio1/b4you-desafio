@@ -4,20 +4,20 @@ interface IRequest {
   id: string
 }
 
-class DeleteBrindeService {
+class DeleteConvenioService {
   async execute({ id }: IRequest) {
-    const brinde = await prismaClient.brinde.findFirst({
+    const convenio = await prismaClient.convenios.findFirst({
       where: {
         id,
         deleted: false,
       },
     })
 
-    if (!brinde) {
-      throw new Error('Brinde não encontrado')
+    if (!convenio) {
+      throw new Error('Convênio não encontrado')
     }
 
-    const deleteBrinde = await prismaClient.brinde.update({
+    const deleteConvenio = await prismaClient.convenios.update({
       where: {
         id,
       },
@@ -26,8 +26,8 @@ class DeleteBrindeService {
       },
     })
 
-    return deleteBrinde
+    return deleteConvenio
   }
 }
 
-export { DeleteBrindeService }
+export { DeleteConvenioService }

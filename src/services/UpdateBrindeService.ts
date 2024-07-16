@@ -95,7 +95,7 @@ class UpdateBrindeService {
 
     // Atualiza o brinde no banco de dados
     const brinde = await prismaClient.brinde.update({
-      where: { id },
+      where: { id, deleted: false },
       data: {
         nome: titulo,
         imageUrl,

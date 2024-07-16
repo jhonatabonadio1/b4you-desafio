@@ -9,6 +9,7 @@ class FetchInformativoService {
     const informativo = await prismaClient.informativos.findFirst({
       where: {
         id,
+        deleted: false,
       },
     })
 

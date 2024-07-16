@@ -35,6 +35,11 @@ import { FetchBrindesController } from '../controllers/FetchBrindesController'
 
 import { FetchUsuarioBrindesController } from '../controllers/FetchUsuarioBrindesController'
 import { ensureAuthenticated } from '../middlewares/ensureIsAuthenticated'
+import { FetchConveniosController } from '../controllers/FetchConveniosController'
+import { FetchConvenioController } from '../controllers/FetchConvenioController'
+import { UpdateConvenioController } from '../controllers/UpdateConveniosController'
+import { DeleteConvenioController } from '../controllers/DeleteConvenioController'
+import { CreateConvenioController } from '../controllers/CreateConvenioController'
 
 const authRoutes = Router()
 
@@ -69,6 +74,12 @@ const fetchBrindeController = new FetchBrindeController()
 const fetchBrindesController = new FetchBrindesController()
 
 const fetchUsuarioBrindesController = new FetchUsuarioBrindesController()
+
+const createConvenioController = new CreateConvenioController()
+const updateConvenioController = new UpdateConvenioController()
+const deleteConvenioController = new DeleteConvenioController()
+const fetchConvenioController = new FetchConvenioController()
+const fetchConveniosController = new FetchConveniosController()
 
 authRoutes.post('/admin/users', ensureIsAdmin, createUserController.handle)
 authRoutes.put(
@@ -146,7 +157,6 @@ authRoutes.get(
 )
 
 authRoutes.post('/admin/brindes', ensureIsAdmin, createBrindeController.handle)
-
 authRoutes.delete(
   '/admin/brindes/:id',
   ensureIsAdmin,
@@ -168,6 +178,32 @@ authRoutes.get(
   '/brindes',
   ensureAuthenticated,
   fetchUsuarioBrindesController.handle,
+)
+
+authRoutes.post(
+  '/admin/convenios',
+  ensureIsAdmin,
+  createConvenioController.handle,
+)
+authRoutes.delete(
+  '/admin/convenios/:id',
+  ensureIsAdmin,
+  deleteConvenioController.handle,
+)
+authRoutes.put(
+  '/admin/convenios/:id',
+  ensureIsAdmin,
+  updateConvenioController.handle,
+)
+authRoutes.get(
+  '/admin/convenios',
+  ensureIsAdmin,
+  fetchConveniosController.handle,
+)
+authRoutes.get(
+  '/admin/convenios/:id',
+  ensureIsAdmin,
+  fetchConvenioController.handle,
 )
 
 export { authRoutes }
