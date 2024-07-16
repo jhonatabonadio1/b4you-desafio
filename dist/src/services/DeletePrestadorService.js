@@ -17,7 +17,7 @@ class DeletePrestadorService {
             throw new Error('Prestador não encontrado.');
         }
         const updateUserService = await prismaClient_1.prismaClient.prestador.update({
-            where: { id: user.id },
+            where: { id: user.id, deleted: false },
             data: {
                 deleted: true,
             },

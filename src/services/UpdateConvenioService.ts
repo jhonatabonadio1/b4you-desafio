@@ -33,7 +33,7 @@ class UpdateConvenioService {
     }
 
     const updatedConvenio = await prismaClient.convenios.update({
-      where: { id },
+      where: { id, deleted: false },
       data: {
         titulo: titulo || existingConvenio.titulo,
         texto: texto || existingConvenio.texto,

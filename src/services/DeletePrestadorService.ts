@@ -25,7 +25,7 @@ class DeletePrestadorService {
     }
 
     const updateUserService = await prismaClient.prestador.update({
-      where: { id: user.id },
+      where: { id: user.id, deleted: false },
       data: {
         deleted: true,
       },

@@ -8,6 +8,7 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const auth_routes_1 = require("./routes/auth.routes");
+require("./jobs/cronJobs");
 const helmet_1 = __importDefault(require("helmet"));
 const app = (0, express_1.default)();
 dotenv_1.default.config();

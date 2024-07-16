@@ -99,7 +99,7 @@ class UpdatePrestadorService {
         : user.inscricao
 
       const updatePrestadorService = await prismaClient.prestador.update({
-        where: { id: prestadorId },
+        where: { id: prestadorId, deleted: false },
         data: {
           inscricao: inscricaoString,
           bairro: bairro || user.bairro,

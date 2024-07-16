@@ -31,7 +31,11 @@ class UpdatePrestadorService {
                     }
                 }
                 const verifyDocAlreadyExists = await prismaClient_1.prismaClient.prestador.findFirst({
-                    where: { inscricao: inscricaoString, deleted: false },
+                    where: {
+                        inscricao: inscricaoString,
+                        deleted: false,
+                        NOT: { id: prestadorId },
+                    },
                 });
                 if (verifyDocAlreadyExists) {
                     throw new Error('CNPJ já cadastrado no sistema.');
@@ -39,7 +43,7 @@ class UpdatePrestadorService {
             }
             if (email) {
                 const verifyEmailAlreadyExists = await prismaClient_1.prismaClient.prestador.findFirst({
-                    where: { email, deleted: false },
+                    where: { email, deleted: false, NOT: { id: prestadorId } },
                 });
                 if (verifyEmailAlreadyExists) {
                     throw new Error('E-mail já cadastrado no sistema.');
@@ -50,7 +54,7 @@ class UpdatePrestadorService {
                 ? inscricao.toString().replace(/\D/g, '')
                 : user.inscricao;
             const updatePrestadorService = await prismaClient_1.prismaClient.prestador.update({
-                where: { id: prestadorId },
+                where: { id: prestadorId, deleted: false },
                 data: {
                     inscricao: inscricaoString,
                     bairro: bairro || user.bairro,

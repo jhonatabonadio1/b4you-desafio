@@ -20,6 +20,7 @@ class DeleteConvenioService {
     const deleteConvenio = await prismaClient.convenios.update({
       where: {
         id,
+        deleted: false,
       },
       data: {
         deleted: true,

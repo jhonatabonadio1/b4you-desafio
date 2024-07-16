@@ -28,6 +28,7 @@ class UpdateInformativoService {
     const updateInformativo = await prismaClient.informativos.update({
       where: {
         id,
+        deleted: false,
       },
       data: {
         titulo: titulo || informativo.titulo,

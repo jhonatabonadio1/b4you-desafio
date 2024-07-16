@@ -1,4 +1,3 @@
-import { Brinde } from '@prisma/client'
 import { prismaClient } from '../database/prismaClient'
 import moment from 'moment-timezone'
 
@@ -6,11 +5,24 @@ interface IUser {
   userId: string
 }
 
+// Função exclude ajustada para aceitar arrays de objetos
+function excludeArray<Brinde, Key extends keyof Brinde>(
+  brindes: Brinde[],
+  keys: Key[],
+): Omit<Brinde, Key>[] {
+  return brindes.map((brinde) => {
+    const brindeCopy = { ...brinde }
+    keys.forEach((key) => delete brindeCopy[key])
+    return brindeCopy
+  })
+}
+
 class FetchUsuarioBrindesService {
   async execute({ userId }: IUser) {
     const user = await prismaClient.usuario.findFirst({
       where: {
         id: userId,
+        deleted: false,
       },
     })
 
@@ -38,7 +50,7 @@ class FetchUsuarioBrindesService {
       },
     })
 
-    const usuariosBrindes = [] as Brinde[]
+    const usuariosBrindes = []
 
     for (const brinde of buscaBrindes) {
       if (!brinde.todosUsuarios) {
@@ -54,7 +66,18 @@ class FetchUsuarioBrindesService {
       }
     }
 
-    return usuariosBrindes
+    const usuariosBrindeEx = excludeArray(buscaBrindes, [
+      'prestadoresEspecificos',
+      'usuariosEspecificos',
+      'todosUsuarios',
+      'todosPrestadores',
+      'dataDisponibilidade',
+      'deleted',
+      'ativo',
+      'created_at',
+    ])
+
+    return usuariosBrindeEx
   }
 }
 

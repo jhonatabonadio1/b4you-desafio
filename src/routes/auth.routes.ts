@@ -40,6 +40,8 @@ import { FetchConvenioController } from '../controllers/FetchConvenioController'
 import { UpdateConvenioController } from '../controllers/UpdateConveniosController'
 import { DeleteConvenioController } from '../controllers/DeleteConvenioController'
 import { CreateConvenioController } from '../controllers/CreateConvenioController'
+import { FetchUsuarioInformativosController } from '../controllers/FetchUsuarioInformativos'
+import { FetchUsuarioConveniosController } from '../controllers/FetchUsuarioConvenios'
 
 const authRoutes = Router()
 
@@ -74,6 +76,9 @@ const fetchBrindeController = new FetchBrindeController()
 const fetchBrindesController = new FetchBrindesController()
 
 const fetchUsuarioBrindesController = new FetchUsuarioBrindesController()
+const fetchUsuarioConveniosController = new FetchUsuarioConveniosController()
+const fetchUsuarioInformativosController =
+  new FetchUsuarioInformativosController()
 
 const createConvenioController = new CreateConvenioController()
 const updateConvenioController = new UpdateConvenioController()
@@ -178,6 +183,16 @@ authRoutes.get(
   '/brindes',
   ensureAuthenticated,
   fetchUsuarioBrindesController.handle,
+)
+authRoutes.get(
+  '/convenios',
+  ensureAuthenticated,
+  fetchUsuarioConveniosController.handle,
+)
+authRoutes.get(
+  '/informativos',
+  ensureAuthenticated,
+  fetchUsuarioInformativosController.handle,
 )
 
 authRoutes.post(

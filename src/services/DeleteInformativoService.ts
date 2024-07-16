@@ -20,6 +20,7 @@ class DeleteInformativoService {
     const deleteInformativo = await prismaClient.informativos.update({
       where: {
         id,
+        deleted: false,
       },
       data: {
         deleted: true,

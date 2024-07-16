@@ -20,6 +20,7 @@ class DeleteBrindeService {
     const deleteBrinde = await prismaClient.brinde.update({
       where: {
         id,
+        deleted: false,
       },
       data: {
         deleted: true,

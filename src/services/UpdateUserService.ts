@@ -92,7 +92,7 @@ class UpdateUserService {
         : user.matricula
 
       const updateUserService = await prismaClient.usuario.update({
-        where: { id: usuarioId },
+        where: { id: usuarioId, deleted: false },
         data: {
           matricula: inscricaoString,
           nome: nome || user.nome,

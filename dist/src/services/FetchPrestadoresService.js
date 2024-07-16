@@ -44,7 +44,7 @@ class FetchPrestadoresService {
         });
         const usersWithoutPassword = users.map((user) => exclude(user, ['password']));
         return {
-            users: usersWithoutPassword,
+            prestadores: usersWithoutPassword,
             currentPage: page,
             totalPages,
             totalUsers,

@@ -11,7 +11,7 @@ function exclude(user, keys) {
     return userCopy;
 }
 class CreateUserService {
-    async execute({ nome, matricula, email, cpf, phone, password, birth, }) {
+    async execute({ nome, matricula, email, cpf, phone, password, tipoAcesso, birth, }) {
         if (!matricula) {
             throw new Error('Matrícula inválido.');
         }
@@ -20,6 +20,12 @@ class CreateUserService {
         }
         if (!email) {
             throw new Error('E-mail é obrigatório');
+        }
+        if (!tipoAcesso) {
+            throw new Error('Tipo de acesso é obrigatório');
+        }
+        if (!birth) {
+            throw new Error('Data de nascimento é obrigatório');
         }
         const formattedDoc = cpf.replace(/\D/g, '');
         const validateCpf = cpf_cnpj_validator_1.cpf.isValid(formattedDoc, true);
@@ -48,6 +54,8 @@ class CreateUserService {
             throw new Error('Usuário já cadastrado.');
         }
         const passwordHash = await (0, bcryptjs_1.hash)(password, 8);
+        const birthDate = new Date(birth);
+        birthDate.setUTCHours(6, 0, 0, 0);
         const user = await prismaClient_1.prismaClient.usuario.create({
             data: {
                 nome,
@@ -56,7 +64,8 @@ class CreateUserService {
                 phone,
                 cpf: formattedDoc,
                 password: passwordHash,
-                birth,
+                tipoAcesso,
+                birth: birthDate,
             },
         });
         const userWithoutPassword = exclude(user, ['password']);

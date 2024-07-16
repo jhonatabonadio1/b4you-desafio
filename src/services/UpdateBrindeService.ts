@@ -113,7 +113,7 @@ class UpdateBrindeService {
     const qrCodeData = await toDataURL(brinde.id)
 
     const updatedBrinde = await prismaClient.brinde.update({
-      where: { id: brinde.id },
+      where: { id: brinde.id, deleted: false },
       data: { qrcode: qrCodeData },
     })
 

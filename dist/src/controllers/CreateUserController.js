@@ -4,7 +4,7 @@ exports.CreateUserController = void 0;
 const CreateUserService_1 = require("../services/CreateUserService");
 class CreateUserController {
     async handle(request, response) {
-        const { cpf, email, matricula, nome, password, phone, birth } = request.body;
+        const { cpf, email, matricula, nome, password, phone, birth, tipoAcesso } = request.body;
         const createUserService = new CreateUserService_1.CreateUserService();
         const user = await createUserService.execute({
             cpf,
@@ -14,6 +14,7 @@ class CreateUserController {
             password,
             phone,
             birth,
+            tipoAcesso,
         });
         return response.json(user);
     }
