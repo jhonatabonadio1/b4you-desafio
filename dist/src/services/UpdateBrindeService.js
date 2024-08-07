@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateBrindeService = void 0;
 const prismaClient_1 = require("../database/prismaClient");
-const qrcode_1 = require("qrcode");
 class UpdateBrindeService {
     async execute({ id, titulo, todosPrestadores, imageUrl, texto, dataDisponibilidade, dataLimite, todosUsuarios, prestadores, usuarios, ativo = false, }) {
         if (!id) {
@@ -67,10 +66,9 @@ class UpdateBrindeService {
                 ativo,
             },
         });
-        const qrCodeData = await (0, qrcode_1.toDataURL)(brinde.id);
         const updatedBrinde = await prismaClient_1.prismaClient.brinde.update({
             where: { id: brinde.id, deleted: false },
-            data: { qrcode: qrCodeData },
+            data: { qrcode: 'brinde:' + brinde.id },
         });
         return updatedBrinde;
     }

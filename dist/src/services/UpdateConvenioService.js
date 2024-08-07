@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateConvenioService = void 0;
 const prismaClient_1 = require("../database/prismaClient");
 class UpdateConvenioService {
-    async execute({ id, titulo, texto, bannerUrl, url, html, categoria, }) {
+    async execute({ id, titulo, texto, bannerUrl, url, html, categoria, ativo, }) {
         if (!id) {
             throw new Error('ID do convênio é obrigatório');
         }
@@ -21,6 +21,7 @@ class UpdateConvenioService {
                 bannerUrl: bannerUrl || existingConvenio.bannerUrl,
                 url: url || existingConvenio.url,
                 html: html || existingConvenio.html,
+                ativo,
                 categoria: categoria || existingConvenio.categoria,
             },
         });

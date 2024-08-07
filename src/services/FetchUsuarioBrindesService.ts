@@ -53,16 +53,30 @@ class FetchUsuarioBrindesService {
     const usuariosBrindes = []
 
     for (const brinde of buscaBrindes) {
-      if (!brinde.todosUsuarios) {
-        const buscaUsuarioBrindes = brinde.usuariosEspecificos.find(
-          (item) => item === userId,
-        )
+      const verificaBrindeJaValidado =
+        await prismaClient.validacaoBrinde.findFirst({
+          where: {
+            usuario: {
+              id: user.id,
+            },
+            brinde: {
+              id: brinde.id,
+            },
+          },
+        })
 
-        if (buscaUsuarioBrindes) {
+      if (!verificaBrindeJaValidado) {
+        if (!brinde.todosUsuarios) {
+          const buscaUsuarioBrindes = brinde.usuariosEspecificos.find(
+            (item) => item === userId,
+          )
+
+          if (buscaUsuarioBrindes) {
+            usuariosBrindes.push(brinde)
+          }
+        } else {
           usuariosBrindes.push(brinde)
         }
-      } else {
-        usuariosBrindes.push(brinde)
       }
     }
 

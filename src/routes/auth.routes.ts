@@ -43,6 +43,17 @@ import { CreateConvenioController } from '../controllers/CreateConvenioControlle
 import { FetchUsuarioInformativosController } from '../controllers/FetchUsuarioInformativos'
 import { FetchUsuarioConveniosController } from '../controllers/FetchUsuarioConvenios'
 
+import { CreateVehicleController } from '../controllers/CreateVehicleController'
+import { UpdateUserVehicleController } from '../controllers/UpdateUserVehicleController'
+import { FetchUserVehicleController } from '../controllers/FetchUserVehicleController'
+import { FetchUserVehiclesController } from '../controllers/FetchUserVehiclesController'
+import { DeleteUserVehicleController } from '../controllers/DeleteUserVehicleController'
+
+import { UpdateVehicleController } from '../controllers/UpdateVehicleController'
+import { FetchVehicleController } from '../controllers/FetchVehicleController'
+import { FetchVehiclesController } from '../controllers/FetchVehiclesController'
+import { DeleteVehicleController } from '../controllers/DeleteVehicleController'
+
 const authRoutes = Router()
 
 const verifyAuthMatriculaController = new VerifyAuthMatriculaController()
@@ -85,6 +96,17 @@ const updateConvenioController = new UpdateConvenioController()
 const deleteConvenioController = new DeleteConvenioController()
 const fetchConvenioController = new FetchConvenioController()
 const fetchConveniosController = new FetchConveniosController()
+
+const createVehicleController = new CreateVehicleController()
+const updateUserVehicleController = new UpdateUserVehicleController()
+const fetchUserVehicleController = new FetchUserVehicleController()
+const fetchUserVehiclesController = new FetchUserVehiclesController()
+const deleteUserVehicleController = new DeleteUserVehicleController()
+
+const updateVehicleController = new UpdateVehicleController()
+const fetchVehicleController = new FetchVehicleController()
+const fetchVehiclesController = new FetchVehiclesController()
+const deleteVehicleController = new DeleteVehicleController()
 
 authRoutes.post('/admin/users', ensureIsAdmin, createUserController.handle)
 authRoutes.put(
@@ -221,4 +243,46 @@ authRoutes.get(
   fetchConvenioController.handle,
 )
 
+authRoutes.post(
+  '/veiculos',
+  ensureAuthenticated,
+  createVehicleController.handle,
+)
+authRoutes.put(
+  '/veiculos/:vehicleId',
+  ensureAuthenticated,
+  updateUserVehicleController.handle,
+)
+authRoutes.delete(
+  '/veiculos/:vehicleId',
+  ensureAuthenticated,
+  deleteUserVehicleController.handle,
+)
+authRoutes.get(
+  '/veiculos/:vehicleId',
+  ensureAuthenticated,
+  fetchUserVehicleController.handle,
+)
+authRoutes.get(
+  '/veiculos',
+  ensureAuthenticated,
+  fetchUserVehiclesController.handle,
+)
+
+authRoutes.put(
+  '/admin/veiculos/:vehicleId',
+  ensureIsAdmin,
+  updateVehicleController.handle,
+)
+authRoutes.delete(
+  '/admin/veiculos/:vehicleId',
+  ensureIsAdmin,
+  deleteVehicleController.handle,
+)
+authRoutes.get(
+  '/admin/veiculos/:vehicleId',
+  ensureIsAdmin,
+  fetchVehicleController.handle,
+)
+authRoutes.get('/admin/veiculos', ensureIsAdmin, fetchVehiclesController.handle)
 export { authRoutes }

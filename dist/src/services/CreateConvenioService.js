@@ -3,12 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateConvenioService = void 0;
 const prismaClient_1 = require("../database/prismaClient");
 class CreateConvenioService {
-    async execute({ titulo, texto, bannerUrl, url, html, categoria }) {
+    async execute({ titulo, bannerUrl, texto, url, html, categoria }) {
         if (!titulo) {
             throw new Error('Título é obrigatório');
-        }
-        if (!bannerUrl) {
-            throw new Error('URL do banner é obrigatório');
         }
         if (!categoria) {
             throw new Error('Categoria é obrigatório.');
@@ -20,9 +17,11 @@ class CreateConvenioService {
             data: {
                 titulo,
                 texto,
-                bannerUrl,
+                bannerUrl: bannerUrl ||
+                    'https://pip.global/static/1632e46a5c79d43f3125ca62c54189cb/ba986/hills_placeholder.png',
                 url,
                 html,
+                ativo: true,
                 categoria,
             },
         });

@@ -45,14 +45,26 @@ class FetchUsuarioBrindesService {
         });
         const usuariosBrindes = [];
         for (const brinde of buscaBrindes) {
-            if (!brinde.todosUsuarios) {
-                const buscaUsuarioBrindes = brinde.usuariosEspecificos.find((item) => item === userId);
-                if (buscaUsuarioBrindes) {
+            const verificaBrindeJaValidado = await prismaClient_1.prismaClient.validacaoBrinde.findFirst({
+                where: {
+                    usuario: {
+                        id: user.id,
+                    },
+                    brinde: {
+                        id: brinde.id,
+                    },
+                },
+            });
+            if (!verificaBrindeJaValidado) {
+                if (!brinde.todosUsuarios) {
+                    const buscaUsuarioBrindes = brinde.usuariosEspecificos.find((item) => item === userId);
+                    if (buscaUsuarioBrindes) {
+                        usuariosBrindes.push(brinde);
+                    }
+                }
+                else {
                     usuariosBrindes.push(brinde);
                 }
-            }
-            else {
-                usuariosBrindes.push(brinde);
             }
         }
         const usuariosBrindeEx = excludeArray(buscaBrindes, [

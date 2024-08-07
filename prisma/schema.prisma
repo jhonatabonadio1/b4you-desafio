@@ -25,7 +25,8 @@ model Usuario {
   tipoAcesso  String?   @default("associado")
 
   agendamentos  Agendamento[]
-  validacao_usuario_brinde ValidacaoUsuarioBrinde[]
+  validacao_brinde ValidacaoBrinde[]
+  veiculos  Veiculo[]
 
   deleted     Boolean   @default(false)
   created_at  DateTime  @default(now())
@@ -52,7 +53,7 @@ model Prestador {
 
   agendamentos Agendamento[]
   servicos     Servico[]
-  validacao_prestador_brinde ValidacaoPrestadorBrinde[]
+  validacao_brinde ValidacaoBrinde[]
 
   deleted     Boolean   @default(false)
   created_at  DateTime  @default(now())
@@ -78,34 +79,31 @@ model Brinde {
   usuariosEspecificos              String[]
   prestadoresEspecificos           String[]
 
+  validacao_brinde ValidacaoBrinde[]
+
   deleted     Boolean   @default(false)
 
   @@map("brindes")
 }
 
-model ValidacaoUsuarioBrinde{
+model ValidacaoBrinde{
    id                    String          @id @default(auto()) @map("_id") @db.ObjectId
    usuario   Usuario     @relation(fields: [usuarioId], references: [id])
    usuarioId String      @db.ObjectId
 
-   created_at DateTime    @default(now())
-
-   @@map("validacao_usuario_brinde")
-}
-
-model ValidacaoPrestadorBrinde{
-   id                     String          @id @default(auto()) @map("_id") @db.ObjectId
    prestador   Prestador     @relation(fields: [prestadorId], references: [id])
    prestadorId String       @db.ObjectId
 
    created_at DateTime    @default(now())
 
-   @@map("validacao_prestador_brinde")
+   brinde   Brinde     @relation(fields: [brindeId], references: [id])
+   brindeId String       @db.ObjectId
+   
+   @@map("validacao_brindes")
 }
 
-
 model Servico {
-  id          String      @id @default(uuid()) @map("_id") @db.ObjectId
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
   nome        String
   imageUrl    String?
 
@@ -122,7 +120,7 @@ model Servico {
 }
 
 model Agendamento {
-  id          String    @id @default(uuid()) @map("_id") @db.ObjectId
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
 
   prestador   Prestador @relation(fields: [prestadorId], references: [id])
   prestadorId String    @db.ObjectId
@@ -142,6 +140,18 @@ model Agendamento {
   @@map("agendamentos")
 }
 
+model Veiculo{
+   id          String    @id @default(auto()) @map("_id") @db.ObjectId
+   nome        String
+   usuario     Usuario   @relation(fields: [usuarioId], references: [id])
+   usuarioId   String    @db.ObjectId
+   placa       String
+   categoria   String
+
+   deleted     Boolean   @default(false)
+   created_at  DateTime  @default(now())
+}
+
 model Informativos {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   titulo      String
@@ -155,7 +165,6 @@ model Informativos {
 
   @@map("informativos")
 }
-
 
 model Convenios {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId

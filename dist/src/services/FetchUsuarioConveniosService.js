@@ -14,6 +14,7 @@ class FetchUsuarioConveniosService {
         const convenios = await prismaClient_1.prismaClient.convenios.findMany({
             where: {
                 deleted: false,
+                ativo: true,
             },
         });
         return excludeArray(convenios, ['deleted', 'created_at']);

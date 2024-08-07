@@ -26,7 +26,7 @@ class FetchUsersService {
                 { phone: { contains: search, mode: 'insensitive' as const } },
                 { nome: { contains: search, mode: 'insensitive' as const } },
                 {
-                  matricula: { contains: search, mode: 'insensitive' as const },
+                  matricula: { equals: search, mode: 'insensitive' as const },
                 },
                 { email: { contains: search, mode: 'insensitive' as const } },
                 {

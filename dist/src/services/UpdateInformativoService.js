@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateInformativoService = void 0;
 const prismaClient_1 = require("../database/prismaClient");
 class UpdateInformativoService {
-    async execute({ id, titulo, texto, bannerUrl, url }) {
+    async execute({ id, titulo, html, texto, bannerUrl, url }) {
         if (!titulo) {
             throw new Error('Título é obrigatório');
         }
@@ -25,6 +25,7 @@ class UpdateInformativoService {
                 titulo: titulo || informativo.titulo,
                 texto: texto || informativo.texto,
                 bannerUrl: bannerUrl || informativo.bannerUrl,
+                html: html || informativo.html,
                 url: url || informativo.url,
             },
         });
