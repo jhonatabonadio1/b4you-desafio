@@ -52,7 +52,6 @@ model Prestador {
   email       String
 
   agendamentos Agendamento[]
-  servicos     Servico[]
   validacao_brinde ValidacaoBrinde[]
 
   deleted     Boolean   @default(false)
@@ -106,11 +105,17 @@ model Servico {
   id          String      @id @default(auto()) @map("_id") @db.ObjectId
   nome        String
   imageUrl    String?
-
-  prestador   Prestador   @relation(fields: [prestadorId], references: [id])
-  prestadorId String      @db.ObjectId
+  datasDisponiveis String[]
 
   agendamentos  Agendamento[]
+  prestadores   String[]
+
+  exigeVeiculo Boolean? @default(false)
+  precoCarroGrande Int
+  precoCarroPequeno Int
+  preco Int
+
+  opcoesAdicionais OpcaoAdicional[] @relation("ServicoOpcoesAdicionais")
 
   ativo       Boolean     @default(true)
   deleted     Boolean     @default(false)
@@ -118,6 +123,26 @@ model Servico {
 
   @@map("servicos")
 }
+
+model OpcaoAdicional {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  nome        String
+  value       Int
+  servico     Servico? @relation("ServicoOpcoesAdicionais", fields: [servicoId], references: [id])
+  servicoId   String   @db.ObjectId
+
+  @@map("opcoes_adicionais")
+}
+
+model HorariosDisponiveis {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  horario   String
+  prestadorId   String
+
+
+  @@map("horarios_disponiveis")
+}
+
 
 model Agendamento {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId

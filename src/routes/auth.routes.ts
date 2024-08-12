@@ -54,6 +54,13 @@ import { FetchVehicleController } from '../controllers/FetchVehicleController'
 import { FetchVehiclesController } from '../controllers/FetchVehiclesController'
 import { DeleteVehicleController } from '../controllers/DeleteVehicleController'
 
+import { CreateProductController } from '../controllers/CreateProductController'
+import { FetchProductsController } from '../controllers/FetchProductsController'
+import { DeleteProductController } from '../controllers/DeleteProductController'
+
+import { FetchUserProductsController } from '../controllers/FetchUserProductsController'
+import { FetchProductPrestadoresController } from '../controllers/FetchProductPrestadoresController'
+
 const authRoutes = Router()
 
 const verifyAuthMatriculaController = new VerifyAuthMatriculaController()
@@ -107,6 +114,14 @@ const updateVehicleController = new UpdateVehicleController()
 const fetchVehicleController = new FetchVehicleController()
 const fetchVehiclesController = new FetchVehiclesController()
 const deleteVehicleController = new DeleteVehicleController()
+
+const createProductController = new CreateProductController()
+const fetchProductsController = new FetchProductsController()
+const deleteProductController = new DeleteProductController()
+
+const fetchUserProductsController = new FetchUserProductsController()
+const fetchProductPrestadoresController =
+  new FetchProductPrestadoresController()
 
 authRoutes.post('/admin/users', ensureIsAdmin, createUserController.handle)
 authRoutes.put(
@@ -285,4 +300,28 @@ authRoutes.get(
   fetchVehicleController.handle,
 )
 authRoutes.get('/admin/veiculos', ensureIsAdmin, fetchVehiclesController.handle)
+
+authRoutes.post(
+  '/admin/servicos',
+  ensureIsAdmin,
+  createProductController.handle,
+)
+authRoutes.get('/admin/servicos', ensureIsAdmin, fetchProductsController.handle)
+authRoutes.delete(
+  '/admin/servicos/:produtoId',
+  ensureIsAdmin,
+  deleteProductController.handle,
+)
+
+authRoutes.get(
+  '/servicos',
+  ensureAuthenticated,
+  fetchUserProductsController.handle,
+)
+authRoutes.get(
+  '/servicos/:produtoId/prestadores',
+  ensureAuthenticated,
+  fetchProductPrestadoresController.handle,
+)
+
 export { authRoutes }
