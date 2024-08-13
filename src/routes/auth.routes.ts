@@ -61,6 +61,11 @@ import { DeleteProductController } from '../controllers/DeleteProductController'
 import { FetchUserProductsController } from '../controllers/FetchUserProductsController'
 import { FetchProductPrestadoresController } from '../controllers/FetchProductPrestadoresController'
 
+import { CreateAgendamentoController } from '../controllers/CreateAgendamentoController'
+import { FetchUserAgendamentosController } from '../controllers/FetchUserAgendamentosController'
+
+import { FetchAgendamentosController } from '../controllers/FetchAgendamentosController'
+
 const authRoutes = Router()
 
 const verifyAuthMatriculaController = new VerifyAuthMatriculaController()
@@ -122,6 +127,11 @@ const deleteProductController = new DeleteProductController()
 const fetchUserProductsController = new FetchUserProductsController()
 const fetchProductPrestadoresController =
   new FetchProductPrestadoresController()
+
+const createAgendamentoController = new CreateAgendamentoController()
+const fetchUserAgendamentosController = new FetchUserAgendamentosController()
+
+const fetchAgendamentosController = new FetchAgendamentosController()
 
 authRoutes.post('/admin/users', ensureIsAdmin, createUserController.handle)
 authRoutes.put(
@@ -324,4 +334,20 @@ authRoutes.get(
   fetchProductPrestadoresController.handle,
 )
 
+authRoutes.post(
+  '/agendamento',
+  ensureAuthenticated,
+  createAgendamentoController.handle,
+)
+authRoutes.get(
+  '/agendamentos',
+  ensureAuthenticated,
+  fetchUserAgendamentosController.handle,
+)
+
+authRoutes.get(
+  '/admin/agendamentos',
+  ensureIsAdmin,
+  fetchAgendamentosController.handle,
+)
 export { authRoutes }

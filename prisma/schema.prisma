@@ -130,19 +130,10 @@ model OpcaoAdicional {
   value       Int
   servico     Servico? @relation("ServicoOpcoesAdicionais", fields: [servicoId], references: [id])
   servicoId   String   @db.ObjectId
-
+  
+  agendamentos Agendamento[]
   @@map("opcoes_adicionais")
 }
-
-model HorariosDisponiveis {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  horario   String
-  prestadorId   String
-
-
-  @@map("horarios_disponiveis")
-}
-
 
 model Agendamento {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
@@ -155,9 +146,18 @@ model Agendamento {
   servico     Servico  @relation(fields: [servicoId], references: [id])
   servicoId   String    @db.ObjectId
 
+  opcaoAdicional OpcaoAdicional? @relation(fields: [opcaoAdicionalId], references: [id])
+  opcaoAdicionalId String?    @db.ObjectId
+
+  veiculo Veiculo? @relation(fields: [veiculoId], references: [id])
+  veiculoId String?    @db.ObjectId
+
+  valor       Int
+
   qrcode      String?
-  data        DateTime
+  data        String
   ativo       Boolean   @default(true)
+
 
   deleted     Boolean   @default(false)
   created_at  DateTime  @default(now())
@@ -172,6 +172,8 @@ model Veiculo{
    usuarioId   String    @db.ObjectId
    placa       String
    categoria   String
+
+   agendamentos Agendamento[]
 
    deleted     Boolean   @default(false)
    created_at  DateTime  @default(now())
