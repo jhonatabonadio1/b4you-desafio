@@ -62,6 +62,8 @@ const ValidaQrCodeController_1 = require("../controllers/ValidaQrCodeController"
 const FetchStoreValidationsController_1 = require("../controllers/FetchStoreValidationsController");
 const FetchAvaliacoesPendentesController_1 = require("../controllers/FetchAvaliacoesPendentesController");
 const AvaliaAtendimentoController_1 = require("../controllers/AvaliaAtendimentoController");
+const FetchStoreAvaliacoesController_1 = require("../controllers/FetchStoreAvaliacoesController");
+const FetchAdminAvaliacoesController_1 = require("../controllers/FetchAdminAvaliacoesController");
 const authRoutes = (0, express_1.Router)();
 exports.authRoutes = authRoutes;
 const verifyAuthMatriculaController = new VerifyAuthMatriculaController_1.VerifyAuthMatriculaController();
@@ -122,6 +124,8 @@ const validaQrCodeController = new ValidaQrCodeController_1.ValidaQrCodeControll
 const fetchStoreValidationsController = new FetchStoreValidationsController_1.FetchStoreValidationsController();
 const fetchAvaliacoesPendentesController = new FetchAvaliacoesPendentesController_1.FetchAvaliacoesPendentesController();
 const avaliaAtendimentoController = new AvaliaAtendimentoController_1.AvaliaAtendimentoController();
+const fetchStoreAvaliacoesController = new FetchStoreAvaliacoesController_1.FetchStoreAvaliacoesController();
+const fetchAdminAvaliacoesController = new FetchAdminAvaliacoesController_1.FetchAdminAvaliacoesController();
 authRoutes.post('/admin/users', ensureIsAdmin_1.ensureIsAdmin, createUserController.handle);
 authRoutes.put('/admin/users/:usuarioId', ensureIsAdmin_1.ensureIsAdmin, updateUserController.handle);
 authRoutes.get('/admin/users/:usuarioId', ensureIsAdmin_1.ensureIsAdmin, fetchUserController.handle);
@@ -180,3 +184,5 @@ authRoutes.post('/validaQrCode', ensureIsAuthenticated_1.ensureAuthenticated, va
 authRoutes.get('/validacoes', ensureIsAuthenticated_1.ensureAuthenticated, fetchStoreValidationsController.handle);
 authRoutes.get('/avaliacoes', ensureIsAuthenticated_1.ensureAuthenticated, fetchAvaliacoesPendentesController.handle);
 authRoutes.post('/avaliaLoja/:id', ensureIsAuthenticated_1.ensureAuthenticated, avaliaAtendimentoController.handle);
+authRoutes.get('/store/avaliacoes', ensureIsAuthenticated_1.ensureAuthenticated, fetchStoreAvaliacoesController.handle);
+authRoutes.get('/admin/avaliacoes', ensureIsAdmin_1.ensureIsAdmin, fetchAdminAvaliacoesController.handle);

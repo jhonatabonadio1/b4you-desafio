@@ -78,6 +78,9 @@ import { FetchAvaliacoesPendentesController } from '../controllers/FetchAvaliaco
 
 import { AvaliaAtendimentoController } from '../controllers/AvaliaAtendimentoController'
 
+import { FetchStoreAvaliacoesController } from '../controllers/FetchStoreAvaliacoesController'
+import { FetchAdminAvaliacoesController } from '../controllers/FetchAdminAvaliacoesController'
+
 const authRoutes = Router()
 
 const verifyAuthMatriculaController = new VerifyAuthMatriculaController()
@@ -161,6 +164,9 @@ const fetchAvaliacoesPendentesController =
   new FetchAvaliacoesPendentesController()
 
 const avaliaAtendimentoController = new AvaliaAtendimentoController()
+
+const fetchStoreAvaliacoesController = new FetchStoreAvaliacoesController()
+const fetchAdminAvaliacoesController = new FetchAdminAvaliacoesController()
 
 authRoutes.post('/admin/users', ensureIsAdmin, createUserController.handle)
 authRoutes.put(
@@ -429,4 +435,16 @@ authRoutes.post(
   '/avaliaLoja/:id',
   ensureAuthenticated,
   avaliaAtendimentoController.handle,
+)
+
+authRoutes.get(
+  '/store/avaliacoes',
+  ensureAuthenticated,
+  fetchStoreAvaliacoesController.handle,
+)
+
+authRoutes.get(
+  '/admin/avaliacoes',
+  ensureIsAdmin,
+  fetchAdminAvaliacoesController.handle,
 )
