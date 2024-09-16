@@ -27,6 +27,7 @@ model Usuario {
   agendamentos  Agendamento[]
   validacao_brinde ValidacaoBrinde[]
   veiculos  Veiculo[]
+  validacao_agendamento ValidacaoAgendamento[]
 
   deleted     Boolean   @default(false)
   created_at  DateTime  @default(now())
@@ -53,6 +54,7 @@ model Prestador {
 
   agendamentos Agendamento[]
   validacao_brinde ValidacaoBrinde[]
+  validacao_agendamento ValidacaoAgendamento[]
 
   deleted     Boolean   @default(false)
   created_at  DateTime  @default(now())
@@ -111,9 +113,9 @@ model Servico {
   prestadores   String[]
 
   exigeVeiculo Boolean? @default(false)
-  precoCarroGrande Int
-  precoCarroPequeno Int
-  preco Int
+  precoCarroGrande Int?
+  precoCarroPequeno Int?
+  preco Int?
 
   opcoesAdicionais OpcaoAdicional[] @relation("ServicoOpcoesAdicionais")
 
@@ -127,12 +129,35 @@ model Servico {
 model OpcaoAdicional {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   nome        String
-  value       Int
+  value       Int?
   servico     Servico? @relation("ServicoOpcoesAdicionais", fields: [servicoId], references: [id])
   servicoId   String   @db.ObjectId
   
-  agendamentos Agendamento[]
   @@map("opcoes_adicionais")
+}
+
+model ValidacaoAgendamento {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  usuario        Usuario       @relation(fields: [usuarioId], references: [id])
+  usuarioId      String        @db.ObjectId
+
+  prestador      Prestador     @relation(fields: [prestadorId], references: [id])
+  prestadorId    String        @db.ObjectId
+
+  estrelas       Int?        
+  message        String?
+  avaliado       Boolean?      @default(false)
+  dataAvaliacao  DateTime?       
+
+  bomAtendimento  Boolean?
+  servicoCompleto Boolean?
+
+  agendamento    Agendamento   @relation(fields: [agendamentoId], references: [id])
+  agendamentoId  String        @db.ObjectId
+
+  created_at     DateTime      @default(now())
+
+  @@map("validacao_agendamentos")
 }
 
 model Agendamento {
@@ -146,18 +171,18 @@ model Agendamento {
   servico     Servico  @relation(fields: [servicoId], references: [id])
   servicoId   String    @db.ObjectId
 
-  opcaoAdicional OpcaoAdicional? @relation(fields: [opcaoAdicionalId], references: [id])
-  opcaoAdicionalId String?    @db.ObjectId
+  opcoesAdicionais String[]
 
   veiculo Veiculo? @relation(fields: [veiculoId], references: [id])
   veiculoId String?    @db.ObjectId
 
-  valor       Int
+  valor       Int?
 
   qrcode      String?
-  data        String
+  data        DateTime
   ativo       Boolean   @default(true)
 
+  validacao_agendamento ValidacaoAgendamento[]
 
   deleted     Boolean   @default(false)
   created_at  DateTime  @default(now())

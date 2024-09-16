@@ -5,13 +5,13 @@ interface IRequest {
   imageUrl: string
   prestadores: string[]
   datasDisponiveis: string[]
-  preco: number
+  preco?: number
   precoCarroGrande?: number
   precoCarroPequeno?: number
   ativo: boolean
   opcoesAdicionais: {
     nome: string
-    value: number
+    value?: number
   }[]
   exigeVeiculo: boolean
 }
@@ -22,9 +22,9 @@ class CreateProductService {
     imageUrl,
     prestadores,
     datasDisponiveis,
-    preco,
-    precoCarroGrande,
-    precoCarroPequeno,
+    // preco,
+    // precoCarroGrande,
+    // precoCarroPequeno,
     ativo,
     opcoesAdicionais,
     exigeVeiculo,
@@ -41,15 +41,11 @@ class CreateProductService {
       throw new Error('Selecione ao menos 1 data')
     }
 
-    if (!preco) {
-      throw new Error('Preço é obrigatório')
-    }
-
-    const precoCents = preco * 100
-    const precoCarroGrandeCents = precoCarroGrande ? precoCarroGrande * 100 : 0
-    const precoCarroPequenoCents = precoCarroPequeno
-      ? precoCarroPequeno * 100
-      : 0
+    // const precoCents = preco * 100
+    // const precoCarroGrandeCents = precoCarroGrande ? precoCarroGrande * 100 : 0
+    // const precoCarroPequenoCents = precoCarroPequeno
+    //  ? precoCarroPequeno * 100
+    //  : 0
 
     const product = await prismaClient.servico.create({
       data: {
@@ -57,9 +53,6 @@ class CreateProductService {
         imageUrl,
         prestadores,
         datasDisponiveis,
-        preco: precoCents,
-        precoCarroGrande: precoCarroGrandeCents,
-        precoCarroPequeno: precoCarroPequenoCents,
         exigeVeiculo,
         ativo,
         created_at: new Date(),
@@ -71,7 +64,6 @@ class CreateProductService {
 
     if (opcoesAdicionais.length > 0) {
       for (const opcao of opcoesAdicionais) {
-        const valueCents = opcao.value * 100
         await prismaClient.opcaoAdicional.create({
           data: {
             servico: {
@@ -80,7 +72,6 @@ class CreateProductService {
               },
             },
             nome: opcao.nome,
-            value: valueCents,
           },
         })
       }

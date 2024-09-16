@@ -3,10 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateAgendamentoService = void 0;
 const prismaClient_1 = require("../database/prismaClient");
 class CreateAgendamentoService {
-    async execute({ userId, servicoId, horario, prestadorId, opcaoAdicionalId, veiculoId, }) {
+    async execute({ userId, servicoId, horario, prestadorId, opcoesAdicionais, veiculoId, }) {
         if (!servicoId || !prestadorId || !horario) {
             throw new Error('ID do serviço, ID do prestador e horário são obrigatórios');
         }
+        const horarioDate = new Date(horario);
         const [findUser, findPrestador, findServico] = await Promise.all([
             prismaClient_1.prismaClient.usuario.findFirst({ where: { id: userId, deleted: false } }),
             prismaClient_1.prismaClient.prestador.findFirst({
@@ -32,7 +33,7 @@ class CreateAgendamentoService {
             where: {
                 servicoId,
                 prestadorId,
-                data: horario,
+                data: horarioDate,
                 deleted: false,
                 ativo: true,
             },
@@ -40,7 +41,7 @@ class CreateAgendamentoService {
         if (verificaHorarioJaReservado) {
             throw new Error('Horário já reservado.');
         }
-        let valor = findServico.preco;
+        // const valor = findServico.preco
         if (findServico.exigeVeiculo) {
             if (!veiculoId) {
                 throw new Error('ID do veículo é obrigatório');
@@ -51,30 +52,29 @@ class CreateAgendamentoService {
             if (!buscaVeiculo) {
                 throw new Error('Veículo não encontrado.');
             }
-            valor =
-                buscaVeiculo.categoria === 'grande'
-                    ? findServico.precoCarroGrande
-                    : findServico.precoCarroPequeno;
+            /** valor =
+              buscaVeiculo.categoria === 'grande'
+                ? findServico.precoCarroGrande
+                : findServico.precoCarroPequeno**/
         }
-        if (opcaoAdicionalId) {
-            const findOpcao = await prismaClient_1.prismaClient.opcaoAdicional.findFirst({
-                where: { id: opcaoAdicionalId },
-            });
-            if (!findOpcao) {
-                throw new Error('Opção adicional não encontrada');
+        if (opcoesAdicionais) {
+            for (const id of opcoesAdicionais) {
+                const findOpcao = await prismaClient_1.prismaClient.opcaoAdicional.findFirst({
+                    where: { id },
+                });
+                // valor += findOpcao.value
+                if (!findOpcao) {
+                    throw new Error('Opção adicional não encontrada');
+                }
             }
-            valor += findOpcao.value;
         }
         const agendamento = await prismaClient_1.prismaClient.agendamento.create({
             data: {
-                data: horario,
+                data: horarioDate,
                 ativo: true,
-                valor,
                 veiculo: veiculoId ? { connect: { id: veiculoId } } : undefined,
                 usuario: { connect: { id: userId } },
-                opcaoAdicional: opcaoAdicionalId
-                    ? { connect: { id: opcaoAdicionalId } }
-                    : undefined,
+                opcoesAdicionais,
                 prestador: { connect: { id: prestadorId } },
                 servico: { connect: { id: servicoId } },
             },

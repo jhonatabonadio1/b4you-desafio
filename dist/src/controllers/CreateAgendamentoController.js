@@ -5,7 +5,7 @@ const CreateAgendamentoService_1 = require("../services/CreateAgendamentoService
 class CreateAgendamentoController {
     async handle(request, response) {
         const { userId } = request;
-        const { servicoId, horario, prestadorId, veiculoId, opcaoAdicionalId } = request.body;
+        const { servicoId, horario, prestadorId, veiculoId, opcoesAdicionais } = request.body;
         const createBrindeService = new CreateAgendamentoService_1.CreateAgendamentoService();
         const brinde = await createBrindeService.execute({
             userId,
@@ -13,7 +13,7 @@ class CreateAgendamentoController {
             horario,
             veiculoId,
             prestadorId,
-            opcaoAdicionalId,
+            opcoesAdicionais,
         });
         return response.json(brinde);
     }

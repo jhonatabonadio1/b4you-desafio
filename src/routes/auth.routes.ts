@@ -65,6 +65,18 @@ import { CreateAgendamentoController } from '../controllers/CreateAgendamentoCon
 import { FetchUserAgendamentosController } from '../controllers/FetchUserAgendamentosController'
 
 import { FetchAgendamentosController } from '../controllers/FetchAgendamentosController'
+import { DeleteAgendamentoController } from '../controllers/DeleteAgendamentoController'
+import { DeleteAgendamentoUserController } from '../controllers/DeleteAgendamentoUserController'
+
+import { FetchStoreAgendamentosController } from '../controllers/FetchStoreAgendamentosController'
+import { DeleteAgendamentoStoreController } from '../controllers/DeleteAgendamentoStoreController'
+import { ReadQrCodeController } from '../controllers/ReadQrCodeController'
+import { ValidaQrCodeController } from '../controllers/ValidaQrCodeController'
+
+import { FetchStoreValidationsController } from '../controllers/FetchStoreValidationsController'
+import { FetchAvaliacoesPendentesController } from '../controllers/FetchAvaliacoesPendentesController'
+
+import { AvaliaAtendimentoController } from '../controllers/AvaliaAtendimentoController'
 
 const authRoutes = Router()
 
@@ -131,7 +143,24 @@ const fetchProductPrestadoresController =
 const createAgendamentoController = new CreateAgendamentoController()
 const fetchUserAgendamentosController = new FetchUserAgendamentosController()
 
+const fetchStoreAgendamentosController = new FetchStoreAgendamentosController()
+
 const fetchAgendamentosController = new FetchAgendamentosController()
+const deleteAgendamentoController = new DeleteAgendamentoController()
+
+const deleteAgendamentoUserController = new DeleteAgendamentoUserController()
+const deleteAgendamentoStoreController = new DeleteAgendamentoStoreController()
+
+const readQrCodeController = new ReadQrCodeController()
+
+const validaQrCodeController = new ValidaQrCodeController()
+
+const fetchStoreValidationsController = new FetchStoreValidationsController()
+
+const fetchAvaliacoesPendentesController =
+  new FetchAvaliacoesPendentesController()
+
+const avaliaAtendimentoController = new AvaliaAtendimentoController()
 
 authRoutes.post('/admin/users', ensureIsAdmin, createUserController.handle)
 authRoutes.put(
@@ -344,10 +373,60 @@ authRoutes.get(
   ensureAuthenticated,
   fetchUserAgendamentosController.handle,
 )
+authRoutes.delete(
+  '/agendamentos/:id',
+  ensureAuthenticated,
+  deleteAgendamentoUserController.handle,
+)
+authRoutes.get(
+  '/store/agendamentos',
+  ensureAuthenticated,
+  fetchStoreAgendamentosController.handle,
+)
+authRoutes.delete(
+  '/store/agendamentos/:id',
+  ensureAuthenticated,
+  deleteAgendamentoStoreController.handle,
+)
 
 authRoutes.get(
   '/admin/agendamentos',
   ensureIsAdmin,
   fetchAgendamentosController.handle,
 )
+authRoutes.delete(
+  '/admin/agendamentos/:id',
+  ensureIsAdmin,
+  deleteAgendamentoController.handle,
+)
+
+authRoutes.get(
+  '/dadosAgendamento',
+  ensureAuthenticated,
+  readQrCodeController.handle,
+)
+
+authRoutes.post(
+  '/validaQrCode',
+  ensureAuthenticated,
+  validaQrCodeController.handle,
+)
+
+authRoutes.get(
+  '/validacoes',
+  ensureAuthenticated,
+  fetchStoreValidationsController.handle,
+)
 export { authRoutes }
+
+authRoutes.get(
+  '/avaliacoes',
+  ensureAuthenticated,
+  fetchAvaliacoesPendentesController.handle,
+)
+
+authRoutes.post(
+  '/avaliaLoja/:id',
+  ensureAuthenticated,
+  avaliaAtendimentoController.handle,
+)

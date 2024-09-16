@@ -4,7 +4,8 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import { authRoutes } from './routes/auth.routes'
 
-import './jobs/cronJobs'
+import './jobs/verificacaoBrindes'
+import './jobs/desativarAgendamentos'
 
 import helmet from 'helmet'
 

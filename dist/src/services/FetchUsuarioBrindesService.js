@@ -47,12 +47,8 @@ class FetchUsuarioBrindesService {
         for (const brinde of buscaBrindes) {
             const verificaBrindeJaValidado = await prismaClient_1.prismaClient.validacaoBrinde.findFirst({
                 where: {
-                    usuario: {
-                        id: user.id,
-                    },
-                    brinde: {
-                        id: brinde.id,
-                    },
+                    brindeId: brinde.id,
+                    usuarioId: user.id,
                 },
             });
             if (!verificaBrindeJaValidado) {
@@ -67,7 +63,7 @@ class FetchUsuarioBrindesService {
                 }
             }
         }
-        const usuariosBrindeEx = excludeArray(buscaBrindes, [
+        const usuariosBrindeEx = excludeArray(usuariosBrindes, [
             'prestadoresEspecificos',
             'usuariosEspecificos',
             'todosUsuarios',

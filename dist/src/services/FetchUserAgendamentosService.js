@@ -11,15 +11,27 @@ class FetchUserAgendamentosService {
             throw new Error('Usuário não encontrado');
         }
         const findAgendamnetos = await prismaClient_1.prismaClient.agendamento.findMany({
-            where: { usuario: { id: findUser.id }, ativo: true, deleted: false },
+            where: {
+                usuario: { id: findUser.id },
+                ativo: true,
+                deleted: false,
+            },
             include: {
                 prestador: true,
                 servico: true,
                 veiculo: true,
-                opcaoAdicional: true,
             },
         });
-        return findAgendamnetos;
+        const agendamentosNaoValidados = [];
+        for (const agendamento of findAgendamnetos) {
+            const verificaAgendamentoJaValidado = await prismaClient_1.prismaClient.validacaoAgendamento.findFirst({
+                where: { agendamentoId: agendamento.id },
+            });
+            if (!verificaAgendamentoJaValidado) {
+                agendamentosNaoValidados.push(agendamento);
+            }
+        }
+        return agendamentosNaoValidados;
     }
 }
 exports.FetchUserAgendamentosService = FetchUserAgendamentosService;
