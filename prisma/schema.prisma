@@ -197,6 +197,8 @@ model Veiculo{
    usuarioId   String    @db.ObjectId
    placa       String
    categoria   String
+   marca       String?
+   modelo      String?
 
    agendamentos Agendamento[]
 

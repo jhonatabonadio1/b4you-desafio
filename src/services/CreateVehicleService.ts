@@ -4,11 +4,13 @@ interface IRequest {
   nome: string
   placa: string
   categoria: string
+  marca?: string
+  modelo?: string
   userId: string
 }
 
 class CreateVehicleService {
-  async execute({ nome, placa, categoria, userId }: IRequest) {
+  async execute({ nome, placa, categoria, marca, modelo, userId }: IRequest) {
     if (!placa) {
       throw new Error('Placa inválida.')
     }
@@ -60,6 +62,8 @@ class CreateVehicleService {
         nome,
         placa,
         categoria,
+        marca,
+        modelo,
         usuario: {
           connect: {
             id: findUser.id,

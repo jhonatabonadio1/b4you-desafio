@@ -80,6 +80,10 @@ import { AvaliaAtendimentoController } from '../controllers/AvaliaAtendimentoCon
 
 import { FetchStoreAvaliacoesController } from '../controllers/FetchStoreAvaliacoesController'
 import { FetchAdminAvaliacoesController } from '../controllers/FetchAdminAvaliacoesController'
+import { ChangeUserAvatarController } from '../controllers/ChangeUserAvatarController'
+
+import { FetchAdminValidacoesBrindesController } from '../controllers/FetchAdminValidacoesBrindeController'
+import { FetchAdminValidacoesController } from '../controllers/FetchAdminValidacoesController'
 
 const authRoutes = Router()
 
@@ -167,6 +171,12 @@ const avaliaAtendimentoController = new AvaliaAtendimentoController()
 
 const fetchStoreAvaliacoesController = new FetchStoreAvaliacoesController()
 const fetchAdminAvaliacoesController = new FetchAdminAvaliacoesController()
+
+const changeUserAvatarController = new ChangeUserAvatarController()
+
+const fetchAdminValidacoesBrindesController =
+  new FetchAdminValidacoesBrindesController()
+const fetchAdminValidacoesController = new FetchAdminValidacoesController()
 
 authRoutes.post('/admin/users', ensureIsAdmin, createUserController.handle)
 authRoutes.put(
@@ -447,4 +457,22 @@ authRoutes.get(
   '/admin/avaliacoes',
   ensureIsAdmin,
   fetchAdminAvaliacoesController.handle,
+)
+
+authRoutes.get(
+  '/admin/validacoes',
+  ensureIsAdmin,
+  fetchAdminValidacoesController.handle,
+)
+
+authRoutes.get(
+  '/admin/validacoesBrindes',
+  ensureIsAdmin,
+  fetchAdminValidacoesBrindesController.handle,
+)
+
+authRoutes.put(
+  '/trocaAvatar',
+  ensureAuthenticated,
+  changeUserAvatarController.handle,
 )

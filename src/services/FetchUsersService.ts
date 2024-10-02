@@ -15,7 +15,7 @@ function exclude<Prestador, Key extends keyof Prestador>(
 }
 
 class FetchUsersService {
-  async execute({ page, search }: IUser, pageSize = 2) {
+  async execute({ page, search }: IUser, pageSize = 10) {
     const baseWhere = { deleted: false }
     const searchWhere = search
       ? {
