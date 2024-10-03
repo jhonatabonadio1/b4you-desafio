@@ -1,4 +1,11 @@
 import { prismaClient } from '../database/prismaClient'
+import {
+  startOfMonth,
+  endOfMonth,
+  setDate,
+  addMonths,
+  isBefore,
+} from 'date-fns'
 
 interface IRequest {
   userId: string
@@ -52,6 +59,68 @@ class CreateAgendamentoService {
       throw new Error('Horário inexistente')
     }
 
+    const resetLimiteDia = findServico.diaResetLimite
+
+    if (findServico.usoMensal) {
+      if (opcoesAdicionais && opcoesAdicionais.length <= 0) {
+        // Data de hoje
+        const hoje = new Date()
+        // Definindo o dia 20 do mês atual
+        const diaVinteMesAtual = setDate(hoje, resetLimiteDia || 20)
+        // Definindo o dia 20 do próximo mês
+        const diaVinteProximoMes = setDate(
+          addMonths(hoje, 1),
+          resetLimiteDia || 20,
+        )
+
+        // Contagem de agendamentos do mês atual (para verificar o uso mensal)
+        const contagemAgendamento = await prismaClient.agendamento.count({
+          where: {
+            usuarioId: userId,
+            servicoId: findServico.id,
+            deleted: false,
+            // Verifica se o agendamento foi feito neste mês
+            created_at: {
+              gte: startOfMonth(hoje),
+              lte: endOfMonth(hoje),
+            },
+          },
+        })
+
+        // Verifica o último agendamento do usuário para o serviço
+        const ultimoAgendamento = await prismaClient.agendamento.findFirst({
+          where: {
+            usuarioId: userId,
+            servicoId: findServico.id,
+            deleted: false,
+          },
+          orderBy: {
+            created_at: 'desc', // Ordena pela data mais recente
+          },
+        })
+
+        // Verifica se o número de agendamentos excede o usoMensal
+        if (contagemAgendamento >= findServico.usoMensal) {
+          if (ultimoAgendamento) {
+            const dataUltimoAgendamento = ultimoAgendamento.created_at
+
+            // Se o último agendamento foi antes do dia 20 deste mês
+            if (isBefore(dataUltimoAgendamento, diaVinteMesAtual)) {
+              if (isBefore(hoje, diaVinteProximoMes)) {
+                // O usuário só poderá agendar a partir do dia 20 do próximo mês
+                throw new Error('Limite mensal atingido')
+              }
+            } else {
+              // Se o último agendamento foi após o dia 20 deste mês
+              if (isBefore(hoje, diaVinteProximoMes)) {
+                throw new Error('Limite mensal atingido')
+              }
+            }
+          }
+        }
+      }
+    }
+
     const verificaHorarioJaReservado = await prismaClient.agendamento.findFirst(
       {
         where: {
@@ -99,6 +168,72 @@ class CreateAgendamentoService {
 
         if (!findOpcao) {
           throw new Error('Opção adicional não encontrada')
+        }
+
+        const limiteUsoMensal = findOpcao.usoMensal
+
+        if (limiteUsoMensal) {
+          // Data de hoje
+          const hoje = new Date()
+          // Definindo o dia 20 do mês atual
+          const diaVinteMesAtual = setDate(hoje, resetLimiteDia || 20)
+          // Definindo o dia 20 do próximo mês
+          const diaVinteProximoMes = setDate(
+            addMonths(hoje, 1),
+            resetLimiteDia || 20,
+          )
+
+          // Contagem de agendamentos do mês atual (para verificar o uso mensal)
+          const contagemAgendamento = await prismaClient.agendamento.count({
+            where: {
+              usuarioId: userId,
+              servicoId: findServico.id,
+              opcoesAdicionais: {
+                has: id,
+              },
+              deleted: false,
+              // Verifica se o agendamento foi feito neste mês
+              created_at: {
+                gte: startOfMonth(hoje),
+                lte: endOfMonth(hoje),
+              },
+            },
+          })
+
+          // Verifica o último agendamento do usuário para o serviço
+          const ultimoAgendamento = await prismaClient.agendamento.findFirst({
+            where: {
+              usuarioId: userId,
+              servicoId: findServico.id,
+              opcoesAdicionais: {
+                has: id,
+              },
+              deleted: false,
+            },
+            orderBy: {
+              created_at: 'desc', // Ordena pela data mais recente
+            },
+          })
+
+          // Verifica se o número de agendamentos excede o usoMensal
+          if (contagemAgendamento >= limiteUsoMensal) {
+            if (ultimoAgendamento) {
+              const dataUltimoAgendamento = ultimoAgendamento.created_at
+
+              // Se o último agendamento foi antes do dia 20 deste mês
+              if (isBefore(dataUltimoAgendamento, diaVinteMesAtual)) {
+                if (isBefore(hoje, diaVinteProximoMes)) {
+                  // O usuário só poderá agendar a partir do dia 20 do próximo mês
+                  throw new Error('Limite mensal atingido')
+                }
+              } else {
+                // Se o último agendamento foi após o dia 20 deste mês
+                if (isBefore(hoje, diaVinteProximoMes)) {
+                  throw new Error('Limite mensal atingido')
+                }
+              }
+            }
+          }
         }
       }
     }

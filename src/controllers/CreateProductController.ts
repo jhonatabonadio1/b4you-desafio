@@ -9,10 +9,12 @@ class CreateProductController {
       prestadores,
       datasDisponiveis,
       preco,
+      usoMensal,
       precoCarroGrande,
       precoCarroPequeno,
       ativo,
       opcoesAdicionais,
+      diaResetLimite,
       exigeVeiculo,
     } = request.body
 
@@ -24,10 +26,12 @@ class CreateProductController {
       prestadores,
       datasDisponiveis,
       preco,
+      usoMensal,
       precoCarroGrande,
       precoCarroPequeno,
       ativo,
       opcoesAdicionais,
+      diaResetLimite,
       exigeVeiculo,
     })
 

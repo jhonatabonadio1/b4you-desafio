@@ -9,11 +9,13 @@ interface IRequest {
   precoCarroGrande?: number
   precoCarroPequeno?: number
   ativo: boolean
+  diaResetLimite?: number
   opcoesAdicionais: {
     nome: string
-    value?: number
+    usoMensal?: number
   }[]
   exigeVeiculo: boolean
+  usoMensal?: number
 }
 
 class CreateProductService {
@@ -22,10 +24,12 @@ class CreateProductService {
     imageUrl,
     prestadores,
     datasDisponiveis,
+    diaResetLimite,
     // preco,
     // precoCarroGrande,
     // precoCarroPequeno,
     ativo,
+    usoMensal,
     opcoesAdicionais,
     exigeVeiculo,
   }: IRequest) {
@@ -52,6 +56,8 @@ class CreateProductService {
         nome,
         imageUrl,
         prestadores,
+        usoMensal,
+        diaResetLimite,
         datasDisponiveis,
         exigeVeiculo,
         ativo,
@@ -72,6 +78,7 @@ class CreateProductService {
               },
             },
             nome: opcao.nome,
+            usoMensal: opcao.usoMensal,
           },
         })
       }

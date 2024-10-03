@@ -117,7 +117,11 @@ model Servico {
   precoCarroPequeno Int?
   preco Int?
 
+  diaResetLimite  Int    @default(20)
+
   opcoesAdicionais OpcaoAdicional[] @relation("ServicoOpcoesAdicionais")
+
+  usoMensal   Int?
 
   ativo       Boolean     @default(true)
   deleted     Boolean     @default(false)
@@ -130,6 +134,9 @@ model OpcaoAdicional {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   nome        String
   value       Int?
+
+  usoMensal   Int?
+
   servico     Servico? @relation("ServicoOpcoesAdicionais", fields: [servicoId], references: [id])
   servicoId   String   @db.ObjectId
   
