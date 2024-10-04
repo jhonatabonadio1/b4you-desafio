@@ -186,8 +186,10 @@ model Agendamento {
   valor       Int?
 
   qrcode      String?
-  data        DateTime
+  data        DateTime?
   ativo       Boolean   @default(true)
+
+  semValidade   Boolean?  @default(false)
 
   validacao_agendamento ValidacaoAgendamento[]
 

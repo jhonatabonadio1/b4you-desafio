@@ -85,6 +85,8 @@ import { ChangeUserAvatarController } from '../controllers/ChangeUserAvatarContr
 import { FetchAdminValidacoesBrindesController } from '../controllers/FetchAdminValidacoesBrindeController'
 import { FetchAdminValidacoesController } from '../controllers/FetchAdminValidacoesController'
 
+import { GetServiceInfoController } from '../controllers/GetServiceInfoController'
+
 const authRoutes = Router()
 
 const verifyAuthMatriculaController = new VerifyAuthMatriculaController()
@@ -177,6 +179,8 @@ const changeUserAvatarController = new ChangeUserAvatarController()
 const fetchAdminValidacoesBrindesController =
   new FetchAdminValidacoesBrindesController()
 const fetchAdminValidacoesController = new FetchAdminValidacoesController()
+
+const getServiceInfoController = new GetServiceInfoController()
 
 authRoutes.post('/admin/users', ensureIsAdmin, createUserController.handle)
 authRoutes.put(
@@ -475,4 +479,16 @@ authRoutes.put(
   '/trocaAvatar',
   ensureAuthenticated,
   changeUserAvatarController.handle,
+)
+
+authRoutes.get(
+  '/admin/servico/:id',
+  ensureIsAdmin,
+  getServiceInfoController.handle,
+)
+
+authRoutes.get(
+  '/admin/servicos/:produtoId/prestadores',
+  ensureIsAdmin,
+  fetchProductPrestadoresController.handle,
 )
