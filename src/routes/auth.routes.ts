@@ -86,6 +86,8 @@ import { FetchAdminValidacoesBrindesController } from '../controllers/FetchAdmin
 import { FetchAdminValidacoesController } from '../controllers/FetchAdminValidacoesController'
 
 import { GetServiceInfoController } from '../controllers/GetServiceInfoController'
+import { CreateAdminAgendamentoController } from '../controllers/CreateAdminAgendamentoController'
+import { FetchAdminUserVehiclesController } from '../controllers/FetchAdminUserVehiclesController'
 
 const authRoutes = Router()
 
@@ -181,6 +183,9 @@ const fetchAdminValidacoesBrindesController =
 const fetchAdminValidacoesController = new FetchAdminValidacoesController()
 
 const getServiceInfoController = new GetServiceInfoController()
+
+const createAdminAgendamentoController = new CreateAdminAgendamentoController()
+const fetchAdminUserVehiclesController = new FetchAdminUserVehiclesController()
 
 authRoutes.post('/admin/users', ensureIsAdmin, createUserController.handle)
 authRoutes.put(
@@ -491,4 +496,16 @@ authRoutes.get(
   '/admin/servicos/:produtoId/prestadores',
   ensureIsAdmin,
   fetchProductPrestadoresController.handle,
+)
+
+authRoutes.post(
+  '/admin/agendamentos',
+  ensureIsAdmin,
+  createAdminAgendamentoController.handle,
+)
+
+authRoutes.get(
+  '/admin/usuarios/:userId/veiculos',
+  ensureIsAdmin,
+  fetchAdminUserVehiclesController.handle,
 )

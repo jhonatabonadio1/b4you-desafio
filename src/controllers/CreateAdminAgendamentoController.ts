@@ -4,7 +4,7 @@ import { CreateAdminAgendamentoService } from '../services/CreateAdminAgendament
 class CreateAdminAgendamentoController {
   async handle(request: Request, response: Response) {
     const {
-      codMembro,
+      userId,
       servicoId,
       semValidade,
       horario,
@@ -16,7 +16,7 @@ class CreateAdminAgendamentoController {
     const createBrindeService = new CreateAdminAgendamentoService()
 
     const brinde = await createBrindeService.execute({
-      codMembro,
+      userId,
       servicoId,
       semValidade,
       horario,

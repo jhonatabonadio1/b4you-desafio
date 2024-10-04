@@ -1,7 +1,7 @@
 import { prismaClient } from '../database/prismaClient'
 
 interface IRequest {
-  codMembro: string
+  userId: string
   servicoId: string
   horario: string
   prestadorId: string
@@ -12,7 +12,7 @@ interface IRequest {
 
 class CreateAdminAgendamentoService {
   async execute({
-    codMembro,
+    userId,
     servicoId,
     horario,
     semValidade,
@@ -28,11 +28,11 @@ class CreateAdminAgendamentoService {
       throw new Error('Horário é obrigatório')
     }
 
-    const horarioDate = new Date(horario)
+    const horarioDate = horario && new Date(horario)
 
     const [findUser, findPrestador, findServico] = await Promise.all([
       prismaClient.usuario.findFirst({
-        where: { matricula: codMembro, deleted: false },
+        where: { id: userId, deleted: false },
       }),
       prismaClient.prestador.findFirst({
         where: { id: prestadorId, deleted: false, ativo: true },

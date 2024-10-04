@@ -62,6 +62,7 @@ class FetchAgendamentosService {
       select: {
         id: true,
         ativo: true,
+        semValidade: true,
         veiculo: {
           select: {
             placa: true,

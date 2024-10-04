@@ -33,11 +33,18 @@ class FetchUserProductsService {
       // Filtra os horários disponíveis, excluindo aqueles que já foram reservados
       const horariosFiltrados = horariosDisponiveis.filter(
         (horario) =>
-          !agendamentos.some(
-            (agendamento) =>
-              new Date(agendamento.data).getTime() ===
-              new Date(horario).getTime(),
-          ),
+          !agendamentos.some((agendamento) => {
+            const agendamentoData = agendamento.data
+              ? new Date(agendamento.data).getTime()
+              : null
+            const horarioData = horario ? new Date(horario).getTime() : null
+
+            return (
+              agendamentoData !== null &&
+              horarioData !== null &&
+              agendamentoData === horarioData
+            )
+          }),
       )
 
       // Se houver horários filtrados e no futuro, adiciona o produto à lista final

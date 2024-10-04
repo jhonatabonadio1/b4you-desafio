@@ -10,6 +10,7 @@ async function desativarAgendamentosVencidos() {
       where: {
         deleted: false,
         ativo: true,
+        semValidade: false,
         data: {
           lt: umMesAtras,
         },
@@ -36,6 +37,7 @@ async function reexecutarJobsPerdidos() {
       where: {
         deleted: false,
         ativo: true,
+        semValidade: false,
         data: {
           lt: umMesAtras,
         },
