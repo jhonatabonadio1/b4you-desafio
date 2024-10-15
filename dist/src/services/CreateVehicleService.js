@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateVehicleService = void 0;
 const prismaClient_1 = require("../database/prismaClient");
 class CreateVehicleService {
-    async execute({ nome, placa, categoria, userId }) {
+    async execute({ nome, placa, categoria, marca, modelo, userId }) {
         if (!placa) {
             throw new Error('Placa inválida.');
         }
@@ -46,6 +46,8 @@ class CreateVehicleService {
                 nome,
                 placa,
                 categoria,
+                marca,
+                modelo,
                 usuario: {
                     connect: {
                         id: findUser.id,

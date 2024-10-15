@@ -76,10 +76,12 @@ class ValidaQrCodeService {
       const oneMonthAgo = new Date()
       oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
 
-      if (agendamento.data < oneMonthAgo) {
-        throw new Error(
-          'Agendamento não pode ser validado após 1 mês da data agendada.',
-        )
+      if (agendamento.data) {
+        if (agendamento.data < oneMonthAgo) {
+          throw new Error(
+            'Agendamento não pode ser validado após 1 mês da data agendada.',
+          )
+        }
       }
 
       const codCliente = findUser.cpf.substring(0, 4)

@@ -47,6 +47,8 @@ class FetchVehiclesService {
                 nome: veiculo.nome,
                 cpf: veiculo.usuario.cpf,
                 placa: veiculo.placa,
+                modelo: veiculo.modelo,
+                marca: veiculo.marca,
                 categoria: veiculo.categoria,
                 created_at: veiculo.created_at,
             });

@@ -3,11 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateProductService = void 0;
 const prismaClient_1 = require("../database/prismaClient");
 class CreateProductService {
-    async execute({ nome, imageUrl, prestadores, datasDisponiveis, 
+    async execute({ nome, imageUrl, prestadores, datasDisponiveis, diaResetLimite, 
     // preco,
     // precoCarroGrande,
     // precoCarroPequeno,
-    ativo, opcoesAdicionais, exigeVeiculo, }) {
+    ativo, usoMensal, opcoesAdicionais, exigeVeiculo, }) {
         if (!nome) {
             throw new Error('Nome é obrigatório');
         }
@@ -27,6 +27,8 @@ class CreateProductService {
                 nome,
                 imageUrl,
                 prestadores,
+                usoMensal,
+                diaResetLimite,
                 datasDisponiveis,
                 exigeVeiculo,
                 ativo,
@@ -46,6 +48,7 @@ class CreateProductService {
                             },
                         },
                         nome: opcao.nome,
+                        usoMensal: opcao.usoMensal,
                     },
                 });
             }

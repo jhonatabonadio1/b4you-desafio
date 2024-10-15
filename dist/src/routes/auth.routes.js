@@ -64,6 +64,12 @@ const FetchAvaliacoesPendentesController_1 = require("../controllers/FetchAvalia
 const AvaliaAtendimentoController_1 = require("../controllers/AvaliaAtendimentoController");
 const FetchStoreAvaliacoesController_1 = require("../controllers/FetchStoreAvaliacoesController");
 const FetchAdminAvaliacoesController_1 = require("../controllers/FetchAdminAvaliacoesController");
+const ChangeUserAvatarController_1 = require("../controllers/ChangeUserAvatarController");
+const FetchAdminValidacoesBrindeController_1 = require("../controllers/FetchAdminValidacoesBrindeController");
+const FetchAdminValidacoesController_1 = require("../controllers/FetchAdminValidacoesController");
+const GetServiceInfoController_1 = require("../controllers/GetServiceInfoController");
+const CreateAdminAgendamentoController_1 = require("../controllers/CreateAdminAgendamentoController");
+const FetchAdminUserVehiclesController_1 = require("../controllers/FetchAdminUserVehiclesController");
 const authRoutes = (0, express_1.Router)();
 exports.authRoutes = authRoutes;
 const verifyAuthMatriculaController = new VerifyAuthMatriculaController_1.VerifyAuthMatriculaController();
@@ -126,6 +132,12 @@ const fetchAvaliacoesPendentesController = new FetchAvaliacoesPendentesControlle
 const avaliaAtendimentoController = new AvaliaAtendimentoController_1.AvaliaAtendimentoController();
 const fetchStoreAvaliacoesController = new FetchStoreAvaliacoesController_1.FetchStoreAvaliacoesController();
 const fetchAdminAvaliacoesController = new FetchAdminAvaliacoesController_1.FetchAdminAvaliacoesController();
+const changeUserAvatarController = new ChangeUserAvatarController_1.ChangeUserAvatarController();
+const fetchAdminValidacoesBrindesController = new FetchAdminValidacoesBrindeController_1.FetchAdminValidacoesBrindesController();
+const fetchAdminValidacoesController = new FetchAdminValidacoesController_1.FetchAdminValidacoesController();
+const getServiceInfoController = new GetServiceInfoController_1.GetServiceInfoController();
+const createAdminAgendamentoController = new CreateAdminAgendamentoController_1.CreateAdminAgendamentoController();
+const fetchAdminUserVehiclesController = new FetchAdminUserVehiclesController_1.FetchAdminUserVehiclesController();
 authRoutes.post('/admin/users', ensureIsAdmin_1.ensureIsAdmin, createUserController.handle);
 authRoutes.put('/admin/users/:usuarioId', ensureIsAdmin_1.ensureIsAdmin, updateUserController.handle);
 authRoutes.get('/admin/users/:usuarioId', ensureIsAdmin_1.ensureIsAdmin, fetchUserController.handle);
@@ -186,3 +198,10 @@ authRoutes.get('/avaliacoes', ensureIsAuthenticated_1.ensureAuthenticated, fetch
 authRoutes.post('/avaliaLoja/:id', ensureIsAuthenticated_1.ensureAuthenticated, avaliaAtendimentoController.handle);
 authRoutes.get('/store/avaliacoes', ensureIsAuthenticated_1.ensureAuthenticated, fetchStoreAvaliacoesController.handle);
 authRoutes.get('/admin/avaliacoes', ensureIsAdmin_1.ensureIsAdmin, fetchAdminAvaliacoesController.handle);
+authRoutes.get('/admin/validacoes', ensureIsAdmin_1.ensureIsAdmin, fetchAdminValidacoesController.handle);
+authRoutes.get('/admin/validacoesBrindes', ensureIsAdmin_1.ensureIsAdmin, fetchAdminValidacoesBrindesController.handle);
+authRoutes.put('/trocaAvatar', ensureIsAuthenticated_1.ensureAuthenticated, changeUserAvatarController.handle);
+authRoutes.get('/admin/servico/:id', ensureIsAdmin_1.ensureIsAdmin, getServiceInfoController.handle);
+authRoutes.get('/admin/servicos/:produtoId/prestadores', ensureIsAdmin_1.ensureIsAdmin, fetchProductPrestadoresController.handle);
+authRoutes.post('/admin/agendamentos', ensureIsAdmin_1.ensureIsAdmin, createAdminAgendamentoController.handle);
+authRoutes.get('/admin/usuarios/:userId/veiculos', ensureIsAdmin_1.ensureIsAdmin, fetchAdminUserVehiclesController.handle);

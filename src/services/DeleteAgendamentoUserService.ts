@@ -35,31 +35,36 @@ class DeleteAgendamentoUserService {
       )
     }
 
-    const dataAgendamento = new Date(agendamento.data)
-    const umaHoraAntes = subHours(dataAgendamento, 1)
-    const trintaMinutosDepois = addMinutes(dataAgendamento, 30)
-    const agora = new Date()
+    if (agendamento.data) {
+      const dataAgendamento = new Date(agendamento.data)
+      const umaHoraAntes = subHours(dataAgendamento, 1)
+      const trintaMinutosDepois = addMinutes(dataAgendamento, 30)
+      const agora = new Date()
 
-    // Permitir o cancelamento até 1 hora antes do agendamento
-    // ou após 30 minutos do horário do agendamento
-    if (isBefore(agora, umaHoraAntes) || isBefore(trintaMinutosDepois, agora)) {
-      // Se passar nas verificações, cancelar o agendamento
-      const deleteAgendamento = await prismaClient.agendamento.update({
-        where: {
-          id,
-        },
-        data: {
-          deleted: true,
-          ativo: false,
-        },
-      })
+      // Permitir o cancelamento até 1 hora antes do agendamento
+      // ou após 30 minutos do horário do agendamento
+      if (
+        isBefore(agora, umaHoraAntes) ||
+        isBefore(trintaMinutosDepois, agora)
+      ) {
+        // Se passar nas verificações, cancelar o agendamento
+        const deleteAgendamento = await prismaClient.agendamento.update({
+          where: {
+            id,
+          },
+          data: {
+            deleted: true,
+            ativo: false,
+          },
+        })
 
-      return deleteAgendamento
+        return deleteAgendamento
+      }
+
+      throw new Error(
+        'Você só pode cancelar até 1 hora antes do agendamento ou após 30 minutos do horário marcado.',
+      )
     }
-
-    throw new Error(
-      'Você só pode cancelar até 1 hora antes do agendamento ou após 30 minutos do horário marcado.',
-    )
   }
 }
 

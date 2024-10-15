@@ -8,7 +8,7 @@ function exclude(user, keys) {
     return userCopy;
 }
 class FetchUsersService {
-    async execute({ page, search }, pageSize = 2) {
+    async execute({ page, search }, pageSize = 10) {
         const baseWhere = { deleted: false };
         const searchWhere = search
             ? {

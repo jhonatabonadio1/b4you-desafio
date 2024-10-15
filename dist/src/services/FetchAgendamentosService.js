@@ -53,15 +53,22 @@ class FetchAgendamentosService {
             where: searchWhere,
             skip: (page - 1) * pageSize,
             take: pageSize,
-            include: {
-                usuario: {
+            select: {
+                id: true,
+                ativo: true,
+                semValidade: true,
+                veiculo: {
                     select: {
-                        cpf: true,
+                        placa: true,
+                        modelo: true,
+                        marca: true,
+                        categoria: true,
                     },
                 },
                 prestador: {
                     select: {
                         razaoSocial: true,
+                        inscricao: true,
                     },
                 },
                 servico: {
@@ -69,6 +76,15 @@ class FetchAgendamentosService {
                         nome: true,
                     },
                 },
+                usuario: {
+                    select: {
+                        nome: true,
+                        cpf: true,
+                    },
+                },
+                data: true,
+                opcoesAdicionais: true,
+                created_at: true,
             },
             orderBy: { created_at: 'desc' },
         });
