@@ -70,6 +70,12 @@ const FetchAdminValidacoesController_1 = require("../controllers/FetchAdminValid
 const GetServiceInfoController_1 = require("../controllers/GetServiceInfoController");
 const CreateAdminAgendamentoController_1 = require("../controllers/CreateAdminAgendamentoController");
 const FetchAdminUserVehiclesController_1 = require("../controllers/FetchAdminUserVehiclesController");
+const UploadCargaController_1 = require("../controllers/UploadCargaController");
+const FetchCargaController_1 = require("../controllers/FetchCargaController");
+const upload_1 = require("../middlewares/upload");
+const FetchMemberExistsController_1 = require("../controllers/FetchMemberExistsController");
+const DeleteCargaController_1 = require("../controllers/DeleteCargaController");
+const CreateUserCargaController_1 = require("../controllers/CreateUserCargaController");
 const authRoutes = (0, express_1.Router)();
 exports.authRoutes = authRoutes;
 const verifyAuthMatriculaController = new VerifyAuthMatriculaController_1.VerifyAuthMatriculaController();
@@ -138,7 +144,13 @@ const fetchAdminValidacoesController = new FetchAdminValidacoesController_1.Fetc
 const getServiceInfoController = new GetServiceInfoController_1.GetServiceInfoController();
 const createAdminAgendamentoController = new CreateAdminAgendamentoController_1.CreateAdminAgendamentoController();
 const fetchAdminUserVehiclesController = new FetchAdminUserVehiclesController_1.FetchAdminUserVehiclesController();
+const uploadCargaController = new UploadCargaController_1.UploadCargaController();
+const fetchCargaController = new FetchCargaController_1.FetchCargaController();
+const fetchMemberExistsController = new FetchMemberExistsController_1.FetchMemberExistsController();
+const deleteCargaController = new DeleteCargaController_1.DeleteCargaController();
+const createUserCargaController = new CreateUserCargaController_1.CreateUserCargaController();
 authRoutes.post('/admin/users', ensureIsAdmin_1.ensureIsAdmin, createUserController.handle);
+authRoutes.post('/users', createUserCargaController.handle);
 authRoutes.put('/admin/users/:usuarioId', ensureIsAdmin_1.ensureIsAdmin, updateUserController.handle);
 authRoutes.get('/admin/users/:usuarioId', ensureIsAdmin_1.ensureIsAdmin, fetchUserController.handle);
 authRoutes.delete('/admin/users/:usuarioId', ensureIsAdmin_1.ensureIsAdmin, deleteUserController.handle);
@@ -205,3 +217,9 @@ authRoutes.get('/admin/servico/:id', ensureIsAdmin_1.ensureIsAdmin, getServiceIn
 authRoutes.get('/admin/servicos/:produtoId/prestadores', ensureIsAdmin_1.ensureIsAdmin, fetchProductPrestadoresController.handle);
 authRoutes.post('/admin/agendamentos', ensureIsAdmin_1.ensureIsAdmin, createAdminAgendamentoController.handle);
 authRoutes.get('/admin/usuarios/:userId/veiculos', ensureIsAdmin_1.ensureIsAdmin, fetchAdminUserVehiclesController.handle);
+authRoutes.post('/admin/cargas', ensureIsAdmin_1.ensureIsAdmin, upload_1.upload.single('file'), (req, res) => {
+    uploadCargaController.handle(req, res);
+});
+authRoutes.get('/admin/cargas', ensureIsAdmin_1.ensureIsAdmin, fetchCargaController.handle);
+authRoutes.get('/membro', fetchMemberExistsController.handle);
+authRoutes.delete('/admin/cargas/:id', ensureIsAdmin_1.ensureIsAdmin, deleteCargaController.handle);

@@ -23,10 +23,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateUserService = void 0;
+exports.CreateUserCargaService = void 0;
 const prismaClient_1 = require("../database/prismaClient");
 const bcryptjs_1 = require("bcryptjs");
 const cpf_cnpj_validator_1 = require("cpf-cnpj-validator");
+const FetchMemberExistsService_1 = require("./FetchMemberExistsService");
 const Yup = __importStar(require("yup"));
 // Exclude keys from user
 function exclude(user, keys) {
@@ -34,23 +35,25 @@ function exclude(user, keys) {
     keys.forEach((key) => delete userCopy[key]);
     return userCopy;
 }
-class CreateUserService {
-    async execute({ nome, matricula, email, cpf, phone, password, tipoAcesso, birth, }) {
-        // Verificar campos obrigatórios
+class CreateUserCargaService {
+    async execute({ nome, matricula, email, cpf, phone, password, birth, }) {
+        const carga = new FetchMemberExistsService_1.FetchMemberExistsService();
+        const verifyMemberExistInCarga = await carga.execute(matricula);
+        if (!verifyMemberExistInCarga.Matricula) {
+            throw new Error('Matrícula não encontrada');
+        }
+        // Validações básicas
         if (!matricula) {
             throw new Error('Matrícula inválida.');
         }
         if (!nome) {
-            throw new Error('Nome é obrigatório.');
+            throw new Error('Nome é obrigatório');
         }
         if (!email) {
-            throw new Error('E-mail é obrigatório.');
-        }
-        if (!tipoAcesso) {
-            throw new Error('Tipo de acesso é obrigatório.');
+            throw new Error('E-mail é obrigatório');
         }
         if (!birth) {
-            throw new Error('Data de nascimento é obrigatória.');
+            throw new Error('Data de nascimento é obrigatório');
         }
         // Formatar e validar o e-mail
         const formattedEmail = email.trim().toLowerCase();
@@ -59,7 +62,7 @@ class CreateUserService {
             await emailSchema.validate(formattedEmail);
         }
         catch (error) {
-            throw new Error('E-mail inválido.');
+            throw new Error('E-mail inválido');
         }
         // Validar CPF
         const formattedDoc = cpf.replace(/\D/g, '');
@@ -68,7 +71,7 @@ class CreateUserService {
             throw new Error('CPF inválido.');
         }
         // Verificar se já existe o usuário com essa matrícula, CPF ou e-mail
-        const matriculaAlreadyExists = await prismaClient_1.prismaClient.usuario.findFirst({
+        const matericulaAlreadyExists = await prismaClient_1.prismaClient.usuario.findFirst({
             where: {
                 matricula,
                 deleted: false,
@@ -86,10 +89,10 @@ class CreateUserService {
                 deleted: false,
             },
         });
-        if (matriculaAlreadyExists || cpfAlreadyExists || emailAlreadyExists) {
+        if (matericulaAlreadyExists || cpfAlreadyExists || emailAlreadyExists) {
             throw new Error('Usuário já cadastrado.');
         }
-        // Criptografar a senha
+        // Criptografar senha
         const passwordHash = await (0, bcryptjs_1.hash)(password, 8);
         // Ajustar a data de nascimento
         const birthDate = new Date(birth);
@@ -104,7 +107,6 @@ class CreateUserService {
                 phone,
                 cpf: formattedDoc,
                 password: passwordHash,
-                tipoAcesso,
                 birth: birthDate,
             },
         });
@@ -113,4 +115,4 @@ class CreateUserService {
         return userWithoutPassword;
     }
 }
-exports.CreateUserService = CreateUserService;
+exports.CreateUserCargaService = CreateUserCargaService;

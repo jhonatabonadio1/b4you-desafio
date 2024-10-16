@@ -1,6 +1,7 @@
 import { prismaClient } from '../database/prismaClient'
 import { hash } from 'bcryptjs'
 import { cpf as validate } from 'cpf-cnpj-validator'
+import { FetchMemberExistsService } from './FetchMemberExistsService'
 import * as Yup from 'yup'
 
 interface IRequest {
@@ -10,7 +11,6 @@ interface IRequest {
   cpf: string
   phone: string
   password: string
-  tipoAcesso: string
   birth: Date
 }
 
@@ -24,7 +24,7 @@ function exclude<User, Key extends keyof User>(
   return userCopy
 }
 
-class CreateUserService {
+class CreateUserCargaService {
   async execute({
     nome,
     matricula,
@@ -32,28 +32,30 @@ class CreateUserService {
     cpf,
     phone,
     password,
-    tipoAcesso,
     birth,
   }: IRequest) {
-    // Verificar campos obrigatórios
+    const carga = new FetchMemberExistsService()
+    const verifyMemberExistInCarga = await carga.execute(matricula)
+
+    if (!verifyMemberExistInCarga.Matricula) {
+      throw new Error('Matrícula não encontrada')
+    }
+
+    // Validações básicas
     if (!matricula) {
       throw new Error('Matrícula inválida.')
     }
 
     if (!nome) {
-      throw new Error('Nome é obrigatório.')
+      throw new Error('Nome é obrigatório')
     }
 
     if (!email) {
-      throw new Error('E-mail é obrigatório.')
-    }
-
-    if (!tipoAcesso) {
-      throw new Error('Tipo de acesso é obrigatório.')
+      throw new Error('E-mail é obrigatório')
     }
 
     if (!birth) {
-      throw new Error('Data de nascimento é obrigatória.')
+      throw new Error('Data de nascimento é obrigatório')
     }
 
     // Formatar e validar o e-mail
@@ -63,7 +65,7 @@ class CreateUserService {
     try {
       await emailSchema.validate(formattedEmail)
     } catch (error) {
-      throw new Error('E-mail inválido.')
+      throw new Error('E-mail inválido')
     }
 
     // Validar CPF
@@ -75,7 +77,7 @@ class CreateUserService {
     }
 
     // Verificar se já existe o usuário com essa matrícula, CPF ou e-mail
-    const matriculaAlreadyExists = await prismaClient.usuario.findFirst({
+    const matericulaAlreadyExists = await prismaClient.usuario.findFirst({
       where: {
         matricula,
         deleted: false,
@@ -96,11 +98,11 @@ class CreateUserService {
       },
     })
 
-    if (matriculaAlreadyExists || cpfAlreadyExists || emailAlreadyExists) {
+    if (matericulaAlreadyExists || cpfAlreadyExists || emailAlreadyExists) {
       throw new Error('Usuário já cadastrado.')
     }
 
-    // Criptografar a senha
+    // Criptografar senha
     const passwordHash = await hash(password, 8)
 
     // Ajustar a data de nascimento
@@ -118,7 +120,6 @@ class CreateUserService {
         phone,
         cpf: formattedDoc,
         password: passwordHash,
-        tipoAcesso,
         birth: birthDate,
       },
     })
@@ -130,4 +131,4 @@ class CreateUserService {
   }
 }
 
-export { CreateUserService }
+export { CreateUserCargaService }

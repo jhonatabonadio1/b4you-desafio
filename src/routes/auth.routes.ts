@@ -89,6 +89,13 @@ import { GetServiceInfoController } from '../controllers/GetServiceInfoControlle
 import { CreateAdminAgendamentoController } from '../controllers/CreateAdminAgendamentoController'
 import { FetchAdminUserVehiclesController } from '../controllers/FetchAdminUserVehiclesController'
 
+import { UploadCargaController } from '../controllers/UploadCargaController'
+import { FetchCargaController } from '../controllers/FetchCargaController'
+import { upload } from '../middlewares/upload'
+import { FetchMemberExistsController } from '../controllers/FetchMemberExistsController'
+import { DeleteCargaController } from '../controllers/DeleteCargaController'
+import { CreateUserCargaController } from '../controllers/CreateUserCargaController'
+
 const authRoutes = Router()
 
 const verifyAuthMatriculaController = new VerifyAuthMatriculaController()
@@ -187,7 +194,15 @@ const getServiceInfoController = new GetServiceInfoController()
 const createAdminAgendamentoController = new CreateAdminAgendamentoController()
 const fetchAdminUserVehiclesController = new FetchAdminUserVehiclesController()
 
+const uploadCargaController = new UploadCargaController()
+const fetchCargaController = new FetchCargaController()
+
+const fetchMemberExistsController = new FetchMemberExistsController()
+const deleteCargaController = new DeleteCargaController()
+const createUserCargaController = new CreateUserCargaController()
+
 authRoutes.post('/admin/users', ensureIsAdmin, createUserController.handle)
+authRoutes.post('/users', createUserCargaController.handle)
 authRoutes.put(
   '/admin/users/:usuarioId',
   ensureIsAdmin,
@@ -508,4 +523,20 @@ authRoutes.get(
   '/admin/usuarios/:userId/veiculos',
   ensureIsAdmin,
   fetchAdminUserVehiclesController.handle,
+)
+
+authRoutes.post(
+  '/admin/cargas',
+  ensureIsAdmin,
+  upload.single('file'),
+  (req, res) => {
+    uploadCargaController.handle(req, res)
+  },
+)
+authRoutes.get('/admin/cargas', ensureIsAdmin, fetchCargaController.handle)
+authRoutes.get('/membro', fetchMemberExistsController.handle)
+authRoutes.delete(
+  '/admin/cargas/:id',
+  ensureIsAdmin,
+  deleteCargaController.handle,
 )
