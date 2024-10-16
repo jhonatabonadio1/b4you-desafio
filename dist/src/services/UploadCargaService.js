@@ -27,7 +27,9 @@ class UploadCargaService {
         const s3Response = await this.s3.upload(params).promise();
         // Verifica o tamanho do arquivo
         const fileSizeInBytes = fs_1.default.statSync(filePath).size;
-        const cargasCount = await prismaClient_1.prismaClient.carga.count();
+        const cargasCount = await prismaClient_1.prismaClient.carga.count({
+            where: { deleted: false },
+        });
         // Se houver mais de 2 cargas, marca a última como "deleted"
         if (cargasCount >= 3) {
             const lastCarga = await prismaClient_1.prismaClient.carga.findFirst({

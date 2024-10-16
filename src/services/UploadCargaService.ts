@@ -29,7 +29,9 @@ class UploadCargaService {
     // Verifica o tamanho do arquivo
     const fileSizeInBytes = fs.statSync(filePath).size
 
-    const cargasCount = await prismaClient.carga.count()
+    const cargasCount = await prismaClient.carga.count({
+      where: { deleted: false },
+    })
 
     // Se houver mais de 2 cargas, marca a última como "deleted"
     if (cargasCount >= 3) {
