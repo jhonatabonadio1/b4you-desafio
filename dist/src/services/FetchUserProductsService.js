@@ -8,7 +8,11 @@ class FetchUserProductsService {
         const findProducts = await prismaClient_1.prismaClient.servico.findMany({
             where: { ativo: true, deleted: false },
             include: {
-                opcoesAdicionais: true,
+                opcoesAdicionais: {
+                    where: {
+                        deleted: false,
+                    },
+                },
             },
         });
         const produtosComHorariosDisponiveis = [];

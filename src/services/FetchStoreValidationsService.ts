@@ -45,13 +45,18 @@ class FetchStoreValidationsService {
     const agendamentosValidados = [] as any
 
     for (const agendamento of findAgendamnetos) {
-      const opcoesAdicionais = agendamento.agendamento.opcoesAdicionais.map(
-        async (opcaoId) =>
-          await prismaClient.opcaoAdicional.findFirst({
+      const opcoesAdicionais = await Promise.all(
+        agendamento.agendamento.opcoesAdicionais.map(async (opcaoId) =>
+          prismaClient.opcaoAdicional.findFirst({
             where: {
               id: opcaoId,
             },
           }),
+        ),
+      )
+
+      const filteredOpcoesAdicionais = opcoesAdicionais.filter(
+        (opcao) => opcao !== null,
       )
 
       const resposta = {
@@ -66,7 +71,7 @@ class FetchStoreValidationsService {
           email: agendamento.usuario.email,
           phone: agendamento.usuario.phone,
         },
-        opcoesAdicionais, // Brindes geralmente não têm opções adicionais, mas pode ser ajustado conforme necessário
+        opcoesAdicionais: filteredOpcoesAdicionais ?? [], // Brindes geralmente não têm opções adicionais, mas pode ser ajustado conforme necessário
         veiculo: agendamento.agendamento.veiculo,
         dataValidacao: agendamento.created_at,
       }

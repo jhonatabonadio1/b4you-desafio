@@ -139,6 +139,8 @@ model OpcaoAdicional {
 
   servico     Servico? @relation("ServicoOpcoesAdicionais", fields: [servicoId], references: [id])
   servicoId   String   @db.ObjectId
+
+  deleted     Boolean     @default(false)
   
   @@map("opcoes_adicionais")
 }

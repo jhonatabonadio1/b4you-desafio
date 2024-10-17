@@ -36,8 +36,9 @@ class UpdateProductService {
         // Remover as opções adicionais que não estão mais presentes
         const opcoesToRemove = existingOpcoesIds.filter((id) => !updatedOpcoesIds.includes(id));
         if (opcoesToRemove.length > 0) {
-            await prismaClient_1.prismaClient.opcaoAdicional.deleteMany({
+            await prismaClient_1.prismaClient.opcaoAdicional.updateMany({
                 where: { id: { in: opcoesToRemove } },
+                data: { deleted: true },
             });
         }
         // Verificar e atualizar ou criar opções adicionais

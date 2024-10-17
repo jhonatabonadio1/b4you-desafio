@@ -28,7 +28,14 @@ class FetchUserAgendamentosService {
                 where: { agendamentoId: agendamento.id },
             });
             if (!verificaAgendamentoJaValidado) {
-                agendamentosNaoValidados.push(agendamento);
+                // Buscar as opções adicionais
+                const opcoesAdicionais = await Promise.all(agendamento.opcoesAdicionais.map(async (opcaoId) => prismaClient_1.prismaClient.opcaoAdicional.findFirst({
+                    where: { id: opcaoId },
+                })));
+                // Filtrar as opções adicionais removendo qualquer valor null
+                const filteredOpcoesAdicionais = opcoesAdicionais.filter((opcao) => opcao !== null);
+                // Adicionar o agendamento ao array com as opções adicionais resolvidas
+                agendamentosNaoValidados.push(Object.assign(Object.assign({}, agendamento), { opcoesAdicionais: filteredOpcoesAdicionais }));
             }
         }
         return agendamentosNaoValidados;

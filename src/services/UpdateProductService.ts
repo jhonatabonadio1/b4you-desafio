@@ -75,8 +75,9 @@ class UpdateProductService {
     )
 
     if (opcoesToRemove.length > 0) {
-      await prismaClient.opcaoAdicional.deleteMany({
+      await prismaClient.opcaoAdicional.updateMany({
         where: { id: { in: opcoesToRemove } },
+        data: { deleted: true },
       })
     }
 

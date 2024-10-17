@@ -38,11 +38,12 @@ class FetchStoreValidationsService {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const agendamentosValidados = [];
         for (const agendamento of findAgendamnetos) {
-            const opcoesAdicionais = agendamento.agendamento.opcoesAdicionais.map(async (opcaoId) => await prismaClient_1.prismaClient.opcaoAdicional.findFirst({
+            const opcoesAdicionais = await Promise.all(agendamento.agendamento.opcoesAdicionais.map(async (opcaoId) => prismaClient_1.prismaClient.opcaoAdicional.findFirst({
                 where: {
                     id: opcaoId,
                 },
-            }));
+            })));
+            const filteredOpcoesAdicionais = opcoesAdicionais.filter((opcao) => opcao !== null);
             const resposta = {
                 id: agendamento.id,
                 nome: agendamento.agendamento.servico.nome,
@@ -55,7 +56,7 @@ class FetchStoreValidationsService {
                     email: agendamento.usuario.email,
                     phone: agendamento.usuario.phone,
                 },
-                opcoesAdicionais, // Brindes geralmente não têm opções adicionais, mas pode ser ajustado conforme necessário
+                opcoesAdicionais: filteredOpcoesAdicionais !== null && filteredOpcoesAdicionais !== void 0 ? filteredOpcoesAdicionais : [], // Brindes geralmente não têm opções adicionais, mas pode ser ajustado conforme necessário
                 veiculo: agendamento.agendamento.veiculo,
                 dataValidacao: agendamento.created_at,
             };
