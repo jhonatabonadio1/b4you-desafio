@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FetchVehiclesService = void 0;
 const prismaClient_1 = require("../database/prismaClient");
 class FetchVehiclesService {
-    async execute({ page, search }, pageSize = 2) {
+    async execute({ page, search }, pageSize = 10) {
         const baseWhere = { deleted: false };
         const searchWhere = search
             ? {

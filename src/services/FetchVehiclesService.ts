@@ -6,7 +6,7 @@ interface IVehicle {
 }
 
 class FetchVehiclesService {
-  async execute({ page, search }: IVehicle, pageSize = 2) {
+  async execute({ page, search }: IVehicle, pageSize = 10) {
     const baseWhere = { deleted: false }
     const searchWhere = search
       ? {
