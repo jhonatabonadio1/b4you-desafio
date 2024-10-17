@@ -95,6 +95,7 @@ import { upload } from '../middlewares/upload'
 import { FetchMemberExistsController } from '../controllers/FetchMemberExistsController'
 import { DeleteCargaController } from '../controllers/DeleteCargaController'
 import { CreateUserCargaController } from '../controllers/CreateUserCargaController'
+import { UpdateProductController } from '../controllers/UpdateProductController'
 
 const authRoutes = Router()
 
@@ -151,6 +152,7 @@ const fetchVehiclesController = new FetchVehiclesController()
 const deleteVehicleController = new DeleteVehicleController()
 
 const createProductController = new CreateProductController()
+const updateProductController = new UpdateProductController()
 const fetchProductsController = new FetchProductsController()
 const deleteProductController = new DeleteProductController()
 
@@ -384,6 +386,11 @@ authRoutes.post(
   '/admin/servicos',
   ensureIsAdmin,
   createProductController.handle,
+)
+authRoutes.put(
+  '/admin/servicos/:id',
+  ensureIsAdmin,
+  updateProductController.handle,
 )
 authRoutes.get('/admin/servicos', ensureIsAdmin, fetchProductsController.handle)
 authRoutes.delete(

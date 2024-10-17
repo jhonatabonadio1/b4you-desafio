@@ -76,6 +76,7 @@ const upload_1 = require("../middlewares/upload");
 const FetchMemberExistsController_1 = require("../controllers/FetchMemberExistsController");
 const DeleteCargaController_1 = require("../controllers/DeleteCargaController");
 const CreateUserCargaController_1 = require("../controllers/CreateUserCargaController");
+const UpdateProductController_1 = require("../controllers/UpdateProductController");
 const authRoutes = (0, express_1.Router)();
 exports.authRoutes = authRoutes;
 const verifyAuthMatriculaController = new VerifyAuthMatriculaController_1.VerifyAuthMatriculaController();
@@ -120,6 +121,7 @@ const fetchVehicleController = new FetchVehicleController_1.FetchVehicleControll
 const fetchVehiclesController = new FetchVehiclesController_1.FetchVehiclesController();
 const deleteVehicleController = new DeleteVehicleController_1.DeleteVehicleController();
 const createProductController = new CreateProductController_1.CreateProductController();
+const updateProductController = new UpdateProductController_1.UpdateProductController();
 const fetchProductsController = new FetchProductsController_1.FetchProductsController();
 const deleteProductController = new DeleteProductController_1.DeleteProductController();
 const fetchUserProductsController = new FetchUserProductsController_1.FetchUserProductsController();
@@ -192,6 +194,7 @@ authRoutes.delete('/admin/veiculos/:vehicleId', ensureIsAdmin_1.ensureIsAdmin, d
 authRoutes.get('/admin/veiculos/:vehicleId', ensureIsAdmin_1.ensureIsAdmin, fetchVehicleController.handle);
 authRoutes.get('/admin/veiculos', ensureIsAdmin_1.ensureIsAdmin, fetchVehiclesController.handle);
 authRoutes.post('/admin/servicos', ensureIsAdmin_1.ensureIsAdmin, createProductController.handle);
+authRoutes.put('/admin/servicos/:id', ensureIsAdmin_1.ensureIsAdmin, updateProductController.handle);
 authRoutes.get('/admin/servicos', ensureIsAdmin_1.ensureIsAdmin, fetchProductsController.handle);
 authRoutes.delete('/admin/servicos/:produtoId', ensureIsAdmin_1.ensureIsAdmin, deleteProductController.handle);
 authRoutes.get('/servicos', ensureIsAuthenticated_1.ensureAuthenticated, fetchUserProductsController.handle);
