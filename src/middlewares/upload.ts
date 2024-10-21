@@ -6,8 +6,11 @@ const upload = multer({
   storage: multer.diskStorage({
     destination: 'uploads/', // Pasta temporária
     filename: (req, file, cb) => {
-      // Mantém a extensão do arquivo original
+      // Extrai a extensão do arquivo original
       const ext = path.extname(file.originalname)
+      console.log(`Extensão do arquivo: ${ext}`) // Adicione um log para verificar a extensão
+
+      // Garante que o arquivo seja salvo com a extensão correta
       cb(null, `${file.fieldname}-${Date.now()}${ext}`)
     },
   }),

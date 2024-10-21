@@ -64,7 +64,7 @@ const FetchAvaliacoesPendentesController_1 = require("../controllers/FetchAvalia
 const AvaliaAtendimentoController_1 = require("../controllers/AvaliaAtendimentoController");
 const FetchStoreAvaliacoesController_1 = require("../controllers/FetchStoreAvaliacoesController");
 const FetchAdminAvaliacoesController_1 = require("../controllers/FetchAdminAvaliacoesController");
-const ChangeUserAvatarController_1 = require("../controllers/ChangeUserAvatarController");
+const UploadUserAvatarController_1 = require("../controllers/UploadUserAvatarController");
 const FetchAdminValidacoesBrindeController_1 = require("../controllers/FetchAdminValidacoesBrindeController");
 const FetchAdminValidacoesController_1 = require("../controllers/FetchAdminValidacoesController");
 const GetServiceInfoController_1 = require("../controllers/GetServiceInfoController");
@@ -140,7 +140,7 @@ const fetchAvaliacoesPendentesController = new FetchAvaliacoesPendentesControlle
 const avaliaAtendimentoController = new AvaliaAtendimentoController_1.AvaliaAtendimentoController();
 const fetchStoreAvaliacoesController = new FetchStoreAvaliacoesController_1.FetchStoreAvaliacoesController();
 const fetchAdminAvaliacoesController = new FetchAdminAvaliacoesController_1.FetchAdminAvaliacoesController();
-const changeUserAvatarController = new ChangeUserAvatarController_1.ChangeUserAvatarController();
+const uploadUserAvatarController = new UploadUserAvatarController_1.UploadUserAvatarController();
 const fetchAdminValidacoesBrindesController = new FetchAdminValidacoesBrindeController_1.FetchAdminValidacoesBrindesController();
 const fetchAdminValidacoesController = new FetchAdminValidacoesController_1.FetchAdminValidacoesController();
 const getServiceInfoController = new GetServiceInfoController_1.GetServiceInfoController();
@@ -215,7 +215,9 @@ authRoutes.get('/store/avaliacoes', ensureIsAuthenticated_1.ensureAuthenticated,
 authRoutes.get('/admin/avaliacoes', ensureIsAdmin_1.ensureIsAdmin, fetchAdminAvaliacoesController.handle);
 authRoutes.get('/admin/validacoes', ensureIsAdmin_1.ensureIsAdmin, fetchAdminValidacoesController.handle);
 authRoutes.get('/admin/validacoesBrindes', ensureIsAdmin_1.ensureIsAdmin, fetchAdminValidacoesBrindesController.handle);
-authRoutes.put('/trocaAvatar', ensureIsAuthenticated_1.ensureAuthenticated, changeUserAvatarController.handle);
+authRoutes.post('/trocaAvatar', ensureIsAuthenticated_1.ensureAuthenticated, upload_1.upload.single('file'), (req, res) => {
+    uploadUserAvatarController.handle(req, res);
+});
 authRoutes.get('/admin/servico/:id', ensureIsAdmin_1.ensureIsAdmin, getServiceInfoController.handle);
 authRoutes.get('/admin/servicos/:produtoId/prestadores', ensureIsAdmin_1.ensureIsAdmin, fetchProductPrestadoresController.handle);
 authRoutes.post('/admin/agendamentos', ensureIsAdmin_1.ensureIsAdmin, createAdminAgendamentoController.handle);

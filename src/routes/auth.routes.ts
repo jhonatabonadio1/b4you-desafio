@@ -80,7 +80,7 @@ import { AvaliaAtendimentoController } from '../controllers/AvaliaAtendimentoCon
 
 import { FetchStoreAvaliacoesController } from '../controllers/FetchStoreAvaliacoesController'
 import { FetchAdminAvaliacoesController } from '../controllers/FetchAdminAvaliacoesController'
-import { ChangeUserAvatarController } from '../controllers/ChangeUserAvatarController'
+import { UploadUserAvatarController } from '../controllers/UploadUserAvatarController'
 
 import { FetchAdminValidacoesBrindesController } from '../controllers/FetchAdminValidacoesBrindeController'
 import { FetchAdminValidacoesController } from '../controllers/FetchAdminValidacoesController'
@@ -185,7 +185,7 @@ const avaliaAtendimentoController = new AvaliaAtendimentoController()
 const fetchStoreAvaliacoesController = new FetchStoreAvaliacoesController()
 const fetchAdminAvaliacoesController = new FetchAdminAvaliacoesController()
 
-const changeUserAvatarController = new ChangeUserAvatarController()
+const uploadUserAvatarController = new UploadUserAvatarController()
 
 const fetchAdminValidacoesBrindesController =
   new FetchAdminValidacoesBrindesController()
@@ -502,10 +502,13 @@ authRoutes.get(
   fetchAdminValidacoesBrindesController.handle,
 )
 
-authRoutes.put(
+authRoutes.post(
   '/trocaAvatar',
   ensureAuthenticated,
-  changeUserAvatarController.handle,
+  upload.single('file'),
+  (req, res) => {
+    uploadUserAvatarController.handle(req, res)
+  },
 )
 
 authRoutes.get(
