@@ -86,7 +86,10 @@ class UpdateUserService {
       const birthDate = new Date(birth)
       birthDate.setUTCHours(6, 0, 0, 0)
 
-      const passwordHash = password ? await hash(password, 8) : user.password
+      const passwordHash =
+        password && password.length > 0
+          ? await hash(password, 8)
+          : user.password
       const inscricaoString = matricula
         ? matricula.toString().replace(/\D/g, '')
         : user.matricula
