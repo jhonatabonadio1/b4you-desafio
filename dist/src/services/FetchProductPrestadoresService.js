@@ -12,7 +12,7 @@ function exclude(user, keys) {
 class FetchProductPrestadoresService {
     async execute({ produtoId }) {
         var _a;
-        const agora = new Date(); // Data e hora atual
+        const agora = (0, date_fns_1.subHours)(new Date(), 3); // Ajusta para GMT-3
         const prestadoresComHorariosDisponiveis = [];
         // Busca o produto/serviço com base no ID do produto
         const findProducts = await prismaClient_1.prismaClient.servico.findFirst({
@@ -62,7 +62,7 @@ class FetchProductPrestadoresService {
                 }
             }
         }
-        return prestadoresComHorariosDisponiveis;
+        return prestadoresComHorariosDisponiveis !== null && prestadoresComHorariosDisponiveis !== void 0 ? prestadoresComHorariosDisponiveis : agora;
     }
 }
 exports.FetchProductPrestadoresService = FetchProductPrestadoresService;

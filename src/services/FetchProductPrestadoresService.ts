@@ -84,7 +84,7 @@ class FetchProductPrestadoresService {
       }
     }
 
-    return prestadoresComHorariosDisponiveis
+    return prestadoresComHorariosDisponiveis ?? agora
   }
 }
 
