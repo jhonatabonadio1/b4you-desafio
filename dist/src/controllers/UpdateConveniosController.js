@@ -4,14 +4,16 @@ exports.UpdateConvenioController = void 0;
 const UpdateConvenioService_1 = require("../services/UpdateConvenioService");
 class UpdateConvenioController {
     async handle(request, response) {
-        const { titulo, texto, bannerUrl, url, html, categoria, ativo } = request.body;
+        const { file } = request;
+        const { titulo, texto, url, html, categoria, ativo } = request.body;
         const { id } = request.params;
         const updateConvenioService = new UpdateConvenioService_1.UpdateConvenioService();
         const convenio = await updateConvenioService.execute({
             id,
             titulo,
             texto,
-            bannerUrl,
+            fileName: file === null || file === void 0 ? void 0 : file.filename,
+            filePath: file === null || file === void 0 ? void 0 : file.path,
             url,
             html,
             categoria,

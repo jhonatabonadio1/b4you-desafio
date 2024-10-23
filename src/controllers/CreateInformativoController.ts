@@ -3,14 +3,16 @@ import { CreateInformativoService } from '../services/CreateInformativoService'
 
 class CreateInformativoController {
   async handle(request: Request, response: Response) {
-    const { titulo, texto, bannerUrl, url, html } = request.body
+    const { file } = request
+    const { titulo, texto, url, html } = request.body
 
     const createInformativoService = new CreateInformativoService()
 
     const informativo = await createInformativoService.execute({
       titulo,
       texto,
-      bannerUrl,
+      fileName: file?.filename,
+      filePath: file?.path,
       url,
       html,
     })

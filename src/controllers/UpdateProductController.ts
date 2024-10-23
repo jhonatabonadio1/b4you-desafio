@@ -3,10 +3,10 @@ import { UpdateProductService } from '../services/UpdateProductService'
 
 class UpdateProductController {
   async handle(request: Request, response: Response) {
+    const { file } = request
     const { id } = request.params
     const {
       nome,
-      imageUrl,
       prestadores,
       datasDisponiveis,
       preco,
@@ -24,17 +24,18 @@ class UpdateProductController {
     const updatedProduct = await updateProductService.execute({
       id,
       nome,
-      imageUrl,
-      prestadores,
-      datasDisponiveis,
+      fileName: file?.filename,
+      filePath: file?.path,
+      prestadores: prestadores ? JSON.parse(prestadores) : [],
+      datasDisponiveis: datasDisponiveis ? JSON.parse(datasDisponiveis) : [],
       preco,
-      usoMensal,
+      usoMensal: Number(usoMensal),
       precoCarroGrande,
       precoCarroPequeno,
-      ativo,
-      opcoesAdicionais,
-      diaResetLimite,
-      exigeVeiculo,
+      ativo: ativo === 'true',
+      opcoesAdicionais: opcoesAdicionais ? JSON.parse(opcoesAdicionais) : [],
+      diaResetLimite: Number(diaResetLimite),
+      exigeVeiculo: exigeVeiculo === 'true',
     })
 
     return response.json(updatedProduct)

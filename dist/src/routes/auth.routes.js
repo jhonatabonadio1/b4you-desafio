@@ -166,9 +166,13 @@ authRoutes.post('/verificaLogin', verifyAuthMatriculaController.handle);
 authRoutes.get('/admin/prestadores/:prestadorId', ensureIsAdmin_1.ensureIsAdmin, fetchPrestadorController.handle);
 authRoutes.post('/admin/sessions', authAdminController.handle);
 authRoutes.get('/admin/me', ensureIsAdmin_1.ensureIsAdmin, fetchAdminController.handle);
-authRoutes.post('/admin/informativos', ensureIsAdmin_1.ensureIsAdmin, createInformativoController.handle);
+authRoutes.post('/admin/informativos', ensureIsAdmin_1.ensureIsAdmin, upload_1.upload.single('file'), (req, res) => {
+    createInformativoController.handle(req, res);
+});
 authRoutes.delete('/admin/informativos/:id', ensureIsAdmin_1.ensureIsAdmin, deleteInformativoController.handle);
-authRoutes.put('/admin/informativos/:id', ensureIsAdmin_1.ensureIsAdmin, updateInformativoController.handle);
+authRoutes.put('/admin/informativos/:id', ensureIsAdmin_1.ensureIsAdmin, upload_1.upload.single('file'), (req, res) => {
+    updateInformativoController.handle(req, res);
+});
 authRoutes.get('/admin/informativos', ensureIsAdmin_1.ensureIsAdmin, fetchInformativosController.handle);
 authRoutes.get('/admin/informativos/:id', ensureIsAdmin_1.ensureIsAdmin, fetchInformativoController.handle);
 authRoutes.post('/admin/brindes', ensureIsAdmin_1.ensureIsAdmin, createBrindeController.handle);
@@ -179,9 +183,13 @@ authRoutes.get('/admin/brindes/:id', ensureIsAdmin_1.ensureIsAdmin, fetchBrindeC
 authRoutes.get('/brindes', ensureIsAuthenticated_1.ensureAuthenticated, fetchUsuarioBrindesController.handle);
 authRoutes.get('/convenios', ensureIsAuthenticated_1.ensureAuthenticated, fetchUsuarioConveniosController.handle);
 authRoutes.get('/informativos', ensureIsAuthenticated_1.ensureAuthenticated, fetchUsuarioInformativosController.handle);
-authRoutes.post('/admin/convenios', ensureIsAdmin_1.ensureIsAdmin, createConvenioController.handle);
+authRoutes.post('/admin/convenios', ensureIsAdmin_1.ensureIsAdmin, upload_1.upload.single('file'), (req, res) => {
+    createConvenioController.handle(req, res);
+});
 authRoutes.delete('/admin/convenios/:id', ensureIsAdmin_1.ensureIsAdmin, deleteConvenioController.handle);
-authRoutes.put('/admin/convenios/:id', ensureIsAdmin_1.ensureIsAdmin, updateConvenioController.handle);
+authRoutes.put('/admin/convenios/:id', ensureIsAdmin_1.ensureIsAdmin, upload_1.upload.single('file'), (req, res) => {
+    updateConvenioController.handle(req, res);
+});
 authRoutes.get('/admin/convenios', ensureIsAdmin_1.ensureIsAdmin, fetchConveniosController.handle);
 authRoutes.get('/admin/convenios/:id', ensureIsAdmin_1.ensureIsAdmin, fetchConvenioController.handle);
 authRoutes.post('/veiculos', ensureIsAuthenticated_1.ensureAuthenticated, createVehicleController.handle);
@@ -193,8 +201,12 @@ authRoutes.put('/admin/veiculos/:vehicleId', ensureIsAdmin_1.ensureIsAdmin, upda
 authRoutes.delete('/admin/veiculos/:vehicleId', ensureIsAdmin_1.ensureIsAdmin, deleteVehicleController.handle);
 authRoutes.get('/admin/veiculos/:vehicleId', ensureIsAdmin_1.ensureIsAdmin, fetchVehicleController.handle);
 authRoutes.get('/admin/veiculos', ensureIsAdmin_1.ensureIsAdmin, fetchVehiclesController.handle);
-authRoutes.post('/admin/servicos', ensureIsAdmin_1.ensureIsAdmin, createProductController.handle);
-authRoutes.put('/admin/servicos/:id', ensureIsAdmin_1.ensureIsAdmin, updateProductController.handle);
+authRoutes.post('/admin/servicos', ensureIsAdmin_1.ensureIsAdmin, upload_1.upload.single('file'), (req, res) => {
+    createProductController.handle(req, res);
+});
+authRoutes.put('/admin/servicos/:id', ensureIsAdmin_1.ensureIsAdmin, upload_1.upload.single('file'), (req, res) => {
+    updateProductController.handle(req, res);
+});
 authRoutes.get('/admin/servicos', ensureIsAdmin_1.ensureIsAdmin, fetchProductsController.handle);
 authRoutes.delete('/admin/servicos/:produtoId', ensureIsAdmin_1.ensureIsAdmin, deleteProductController.handle);
 authRoutes.get('/servicos', ensureIsAuthenticated_1.ensureAuthenticated, fetchUserProductsController.handle);

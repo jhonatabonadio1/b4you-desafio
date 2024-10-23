@@ -256,7 +256,10 @@ authRoutes.get('/admin/me', ensureIsAdmin, fetchAdminController.handle)
 authRoutes.post(
   '/admin/informativos',
   ensureIsAdmin,
-  createInformativoController.handle,
+  upload.single('file'),
+  (req, res) => {
+    createInformativoController.handle(req, res)
+  },
 )
 authRoutes.delete(
   '/admin/informativos/:id',
@@ -266,7 +269,10 @@ authRoutes.delete(
 authRoutes.put(
   '/admin/informativos/:id',
   ensureIsAdmin,
-  updateInformativoController.handle,
+  upload.single('file'),
+  (req, res) => {
+    updateInformativoController.handle(req, res)
+  },
 )
 authRoutes.get(
   '/admin/informativos',
@@ -316,7 +322,10 @@ authRoutes.get(
 authRoutes.post(
   '/admin/convenios',
   ensureIsAdmin,
-  createConvenioController.handle,
+  upload.single('file'),
+  (req, res) => {
+    createConvenioController.handle(req, res)
+  },
 )
 authRoutes.delete(
   '/admin/convenios/:id',
@@ -326,7 +335,10 @@ authRoutes.delete(
 authRoutes.put(
   '/admin/convenios/:id',
   ensureIsAdmin,
-  updateConvenioController.handle,
+  upload.single('file'),
+  (req, res) => {
+    updateConvenioController.handle(req, res)
+  },
 )
 authRoutes.get(
   '/admin/convenios',
@@ -385,12 +397,18 @@ authRoutes.get('/admin/veiculos', ensureIsAdmin, fetchVehiclesController.handle)
 authRoutes.post(
   '/admin/servicos',
   ensureIsAdmin,
-  createProductController.handle,
+  upload.single('file'),
+  (req, res) => {
+    createProductController.handle(req, res)
+  },
 )
 authRoutes.put(
   '/admin/servicos/:id',
   ensureIsAdmin,
-  updateProductController.handle,
+  upload.single('file'),
+  (req, res) => {
+    updateProductController.handle(req, res)
+  },
 )
 authRoutes.get('/admin/servicos', ensureIsAdmin, fetchProductsController.handle)
 authRoutes.delete(

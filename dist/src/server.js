@@ -17,6 +17,7 @@ app.use((0, cors_1.default)());
 app.use((0, helmet_1.default)());
 const PORT = process.env.PORT || 3333;
 app.use(express_1.default.json());
+app.use(express_1.default.urlencoded({ extended: true }));
 app.use(auth_routes_1.authRoutes);
 app.use((err, request, response, next) => {
     if (err instanceof Error) {

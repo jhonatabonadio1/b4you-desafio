@@ -1,8 +1,11 @@
+import { S3 } from 'aws-sdk'
 import { prismaClient } from '../database/prismaClient'
+import fs from 'fs'
 
 interface IRequest {
   nome: string
-  imageUrl: string
+  fileName?: string
+  filePath?: string
   prestadores: string[]
   datasDisponiveis: string[]
   preco?: number
@@ -19,9 +22,20 @@ interface IRequest {
 }
 
 class CreateProductService {
+  private s3: S3
+
+  constructor() {
+    this.s3 = new S3({
+      region: process.env.AWS_REGION,
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    })
+  }
+
   async execute({
     nome,
-    imageUrl,
+    fileName,
+    filePath,
     prestadores,
     datasDisponiveis,
     diaResetLimite,
@@ -45,6 +59,27 @@ class CreateProductService {
       throw new Error('Selecione ao menos 1 data')
     }
 
+    let bannerUrl
+
+    if (filePath) {
+      const fileContent = fs.readFileSync(filePath)
+
+      // Configurações para upload no S3
+      const params = {
+        Bucket: process.env.AWS_BUCKET_NAME!, // Bucket name from environment variables
+        Key: `uploads/${fileName}`, // Nome do arquivo no S3
+        Body: fileContent, // Conteúdo do arquivo
+        ACL: 'public-read', // Tornar o arquivo público para leitura
+      }
+
+      // Faz upload para o S3
+      const s3Response = await this.s3.upload(params).promise()
+
+      bannerUrl = s3Response.Location
+
+      fs.unlinkSync(filePath)
+    }
+
     // const precoCents = preco * 100
     // const precoCarroGrandeCents = precoCarroGrande ? precoCarroGrande * 100 : 0
     // const precoCarroPequenoCents = precoCarroPequeno
@@ -54,7 +89,7 @@ class CreateProductService {
     const product = await prismaClient.servico.create({
       data: {
         nome,
-        imageUrl,
+        imageUrl: bannerUrl,
         prestadores,
         usoMensal,
         diaResetLimite,

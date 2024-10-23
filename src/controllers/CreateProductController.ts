@@ -3,9 +3,9 @@ import { CreateProductService } from '../services/CreateProductService'
 
 class CreateProductController {
   async handle(request: Request, response: Response) {
+    const { file } = request
     const {
       nome,
-      imageUrl,
       prestadores,
       datasDisponiveis,
       preco,
@@ -22,17 +22,18 @@ class CreateProductController {
 
     const product = await createProductService.execute({
       nome,
-      imageUrl,
-      prestadores,
-      datasDisponiveis,
+      fileName: file?.filename,
+      filePath: file?.path,
+      prestadores: prestadores ? JSON.parse(prestadores) : [],
+      datasDisponiveis: datasDisponiveis ? JSON.parse(datasDisponiveis) : [],
       preco,
-      usoMensal,
+      usoMensal: Number(usoMensal),
       precoCarroGrande,
       precoCarroPequeno,
-      ativo,
-      opcoesAdicionais,
-      diaResetLimite,
-      exigeVeiculo,
+      ativo: ativo === 'true',
+      opcoesAdicionais: opcoesAdicionais ? JSON.parse(opcoesAdicionais) : [],
+      diaResetLimite: Number(diaResetLimite),
+      exigeVeiculo: exigeVeiculo === 'true',
     })
 
     return response.json(product)

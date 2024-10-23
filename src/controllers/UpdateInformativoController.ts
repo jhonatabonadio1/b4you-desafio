@@ -3,7 +3,8 @@ import { UpdateInformativoService } from '../services/UpdateInformativoService'
 
 class UpdateInformativoController {
   async handle(request: Request, response: Response) {
-    const { titulo, texto, bannerUrl, url, html } = request.body
+    const { file } = request
+    const { titulo, texto, url, html } = request.body
     const { id } = request.params
 
     const updateInformativoService = new UpdateInformativoService()
@@ -12,7 +13,8 @@ class UpdateInformativoController {
       id,
       titulo,
       texto,
-      bannerUrl,
+      fileName: file?.filename,
+      filePath: file?.path,
       url,
       html,
     })

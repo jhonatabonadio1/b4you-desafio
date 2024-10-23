@@ -3,8 +3,8 @@ import { UpdateConvenioService } from '../services/UpdateConvenioService'
 
 class UpdateConvenioController {
   async handle(request: Request, response: Response) {
-    const { titulo, texto, bannerUrl, url, html, categoria, ativo } =
-      request.body
+    const { file } = request
+    const { titulo, texto, url, html, categoria, ativo } = request.body
     const { id } = request.params
 
     const updateConvenioService = new UpdateConvenioService()
@@ -13,7 +13,8 @@ class UpdateConvenioController {
       id,
       titulo,
       texto,
-      bannerUrl,
+      fileName: file?.filename,
+      filePath: file?.path,
       url,
       html,
       categoria,
