@@ -15,7 +15,7 @@ class UpdateProductService {
             secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
         });
     }
-    async execute({ id, nome, fileName, filePath, prestadores, datasDisponiveis, diaResetLimite, ativo, usoMensal, opcoesAdicionais, exigeVeiculo, }) {
+    async execute({ id, nome, fileName, filePath, prestadores, diaResetLimite, ativo, usoMensal, opcoesAdicionais, exigeVeiculo, }) {
         // Verificar se o produto existe
         const productExists = await prismaClient_1.prismaClient.servico.findFirst({
             where: { id, deleted: false },
@@ -46,7 +46,6 @@ class UpdateProductService {
                 nome,
                 imageUrl: bannerUrl || productExists.imageUrl,
                 prestadores,
-                datasDisponiveis,
                 diaResetLimite,
                 ativo,
                 usoMensal,

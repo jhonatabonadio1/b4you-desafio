@@ -96,6 +96,9 @@ import { FetchMemberExistsController } from '../controllers/FetchMemberExistsCon
 import { DeleteCargaController } from '../controllers/DeleteCargaController'
 import { CreateUserCargaController } from '../controllers/CreateUserCargaController'
 import { UpdateProductController } from '../controllers/UpdateProductController'
+import { FetchPrestadorHorariosController } from '../controllers/FetchPrestadorHorariosController'
+import { CreatePrestadorHorariosController } from '../controllers/CreatePrestadorHorariosController'
+import { DeletePrestadorHorariosController } from '../controllers/DeletePrestadorHorariosController'
 
 const authRoutes = Router()
 
@@ -202,6 +205,13 @@ const fetchCargaController = new FetchCargaController()
 const fetchMemberExistsController = new FetchMemberExistsController()
 const deleteCargaController = new DeleteCargaController()
 const createUserCargaController = new CreateUserCargaController()
+
+const fetchPrestadorHorariosController = new FetchPrestadorHorariosController()
+const createPrestadorHorariosController =
+  new CreatePrestadorHorariosController()
+
+const deletePrestadorHorariosController =
+  new DeletePrestadorHorariosController()
 
 authRoutes.post('/admin/users', ensureIsAdmin, createUserController.handle)
 authRoutes.post('/users', createUserCargaController.handle)
@@ -482,7 +492,6 @@ authRoutes.get(
   ensureAuthenticated,
   fetchStoreValidationsController.handle,
 )
-export { authRoutes }
 
 authRoutes.get(
   '/avaliacoes',
@@ -568,3 +577,23 @@ authRoutes.delete(
   ensureIsAdmin,
   deleteCargaController.handle,
 )
+
+authRoutes.get(
+  '/store/horarios',
+  ensureAuthenticated,
+  fetchPrestadorHorariosController.handle,
+)
+
+authRoutes.post(
+  '/store/horarios',
+  ensureAuthenticated,
+  createPrestadorHorariosController.handle,
+)
+
+authRoutes.delete(
+  '/store/horarios',
+  ensureAuthenticated,
+  deletePrestadorHorariosController.handle,
+)
+
+export { authRoutes }

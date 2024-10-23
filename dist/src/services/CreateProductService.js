@@ -15,7 +15,7 @@ class CreateProductService {
             secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
         });
     }
-    async execute({ nome, fileName, filePath, prestadores, datasDisponiveis, diaResetLimite, 
+    async execute({ nome, fileName, filePath, prestadores, diaResetLimite, 
     // preco,
     // precoCarroGrande,
     // precoCarroPequeno,
@@ -25,9 +25,6 @@ class CreateProductService {
         }
         if (prestadores.length === 0) {
             throw new Error('Selecione ao menos 1 prestador');
-        }
-        if (datasDisponiveis.length === 0) {
-            throw new Error('Selecione ao menos 1 data');
         }
         let bannerUrl;
         if (filePath) {
@@ -56,7 +53,6 @@ class CreateProductService {
                 prestadores,
                 usoMensal,
                 diaResetLimite,
-                datasDisponiveis,
                 exigeVeiculo,
                 ativo,
                 created_at: new Date(),

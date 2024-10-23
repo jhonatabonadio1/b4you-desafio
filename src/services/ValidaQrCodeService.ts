@@ -139,7 +139,7 @@ class ValidaQrCodeService {
 
       if (
         !brinde.todosUsuarios &&
-        !brinde.usuariosEspecificos.includes(findPrestador.id)
+        !brinde.usuariosEspecificos.includes(dataExtracted.userId)
       ) {
         throw new Error('Usuário não permitido para validação do brinde.')
       }

@@ -51,6 +51,7 @@ model Prestador {
   ativo       Boolean   @default(true)
   password    String
   email       String
+  datasDisponiveis  String[]
 
   agendamentos Agendamento[]
   validacao_brinde ValidacaoBrinde[]
@@ -67,6 +68,7 @@ model Brinde {
   nome                  String 
   qrcode                String?
   dataLimite            DateTime?
+
   imageUrl              String?
   data                  String?
   dataDisponibilidade   DateTime
@@ -107,7 +109,6 @@ model Servico {
   id          String      @id @default(auto()) @map("_id") @db.ObjectId
   nome        String
   imageUrl    String?
-  datasDisponiveis String[]
 
   agendamentos  Agendamento[]
   prestadores   String[]

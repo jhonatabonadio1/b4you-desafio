@@ -8,7 +8,6 @@ interface IRequest {
   fileName?: string
   filePath?: string
   prestadores?: string[]
-  datasDisponiveis?: string[]
   preco?: number
   precoCarroGrande?: number
   precoCarroPequeno?: number
@@ -40,7 +39,6 @@ class UpdateProductService {
     fileName,
     filePath,
     prestadores,
-    datasDisponiveis,
     diaResetLimite,
     ativo,
     usoMensal,
@@ -85,7 +83,7 @@ class UpdateProductService {
         nome,
         imageUrl: bannerUrl || productExists.imageUrl,
         prestadores,
-        datasDisponiveis,
+
         diaResetLimite,
         ativo,
         usoMensal,

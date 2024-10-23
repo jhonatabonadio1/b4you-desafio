@@ -8,7 +8,6 @@ class UpdateProductController {
     const {
       nome,
       prestadores,
-      datasDisponiveis,
       preco,
       usoMensal,
       precoCarroGrande,
@@ -27,7 +26,6 @@ class UpdateProductController {
       fileName: file?.filename,
       filePath: file?.path,
       prestadores: prestadores ? JSON.parse(prestadores) : [],
-      datasDisponiveis: datasDisponiveis ? JSON.parse(datasDisponiveis) : [],
       preco,
       usoMensal: Number(usoMensal),
       precoCarroGrande,

@@ -6,7 +6,7 @@ class UpdateProductController {
     async handle(request, response) {
         const { file } = request;
         const { id } = request.params;
-        const { nome, prestadores, datasDisponiveis, preco, usoMensal, precoCarroGrande, precoCarroPequeno, ativo, opcoesAdicionais, diaResetLimite, exigeVeiculo, } = request.body;
+        const { nome, prestadores, preco, usoMensal, precoCarroGrande, precoCarroPequeno, ativo, opcoesAdicionais, diaResetLimite, exigeVeiculo, } = request.body;
         const updateProductService = new UpdateProductService_1.UpdateProductService();
         const updatedProduct = await updateProductService.execute({
             id,
@@ -14,7 +14,6 @@ class UpdateProductController {
             fileName: file === null || file === void 0 ? void 0 : file.filename,
             filePath: file === null || file === void 0 ? void 0 : file.path,
             prestadores: prestadores ? JSON.parse(prestadores) : [],
-            datasDisponiveis: datasDisponiveis ? JSON.parse(datasDisponiveis) : [],
             preco,
             usoMensal: Number(usoMensal),
             precoCarroGrande,

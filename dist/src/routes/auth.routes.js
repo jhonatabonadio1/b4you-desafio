@@ -77,6 +77,9 @@ const FetchMemberExistsController_1 = require("../controllers/FetchMemberExistsC
 const DeleteCargaController_1 = require("../controllers/DeleteCargaController");
 const CreateUserCargaController_1 = require("../controllers/CreateUserCargaController");
 const UpdateProductController_1 = require("../controllers/UpdateProductController");
+const FetchPrestadorHorariosController_1 = require("../controllers/FetchPrestadorHorariosController");
+const CreatePrestadorHorariosController_1 = require("../controllers/CreatePrestadorHorariosController");
+const DeletePrestadorHorariosController_1 = require("../controllers/DeletePrestadorHorariosController");
 const authRoutes = (0, express_1.Router)();
 exports.authRoutes = authRoutes;
 const verifyAuthMatriculaController = new VerifyAuthMatriculaController_1.VerifyAuthMatriculaController();
@@ -151,6 +154,9 @@ const fetchCargaController = new FetchCargaController_1.FetchCargaController();
 const fetchMemberExistsController = new FetchMemberExistsController_1.FetchMemberExistsController();
 const deleteCargaController = new DeleteCargaController_1.DeleteCargaController();
 const createUserCargaController = new CreateUserCargaController_1.CreateUserCargaController();
+const fetchPrestadorHorariosController = new FetchPrestadorHorariosController_1.FetchPrestadorHorariosController();
+const createPrestadorHorariosController = new CreatePrestadorHorariosController_1.CreatePrestadorHorariosController();
+const deletePrestadorHorariosController = new DeletePrestadorHorariosController_1.DeletePrestadorHorariosController();
 authRoutes.post('/admin/users', ensureIsAdmin_1.ensureIsAdmin, createUserController.handle);
 authRoutes.post('/users', createUserCargaController.handle);
 authRoutes.put('/admin/users/:usuarioId', ensureIsAdmin_1.ensureIsAdmin, updateUserController.handle);
@@ -240,3 +246,6 @@ authRoutes.post('/admin/cargas', ensureIsAdmin_1.ensureIsAdmin, upload_1.upload.
 authRoutes.get('/admin/cargas', ensureIsAdmin_1.ensureIsAdmin, fetchCargaController.handle);
 authRoutes.get('/membro', fetchMemberExistsController.handle);
 authRoutes.delete('/admin/cargas/:id', ensureIsAdmin_1.ensureIsAdmin, deleteCargaController.handle);
+authRoutes.get('/store/horarios', ensureIsAuthenticated_1.ensureAuthenticated, fetchPrestadorHorariosController.handle);
+authRoutes.post('/store/horarios', ensureIsAuthenticated_1.ensureAuthenticated, createPrestadorHorariosController.handle);
+authRoutes.delete('/store/horarios', ensureIsAuthenticated_1.ensureAuthenticated, deletePrestadorHorariosController.handle);

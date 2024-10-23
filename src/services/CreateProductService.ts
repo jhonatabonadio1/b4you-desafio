@@ -7,7 +7,6 @@ interface IRequest {
   fileName?: string
   filePath?: string
   prestadores: string[]
-  datasDisponiveis: string[]
   preco?: number
   precoCarroGrande?: number
   precoCarroPequeno?: number
@@ -37,7 +36,7 @@ class CreateProductService {
     fileName,
     filePath,
     prestadores,
-    datasDisponiveis,
+
     diaResetLimite,
     // preco,
     // precoCarroGrande,
@@ -53,10 +52,6 @@ class CreateProductService {
 
     if (prestadores.length === 0) {
       throw new Error('Selecione ao menos 1 prestador')
-    }
-
-    if (datasDisponiveis.length === 0) {
-      throw new Error('Selecione ao menos 1 data')
     }
 
     let bannerUrl
@@ -93,7 +88,6 @@ class CreateProductService {
         prestadores,
         usoMensal,
         diaResetLimite,
-        datasDisponiveis,
         exigeVeiculo,
         ativo,
         created_at: new Date(),

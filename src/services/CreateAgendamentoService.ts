@@ -55,7 +55,7 @@ class CreateAgendamentoService {
       throw new Error('Serviço não encontrado')
     }
 
-    if (!findServico.datasDisponiveis.includes(horario)) {
+    if (!findPrestador.datasDisponiveis.includes(horario)) {
       throw new Error('Horário inexistente')
     }
 
