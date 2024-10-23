@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateAdminAgendamentoService = void 0;
 const prismaClient_1 = require("../database/prismaClient");
 class CreateAdminAgendamentoService {
-    async execute({ userId, servicoId, horario, semValidade, prestadorId, opcoesAdicionais, veiculoId, }) {
+    async execute({ userId, servicoId, horario, semValidade, observacao, prestadorId, opcoesAdicionais, veiculoId, }) {
         if (!servicoId || !prestadorId) {
             throw new Error('ID do serviço, ID do prestador  são obrigatórios');
         }
@@ -78,6 +78,7 @@ class CreateAdminAgendamentoService {
                 veiculo: veiculoId ? { connect: { id: veiculoId } } : undefined,
                 usuario: { connect: { id: findUser.id } },
                 opcoesAdicionais,
+                observacao,
                 prestador: { connect: { id: prestadorId } },
                 servico: { connect: { id: servicoId } },
             },

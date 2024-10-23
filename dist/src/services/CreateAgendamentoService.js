@@ -4,7 +4,7 @@ exports.CreateAgendamentoService = void 0;
 const prismaClient_1 = require("../database/prismaClient");
 const date_fns_1 = require("date-fns");
 class CreateAgendamentoService {
-    async execute({ userId, servicoId, horario, prestadorId, opcoesAdicionais, veiculoId, }) {
+    async execute({ userId, servicoId, horario, prestadorId, opcoesAdicionais, observacao, veiculoId, }) {
         if (!servicoId || !prestadorId || !horario) {
             throw new Error('ID do serviço, ID do prestador e horário são obrigatórios');
         }
@@ -185,6 +185,7 @@ class CreateAgendamentoService {
             data: {
                 data: horarioDate,
                 ativo: true,
+                observacao,
                 veiculo: veiculoId ? { connect: { id: veiculoId } } : undefined,
                 usuario: { connect: { id: userId } },
                 opcoesAdicionais,

@@ -177,7 +177,8 @@ model Agendamento {
   prestadorId String    @db.ObjectId
   usuario     Usuario   @relation(fields: [usuarioId], references: [id])
   usuarioId   String    @db.ObjectId
-
+  observacao    String?
+  
   servico     Servico  @relation(fields: [servicoId], references: [id])
   servicoId   String    @db.ObjectId
 

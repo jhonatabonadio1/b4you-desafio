@@ -4,8 +4,14 @@ import { CreateAgendamentoService } from '../services/CreateAgendamentoService'
 class CreateAgendamentoController {
   async handle(request: Request, response: Response) {
     const { userId } = request
-    const { servicoId, horario, prestadorId, veiculoId, opcoesAdicionais } =
-      request.body
+    const {
+      servicoId,
+      horario,
+      prestadorId,
+      veiculoId,
+      opcoesAdicionais,
+      observacao,
+    } = request.body
 
     const createBrindeService = new CreateAgendamentoService()
 
@@ -13,6 +19,7 @@ class CreateAgendamentoController {
       userId,
       servicoId,
       horario,
+      observacao,
       veiculoId,
       prestadorId,
       opcoesAdicionais,

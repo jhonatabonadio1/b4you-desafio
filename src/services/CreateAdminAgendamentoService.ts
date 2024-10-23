@@ -6,6 +6,7 @@ interface IRequest {
   horario: string
   prestadorId: string
   semValidade?: boolean
+  observacao?: string
   opcoesAdicionais?: string[]
   veiculoId: string
 }
@@ -16,6 +17,7 @@ class CreateAdminAgendamentoService {
     servicoId,
     horario,
     semValidade,
+    observacao,
     prestadorId,
     opcoesAdicionais,
     veiculoId,
@@ -113,6 +115,7 @@ class CreateAdminAgendamentoService {
         veiculo: veiculoId ? { connect: { id: veiculoId } } : undefined,
         usuario: { connect: { id: findUser.id } },
         opcoesAdicionais,
+        observacao,
         prestador: { connect: { id: prestadorId } },
         servico: { connect: { id: servicoId } },
       },

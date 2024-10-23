@@ -13,6 +13,7 @@ interface IRequest {
   horario: string
   prestadorId: string
   opcoesAdicionais?: string[]
+  observacao?: string
   veiculoId: string
 }
 
@@ -23,6 +24,7 @@ class CreateAgendamentoService {
     horario,
     prestadorId,
     opcoesAdicionais,
+    observacao,
     veiculoId,
   }: IRequest) {
     if (!servicoId || !prestadorId || !horario) {
@@ -242,6 +244,7 @@ class CreateAgendamentoService {
       data: {
         data: horarioDate,
         ativo: true,
+        observacao,
         veiculo: veiculoId ? { connect: { id: veiculoId } } : undefined,
         usuario: { connect: { id: userId } },
         opcoesAdicionais,

@@ -32,6 +32,7 @@ class FetchProductPrestadoresService {
                         where: {
                             servicoId: produtoId,
                             prestadorId: buscaPrestador.id,
+                            ativo: true,
                             deleted: false,
                         },
                         select: {

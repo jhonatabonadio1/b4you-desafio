@@ -9,6 +9,7 @@ class CreateAdminAgendamentoController {
       semValidade,
       horario,
       prestadorId,
+      observacao,
       veiculoId,
       opcoesAdicionais,
     } = request.body
@@ -21,6 +22,7 @@ class CreateAdminAgendamentoController {
       semValidade,
       horario,
       veiculoId,
+      observacao,
       prestadorId,
       opcoesAdicionais,
     })
