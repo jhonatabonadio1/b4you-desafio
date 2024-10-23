@@ -18,8 +18,8 @@ class UploadUserAvatarController {
       const updatedUser = await uploadAvatarService.execute(
         userId,
         file.path,
-        tipoAcesso,
         file.originalname,
+        tipoAcesso,
       )
 
       // Retorna os dados do usuário atualizado com a nova URL do avatar

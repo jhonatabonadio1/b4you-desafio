@@ -12,7 +12,7 @@ class UploadUserAvatarController {
         const uploadAvatarService = new UploadUserAvatarService_1.UploadUserAvatarService();
         try {
             // Executa o serviço de upload, incluindo o upload para o S3 e remoção do arquivo temporário
-            const updatedUser = await uploadAvatarService.execute(userId, file.path, tipoAcesso, file.originalname);
+            const updatedUser = await uploadAvatarService.execute(userId, file.path, file.originalname, tipoAcesso);
             // Retorna os dados do usuário atualizado com a nova URL do avatar
             return response.status(200).json(updatedUser);
         }

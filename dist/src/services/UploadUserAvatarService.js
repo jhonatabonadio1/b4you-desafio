@@ -17,9 +17,12 @@ class UploadUserAvatarService {
             secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
         });
     }
-    async execute(tipoAcesso, userId, filePath, fileName) {
+    async execute(userId, filePath, fileName, tipoAcesso) {
         if (!userId) {
             throw new Error('ID do usuário não fornecido.');
+        }
+        if (!tipoAcesso) {
+            throw new Error('Tipo de acesso é obrigatório');
         }
         const upload = async () => {
             const fileContent = fs_1.default.readFileSync(filePath);

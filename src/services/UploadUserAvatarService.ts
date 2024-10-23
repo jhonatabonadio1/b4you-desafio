@@ -16,13 +16,17 @@ class UploadUserAvatarService {
   }
 
   async execute(
-    tipoAcesso: string,
     userId: string,
     filePath: string,
     fileName: string,
+    tipoAcesso: string,
   ) {
     if (!userId) {
       throw new Error('ID do usuário não fornecido.')
+    }
+
+    if (!tipoAcesso) {
+      throw new Error('Tipo de acesso é obrigatório')
     }
 
     const upload = async () => {
