@@ -15,49 +15,86 @@ class UploadUserAvatarService {
     })
   }
 
-  async execute(userId: string, filePath: string, fileName: string) {
+  async execute(
+    tipoAcesso: string,
+    userId: string,
+    filePath: string,
+    fileName: string,
+  ) {
     if (!userId) {
       throw new Error('ID do usuário não fornecido.')
     }
 
-    const fileContent = fs.readFileSync(filePath)
+    const upload = async () => {
+      const fileContent = fs.readFileSync(filePath)
 
-    // Extrair a extensão do arquivo original
-    const fileExtension = path.extname(fileName).toLowerCase() // Exemplo: .jpg, .png
+      // Extrair a extensão do arquivo original
+      const fileExtension = path.extname(fileName).toLowerCase() // Exemplo: .jpg, .png
 
-    // Verificar se a extensão está correta e se é uma extensão de imagem válida
-    const validExtensions = ['.jpg', '.jpeg', '.png', '.gif']
-    if (!validExtensions.includes(fileExtension)) {
-      throw new Error(
-        'Formato de arquivo inválido. Use uma imagem no formato JPG, PNG ou GIF.',
-      )
+      // Verificar se a extensão está correta e se é uma extensão de imagem válida
+      const validExtensions = ['.jpg', '.jpeg', '.png', '.gif']
+      if (!validExtensions.includes(fileExtension)) {
+        throw new Error(
+          'Formato de arquivo inválido. Use uma imagem no formato JPG, PNG ou GIF.',
+        )
+      }
+
+      // Gerar um novo nome de arquivo com a extensão correta
+      const newFileName = `${uuid()}${fileExtension}` // Gera um UUID com a extensão do arquivo original
+
+      // Configurações para upload no S3
+      const params = {
+        Bucket: process.env.AWS_BUCKET_NAME!, // Nome do bucket no S3
+        Key: `avatars/${userId}/${newFileName}`, // Nome do arquivo no S3, agora com a extensão
+        Body: fileContent, // Conteúdo do arquivo
+        ACL: 'public-read', // Torna o avatar publicamente acessível
+        ContentType: `image/${fileExtension.replace('.', '')}`, // Define o tipo de conteúdo corretamente
+      }
+
+      // Faz upload para o S3
+      const s3Response = await this.s3.upload(params).promise()
+
+      // Remove o arquivo temporário do servidor após o upload
+      fs.unlinkSync(filePath)
+
+      return s3Response.Location
     }
 
-    // Gerar um novo nome de arquivo com a extensão correta
-    const newFileName = `${uuid()}${fileExtension}` // Gera um UUID com a extensão do arquivo original
+    if (tipoAcesso === '1') {
+      const user = await prismaClient.usuario.findFirst({
+        where: { id: userId, deleted: false }, // Certifique-se de que o `userId` está corretamente definido
+      })
+      if (!user) {
+        throw new Error('Usuário não encotrado.')
+      }
 
-    // Configurações para upload no S3
-    const params = {
-      Bucket: process.env.AWS_BUCKET_NAME!, // Nome do bucket no S3
-      Key: `avatars/${userId}/${newFileName}`, // Nome do arquivo no S3, agora com a extensão
-      Body: fileContent, // Conteúdo do arquivo
-      ACL: 'public-read', // Torna o avatar publicamente acessível
-      ContentType: `image/${fileExtension.replace('.', '')}`, // Define o tipo de conteúdo corretamente
+      const image = await upload()
+
+      const updateUser = await prismaClient.usuario.update({
+        where: { id: user.id }, // Certifique-se de que o `userId` está corretamente definido
+        data: { avatarUrl: image }, // URL gerada pelo S3
+      })
+
+      return updateUser
     }
 
-    // Faz upload para o S3
-    const s3Response = await this.s3.upload(params).promise()
+    if (tipoAcesso === '2') {
+      const user = await prismaClient.prestador.findFirst({
+        where: { id: userId, deleted: false }, // Certifique-se de que o `userId` está corretamente definido
+      })
+      if (!user) {
+        throw new Error('Usuário não encotrado.')
+      }
 
-    // Remove o arquivo temporário do servidor após o upload
-    fs.unlinkSync(filePath)
+      const image = await upload()
 
-    // Atualiza o link do avatar do usuário no banco de dados
-    const user = await prismaClient.usuario.update({
-      where: { id: userId }, // Certifique-se de que o `userId` está corretamente definido
-      data: { avatarUrl: s3Response.Location }, // URL gerada pelo S3
-    })
+      const updateUser = await prismaClient.prestador.update({
+        where: { id: user.id }, // Certifique-se de que o `userId` está corretamente definido
+        data: { avatarUrl: image }, // URL gerada pelo S3
+      })
 
-    return user // Retorna o usuário atualizado com a URL do avatar
+      return updateUser // Retorna o usuário atualizado com a URL do avatar
+    }
   }
 }
 

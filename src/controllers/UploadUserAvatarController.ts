@@ -5,6 +5,7 @@ import { UploadUserAvatarService } from '../services/UploadUserAvatarService'
 class UploadUserAvatarController {
   async handle(request: Request, response: Response) {
     const { file, userId } = request // Arquivo processado pelo multer
+    const { tipoAcesso } = request.body
 
     if (!file) {
       return response.status(400).json({ error: 'Nenhum arquivo foi enviado.' })
@@ -17,6 +18,7 @@ class UploadUserAvatarController {
       const updatedUser = await uploadAvatarService.execute(
         userId,
         file.path,
+        tipoAcesso,
         file.originalname,
       )
 

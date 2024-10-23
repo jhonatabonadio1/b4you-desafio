@@ -5,13 +5,14 @@ const UploadUserAvatarService_1 = require("../services/UploadUserAvatarService")
 class UploadUserAvatarController {
     async handle(request, response) {
         const { file, userId } = request; // Arquivo processado pelo multer
+        const { tipoAcesso } = request.body;
         if (!file) {
             return response.status(400).json({ error: 'Nenhum arquivo foi enviado.' });
         }
         const uploadAvatarService = new UploadUserAvatarService_1.UploadUserAvatarService();
         try {
             // Executa o serviço de upload, incluindo o upload para o S3 e remoção do arquivo temporário
-            const updatedUser = await uploadAvatarService.execute(userId, file.path, file.originalname);
+            const updatedUser = await uploadAvatarService.execute(userId, file.path, tipoAcesso, file.originalname);
             // Retorna os dados do usuário atualizado com a nova URL do avatar
             return response.status(200).json(updatedUser);
         }
