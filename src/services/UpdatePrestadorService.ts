@@ -93,7 +93,10 @@ class UpdatePrestadorService {
         }
       }
 
-      const passwordHash = password ? await hash(password, 8) : user.password
+      const passwordHash =
+        password && password.length > 0
+          ? await hash(password, 8)
+          : user.password
       const inscricaoString = inscricao
         ? inscricao.toString().replace(/\D/g, '')
         : user.inscricao

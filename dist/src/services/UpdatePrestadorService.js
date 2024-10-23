@@ -49,7 +49,9 @@ class UpdatePrestadorService {
                     throw new Error('E-mail já cadastrado no sistema.');
                 }
             }
-            const passwordHash = password ? await (0, bcryptjs_1.hash)(password, 8) : user.password;
+            const passwordHash = password && password.length > 0
+                ? await (0, bcryptjs_1.hash)(password, 8)
+                : user.password;
             const inscricaoString = inscricao
                 ? inscricao.toString().replace(/\D/g, '')
                 : user.inscricao;
