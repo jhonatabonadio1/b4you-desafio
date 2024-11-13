@@ -50,36 +50,29 @@ class DeleteAgendamentoStoreService {
     })
 
     async function sendNotification() {
-      await axios
-        .post(
-          'https://api.onesignal.com/notifications',
-          {
-            app_id: process.env.ONESIGNAL_APP_ID!,
-            name: 'Cancelamento',
-            target_channel: 'push',
-            headings: {
-              en: 'Seu agendamento foi cancelado',
-            },
-            include_aliases: { external_id: [agendamento?.usuarioId] },
-            contents: {
-              en:
-                'Seu agendamento com ' +
-                prestador?.razaoSocial +
-                ' foi cancelado. Entre no app para agendar novamente!',
-            },
+      await axios.post(
+        'https://api.onesignal.com/notifications',
+        {
+          app_id: process.env.ONESIGNAL_APP_ID!,
+          name: 'Cancelamento',
+          target_channel: 'push',
+          headings: {
+            en: 'Seu agendamento foi cancelado',
           },
-          {
-            headers: {
-              Authorization: process.env.ONESIGNAL_API_KEY!,
-            },
+          include_aliases: { external_id: [agendamento?.usuarioId] },
+          contents: {
+            en:
+              'Seu agendamento com ' +
+              prestador?.razaoSocial +
+              ' foi cancelado. Entre no app para agendar novamente!',
           },
-        )
-        .then((data) => {
-          console.log(data)
-        })
-        .catch(({ response }) => {
-          console.log(response)
-        })
+        },
+        {
+          headers: {
+            Authorization: process.env.ONESIGNAL_API_KEY!,
+          },
+        },
+      )
     }
 
     if (deleteAgendamento) {

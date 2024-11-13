@@ -42,8 +42,7 @@ class DeleteAgendamentoStoreService {
             },
         });
         async function sendNotification() {
-            await axios_1.default
-                .post('https://api.onesignal.com/notifications', {
+            await axios_1.default.post('https://api.onesignal.com/notifications', {
                 app_id: process.env.ONESIGNAL_APP_ID,
                 name: 'Cancelamento',
                 target_channel: 'push',
@@ -60,12 +59,6 @@ class DeleteAgendamentoStoreService {
                 headers: {
                     Authorization: process.env.ONESIGNAL_API_KEY,
                 },
-            })
-                .then((data) => {
-                console.log(data);
-            })
-                .catch(({ response }) => {
-                console.log(response);
             });
         }
         if (deleteAgendamento) {

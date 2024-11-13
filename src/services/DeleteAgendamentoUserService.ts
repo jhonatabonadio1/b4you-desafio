@@ -1,5 +1,6 @@
+import axios from 'axios'
 import { prismaClient } from '../database/prismaClient'
-import { isBefore, subHours, addMinutes } from 'date-fns'
+import { isBefore, subHours, addMinutes, parseISO, format } from 'date-fns'
 
 interface IRequest {
   id: string
@@ -57,6 +58,43 @@ class DeleteAgendamentoUserService {
             ativo: false,
           },
         })
+
+        const dataString = new Date(agendamento.data).toISOString()
+
+        const dataAgendamentoFormatada = format(
+          parseISO(dataString),
+          "dd/MM/yyyy 'às' HH:mm",
+        )
+
+        async function sendNotification() {
+          await axios.post(
+            'https://api.onesignal.com/notifications',
+            {
+              app_id: process.env.ONESIGNAL_APP_ID!,
+              name: 'Cancelamento',
+              target_channel: 'push',
+              headings: {
+                en: 'Agendamento cancelado',
+              },
+              include_aliases: { external_id: [agendamento?.prestadorId] },
+              contents: {
+                en:
+                  'O agendamento do dia ' +
+                  dataAgendamentoFormatada +
+                  ' foi cancelado.',
+              },
+            },
+            {
+              headers: {
+                Authorization: process.env.ONESIGNAL_API_KEY!,
+              },
+            },
+          )
+        }
+
+        if (deleteAgendamento) {
+          sendNotification()
+        }
 
         return deleteAgendamento
       }
