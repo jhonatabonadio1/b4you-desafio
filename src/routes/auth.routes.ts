@@ -99,6 +99,7 @@ import { UpdateProductController } from '../controllers/UpdateProductController'
 import { FetchPrestadorHorariosController } from '../controllers/FetchPrestadorHorariosController'
 import { CreatePrestadorHorariosController } from '../controllers/CreatePrestadorHorariosController'
 import { DeletePrestadorHorariosController } from '../controllers/DeletePrestadorHorariosController'
+import { DownloadValidacoesCSVController } from '../controllers/DownloadValidacoesCSVController'
 
 const authRoutes = Router()
 
@@ -212,6 +213,8 @@ const createPrestadorHorariosController =
 
 const deletePrestadorHorariosController =
   new DeletePrestadorHorariosController()
+
+const downloadValidacoesCSVController = new DownloadValidacoesCSVController()
 
 authRoutes.post('/admin/users', ensureIsAdmin, createUserController.handle)
 authRoutes.post('/users', createUserCargaController.handle)
@@ -594,6 +597,12 @@ authRoutes.delete(
   '/store/horarios',
   ensureAuthenticated,
   deletePrestadorHorariosController.handle,
+)
+
+authRoutes.get(
+  '/admin/download-validacoes-csv',
+  ensureIsAdmin,
+  downloadValidacoesCSVController.handle,
 )
 
 export { authRoutes }

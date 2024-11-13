@@ -80,6 +80,7 @@ const UpdateProductController_1 = require("../controllers/UpdateProductControlle
 const FetchPrestadorHorariosController_1 = require("../controllers/FetchPrestadorHorariosController");
 const CreatePrestadorHorariosController_1 = require("../controllers/CreatePrestadorHorariosController");
 const DeletePrestadorHorariosController_1 = require("../controllers/DeletePrestadorHorariosController");
+const DownloadValidacoesCSVController_1 = require("../controllers/DownloadValidacoesCSVController");
 const authRoutes = (0, express_1.Router)();
 exports.authRoutes = authRoutes;
 const verifyAuthMatriculaController = new VerifyAuthMatriculaController_1.VerifyAuthMatriculaController();
@@ -157,6 +158,7 @@ const createUserCargaController = new CreateUserCargaController_1.CreateUserCarg
 const fetchPrestadorHorariosController = new FetchPrestadorHorariosController_1.FetchPrestadorHorariosController();
 const createPrestadorHorariosController = new CreatePrestadorHorariosController_1.CreatePrestadorHorariosController();
 const deletePrestadorHorariosController = new DeletePrestadorHorariosController_1.DeletePrestadorHorariosController();
+const downloadValidacoesCSVController = new DownloadValidacoesCSVController_1.DownloadValidacoesCSVController();
 authRoutes.post('/admin/users', ensureIsAdmin_1.ensureIsAdmin, createUserController.handle);
 authRoutes.post('/users', createUserCargaController.handle);
 authRoutes.put('/admin/users/:usuarioId', ensureIsAdmin_1.ensureIsAdmin, updateUserController.handle);
@@ -249,3 +251,4 @@ authRoutes.delete('/admin/cargas/:id', ensureIsAdmin_1.ensureIsAdmin, deleteCarg
 authRoutes.get('/store/horarios', ensureIsAuthenticated_1.ensureAuthenticated, fetchPrestadorHorariosController.handle);
 authRoutes.post('/store/horarios', ensureIsAuthenticated_1.ensureAuthenticated, createPrestadorHorariosController.handle);
 authRoutes.delete('/store/horarios', ensureIsAuthenticated_1.ensureAuthenticated, deletePrestadorHorariosController.handle);
+authRoutes.get('/admin/download-validacoes-csv', ensureIsAdmin_1.ensureIsAdmin, downloadValidacoesCSVController.handle);
