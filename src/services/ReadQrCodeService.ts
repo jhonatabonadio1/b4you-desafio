@@ -141,6 +141,7 @@ class ReadQrCodeService {
         await prismaClient.validacaoBrinde.findFirst({
           where: {
             brindeId: brinde.id,
+            usuarioId: findUser.id,
           },
         })
 

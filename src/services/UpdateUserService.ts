@@ -90,6 +90,7 @@ class UpdateUserService {
         password && password.length > 0
           ? await hash(password, 8)
           : user.password
+
       const inscricaoString = matricula
         ? matricula.toString().replace(/\D/g, '')
         : user.matricula

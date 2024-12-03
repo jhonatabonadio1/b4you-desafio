@@ -109,6 +109,7 @@ class ReadQrCodeService {
             const buscaBrindeJaValidado = await prismaClient_1.prismaClient.validacaoBrinde.findFirst({
                 where: {
                     brindeId: brinde.id,
+                    usuarioId: findUser.id,
                 },
             });
             if (buscaBrindeJaValidado) {
