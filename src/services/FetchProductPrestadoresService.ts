@@ -1,5 +1,6 @@
 import { prismaClient } from '../database/prismaClient'
-import { isAfter, subHours } from 'date-fns'
+import { isAfter } from 'date-fns'
+import { toZonedTime } from 'date-fns-tz'
 
 type IProduto = {
   produtoId: string
@@ -17,7 +18,8 @@ function exclude<Prestador, Key extends keyof Prestador>(
 
 class FetchProductPrestadoresService {
   async execute({ produtoId }: IProduto) {
-    const agora = subHours(new Date(), 3) // Ajusta para GMT-3
+    const timeZone = 'America/Sao_Paulo' // Fuso horário de São Paulo
+    const agora = toZonedTime(new Date(), timeZone) // Converte a hora atual no timezone para UTC
     const prestadoresComHorariosDisponiveis = []
 
     // Busca o produto/serviço com base no ID do produto
@@ -35,7 +37,10 @@ class FetchProductPrestadoresService {
         if (buscaPrestador) {
           // Filtra as datas disponíveis para manter apenas as que estão no presente ou futuro
           const horariosDisponiveis = buscaPrestador.datasDisponiveis?.filter(
-            (horario) => isAfter(new Date(horario), agora),
+            (horario) => {
+              const horarioUtc = toZonedTime(new Date(horario), timeZone)
+              return isAfter(horarioUtc, agora)
+            },
           )
 
           // Busca agendamentos já realizados para o prestador e produto específico
@@ -56,9 +61,11 @@ class FetchProductPrestadoresService {
             (horario) =>
               !agendamentos.some((agendamento) => {
                 const agendamentoData = agendamento.data
-                  ? new Date(agendamento.data).getTime()
+                  ? toZonedTime(new Date(agendamento.data), timeZone).getTime()
                   : null
-                const horarioData = horario ? new Date(horario).getTime() : null
+                const horarioData = horario
+                  ? toZonedTime(new Date(horario), timeZone).getTime()
+                  : null
 
                 return (
                   agendamentoData !== null &&
@@ -85,7 +92,7 @@ class FetchProductPrestadoresService {
       }
     }
 
-    return prestadoresComHorariosDisponiveis ?? agora
+    return prestadoresComHorariosDisponiveis ?? []
   }
 }
 

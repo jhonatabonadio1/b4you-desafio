@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FetchProductPrestadoresService = void 0;
 const prismaClient_1 = require("../database/prismaClient");
 const date_fns_1 = require("date-fns");
+const date_fns_tz_1 = require("date-fns-tz");
 // Exclude keys from user
 function exclude(user, keys) {
     const userCopy = Object.assign({}, user);
@@ -12,7 +13,8 @@ function exclude(user, keys) {
 class FetchProductPrestadoresService {
     async execute({ produtoId }) {
         var _a;
-        const agora = (0, date_fns_1.subHours)(new Date(), 3); // Ajusta para GMT-3
+        const timeZone = 'America/Sao_Paulo'; // Fuso horário de São Paulo
+        const agora = (0, date_fns_tz_1.toZonedTime)(new Date(), timeZone); // Converte a hora atual no timezone para UTC
         const prestadoresComHorariosDisponiveis = [];
         // Busca o produto/serviço com base no ID do produto
         const findProducts = await prismaClient_1.prismaClient.servico.findFirst({
@@ -26,7 +28,10 @@ class FetchProductPrestadoresService {
                 });
                 if (buscaPrestador) {
                     // Filtra as datas disponíveis para manter apenas as que estão no presente ou futuro
-                    const horariosDisponiveis = (_a = buscaPrestador.datasDisponiveis) === null || _a === void 0 ? void 0 : _a.filter((horario) => (0, date_fns_1.isAfter)(new Date(horario), agora));
+                    const horariosDisponiveis = (_a = buscaPrestador.datasDisponiveis) === null || _a === void 0 ? void 0 : _a.filter((horario) => {
+                        const horarioUtc = (0, date_fns_tz_1.toZonedTime)(new Date(horario), timeZone);
+                        return (0, date_fns_1.isAfter)(horarioUtc, agora);
+                    });
                     // Busca agendamentos já realizados para o prestador e produto específico
                     const agendamentos = await prismaClient_1.prismaClient.agendamento.findMany({
                         where: {
@@ -42,9 +47,11 @@ class FetchProductPrestadoresService {
                     // Filtra os horários disponíveis, excluindo aqueles que já foram reservados
                     const horariosFiltrados = horariosDisponiveis === null || horariosDisponiveis === void 0 ? void 0 : horariosDisponiveis.filter((horario) => !agendamentos.some((agendamento) => {
                         const agendamentoData = agendamento.data
-                            ? new Date(agendamento.data).getTime()
+                            ? (0, date_fns_tz_1.toZonedTime)(new Date(agendamento.data), timeZone).getTime()
                             : null;
-                        const horarioData = horario ? new Date(horario).getTime() : null;
+                        const horarioData = horario
+                            ? (0, date_fns_tz_1.toZonedTime)(new Date(horario), timeZone).getTime()
+                            : null;
                         return (agendamentoData !== null &&
                             horarioData !== null &&
                             agendamentoData === horarioData);
@@ -63,7 +70,7 @@ class FetchProductPrestadoresService {
                 }
             }
         }
-        return prestadoresComHorariosDisponiveis !== null && prestadoresComHorariosDisponiveis !== void 0 ? prestadoresComHorariosDisponiveis : agora;
+        return prestadoresComHorariosDisponiveis !== null && prestadoresComHorariosDisponiveis !== void 0 ? prestadoresComHorariosDisponiveis : [];
     }
 }
 exports.FetchProductPrestadoresService = FetchProductPrestadoresService;

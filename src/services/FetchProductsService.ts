@@ -37,6 +37,8 @@ class FetchProductsService {
       select: {
         id: true,
         nome: true,
+        ativo: true,
+        exigeVeiculo: true,
         created_at: true,
       },
       orderBy: { created_at: 'desc' },

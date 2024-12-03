@@ -1,16 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DownloadValidacoesCSVService = void 0;
-const date_fns_1 = require("date-fns");
 const prismaClient_1 = require("../database/prismaClient");
 const exceljs_1 = require("exceljs");
+const date_fns_tz_1 = require("date-fns-tz");
+const date_fns_1 = require("date-fns");
 class DownloadValidacoesCSVService {
     async execute({ fromDate, toDate }) {
+        const timeZone = 'America/Sao_Paulo'; // Defina o fuso horário correto
+        const from = (0, date_fns_tz_1.toZonedTime)(fromDate, timeZone); // Converte o horário local para UTC
+        const to = (0, date_fns_tz_1.toZonedTime)(`${toDate}T23:59:59`, timeZone); // Ajusta para o final do dia no UTC
         const validacoes = await prismaClient_1.prismaClient.validacaoAgendamento.findMany({
             where: {
                 created_at: {
-                    gte: new Date(fromDate),
-                    lte: new Date(toDate),
+                    gte: from, // Início do intervalo
+                    lte: to, // Final do intervalo ajustado
                 },
             },
             select: {
@@ -69,7 +73,7 @@ class DownloadValidacoesCSVService {
             let dataValidacao = '';
             if (validacao.created_at) {
                 const agendamentoString = new Date(validacao.created_at).toISOString();
-                dataValidacao = (0, date_fns_1.format)((0, date_fns_1.parseISO)(agendamentoString), "dd/MM/yyyy 'às' hh:MM");
+                dataValidacao = (0, date_fns_1.format)((0, date_fns_1.parseISO)(agendamentoString), "dd/MM/yyyy 'às' HH:mm");
             }
             worksheet.addRow({
                 id: validacao.id,

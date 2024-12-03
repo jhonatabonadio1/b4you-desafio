@@ -1,6 +1,7 @@
-import { format, parseISO } from 'date-fns'
 import { prismaClient } from '../database/prismaClient'
 import { Workbook } from 'exceljs'
+import { toZonedTime } from 'date-fns-tz'
+import { format, parseISO } from 'date-fns'
 
 interface IDateRange {
   fromDate: string
@@ -9,11 +10,16 @@ interface IDateRange {
 
 class DownloadValidacoesCSVService {
   async execute({ fromDate, toDate }: IDateRange) {
+    const timeZone = 'America/Sao_Paulo' // Defina o fuso horário correto
+
+    const from = toZonedTime(fromDate, timeZone) // Converte o horário local para UTC
+    const to = toZonedTime(`${toDate}T23:59:59`, timeZone) // Ajusta para o final do dia no UTC
+
     const validacoes = await prismaClient.validacaoAgendamento.findMany({
       where: {
         created_at: {
-          gte: new Date(fromDate),
-          lte: new Date(toDate),
+          gte: from, // Início do intervalo
+          lte: to, // Final do intervalo ajustado
         },
       },
       select: {
@@ -83,7 +89,7 @@ class DownloadValidacoesCSVService {
         const agendamentoString = new Date(validacao.created_at).toISOString()
         dataValidacao = format(
           parseISO(agendamentoString),
-          "dd/MM/yyyy 'às' hh:MM",
+          "dd/MM/yyyy 'às' HH:mm",
         )
       }
       worksheet.addRow({
