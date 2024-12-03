@@ -1,3 +1,4 @@
+
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -120,7 +121,7 @@ model Servico {
 
   diaResetLimite  Int    @default(20)
 
-  opcoesAdicionais OpcaoAdicional[] @relation("ServicoOpcoesAdicionais")
+  opcoesAdicionais String
 
   usoMensal   Int?
 
@@ -131,20 +132,6 @@ model Servico {
   @@map("servicos")
 }
 
-model OpcaoAdicional {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  nome        String
-  value       Int?
-
-  usoMensal   Int?
-
-  servico     Servico? @relation("ServicoOpcoesAdicionais", fields: [servicoId], references: [id])
-  servicoId   String   @db.ObjectId
-
-  deleted     Boolean     @default(false)
-  
-  @@map("opcoes_adicionais")
-}
 
 model ValidacaoAgendamento {
   id             String        @id @default(auto()) @map("_id") @db.ObjectId
@@ -166,6 +153,7 @@ model ValidacaoAgendamento {
   agendamentoId  String        @db.ObjectId
 
   created_at     DateTime      @default(now())
+  deletedAvaliacao       Boolean?
 
   @@map("validacao_agendamentos")
 }
@@ -182,7 +170,7 @@ model Agendamento {
   servico     Servico  @relation(fields: [servicoId], references: [id])
   servicoId   String    @db.ObjectId
 
-  opcoesAdicionais String[]
+  opcoesAdicionais String
 
   veiculo Veiculo? @relation(fields: [veiculoId], references: [id])
   veiculoId String?    @db.ObjectId

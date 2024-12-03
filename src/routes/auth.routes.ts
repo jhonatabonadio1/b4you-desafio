@@ -100,6 +100,7 @@ import { FetchPrestadorHorariosController } from '../controllers/FetchPrestadorH
 import { CreatePrestadorHorariosController } from '../controllers/CreatePrestadorHorariosController'
 import { DeletePrestadorHorariosController } from '../controllers/DeletePrestadorHorariosController'
 import { DownloadValidacoesCSVController } from '../controllers/DownloadValidacoesCSVController'
+import { DeleteAvaliacaoAdminController } from '../controllers/DeleteAvaliacaoAdminController'
 
 const authRoutes = Router()
 
@@ -215,6 +216,8 @@ const deletePrestadorHorariosController =
   new DeletePrestadorHorariosController()
 
 const downloadValidacoesCSVController = new DownloadValidacoesCSVController()
+
+const deleteAvaliacaoAdminController = new DeleteAvaliacaoAdminController()
 
 authRoutes.post('/admin/users', ensureIsAdmin, createUserController.handle)
 authRoutes.post('/users', createUserCargaController.handle)
@@ -518,6 +521,12 @@ authRoutes.get(
   '/admin/avaliacoes',
   ensureIsAdmin,
   fetchAdminAvaliacoesController.handle,
+)
+
+authRoutes.delete(
+  '/admin/avaliacoes/:id',
+  ensureIsAdmin,
+  deleteAvaliacaoAdminController.handle,
 )
 
 authRoutes.get(

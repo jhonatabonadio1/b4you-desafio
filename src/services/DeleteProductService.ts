@@ -16,6 +16,7 @@ class DeleteProductService {
 
     const updateUserService = await prismaClient.servico.update({
       where: { id: produto.id, deleted: false },
+
       data: {
         deleted: true,
       },

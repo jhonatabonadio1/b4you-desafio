@@ -7,9 +7,6 @@ class GetServiceInfoService {
     async execute({ id }) {
         const findProduct = await prismaClient_1.prismaClient.servico.findFirst({
             where: { id, deleted: false },
-            include: {
-                opcoesAdicionais: true,
-            },
         });
         if (!findProduct) {
             throw new Error('Serviço não encontrado.');
@@ -29,6 +26,15 @@ class GetServiceInfoService {
             }
         }
         console.log(prestadores);
+        // Realiza o JSON parse nas opções adicionais e adiciona no findProduct
+        if (findProduct.opcoesAdicionais) {
+            try {
+                findProduct.opcoesAdicionais = JSON.parse(findProduct.opcoesAdicionais);
+            }
+            catch (error) {
+                console.error('Erro ao fazer o JSON parse das opções adicionais:', error);
+            }
+        }
         return Object.assign(Object.assign({}, findProduct), { prestadores });
     }
 }

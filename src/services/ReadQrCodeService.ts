@@ -50,11 +50,7 @@ class ReadQrCodeService {
         include: {
           prestador: true,
           usuario: true,
-          servico: {
-            include: {
-              opcoesAdicionais: true, // Incluir as opções adicionais relacionadas ao serviço
-            },
-          },
+          servico: true,
         },
       })
 
@@ -80,11 +76,6 @@ class ReadQrCodeService {
       if (!agendamento.ativo) {
         throw new Error('Esse agendamento está inativo.')
       }
-      const opcoesAdicionais = agendamento.opcoesAdicionais.map((opcaoId) =>
-        agendamento.servico.opcoesAdicionais.find(
-          (opcao) => opcao.id === opcaoId,
-        ),
-      )
 
       let dadosVeiculo
 
@@ -113,11 +104,7 @@ class ReadQrCodeService {
           ativo: agendamento.prestador.ativo,
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        opcoesAdicionais: opcoesAdicionais.map((opcao: any) => ({
-          id: opcao.id,
-          nome: opcao.nome,
-          value: opcao.value,
-        })),
+        opcoesAdicionais: JSON.parse(agendamento.opcoesAdicionais),
         veiculo: dadosVeiculo,
       }
     } else if (dataExtracted.type === 'brinde') {

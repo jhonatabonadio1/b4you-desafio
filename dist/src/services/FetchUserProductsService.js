@@ -6,15 +6,14 @@ class FetchUserProductsService {
     async execute() {
         const findProducts = await prismaClient_1.prismaClient.servico.findMany({
             where: { ativo: true, deleted: false },
-            include: {
-                opcoesAdicionais: {
-                    where: {
-                        deleted: false,
-                    },
-                },
-            },
         });
-        return findProducts;
+        // Parse do campo opcoesAdicionais para JSON
+        const productsWithParsedOptions = findProducts.map((product) => {
+            return Object.assign(Object.assign({}, product), { opcoesAdicionais: product.opcoesAdicionais
+                    ? JSON.parse(product.opcoesAdicionais)
+                    : null });
+        });
+        return productsWithParsedOptions;
     }
 }
 exports.FetchUserProductsService = FetchUserProductsService;

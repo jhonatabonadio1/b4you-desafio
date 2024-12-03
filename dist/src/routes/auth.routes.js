@@ -81,6 +81,7 @@ const FetchPrestadorHorariosController_1 = require("../controllers/FetchPrestado
 const CreatePrestadorHorariosController_1 = require("../controllers/CreatePrestadorHorariosController");
 const DeletePrestadorHorariosController_1 = require("../controllers/DeletePrestadorHorariosController");
 const DownloadValidacoesCSVController_1 = require("../controllers/DownloadValidacoesCSVController");
+const DeleteAvaliacaoAdminController_1 = require("../controllers/DeleteAvaliacaoAdminController");
 const authRoutes = (0, express_1.Router)();
 exports.authRoutes = authRoutes;
 const verifyAuthMatriculaController = new VerifyAuthMatriculaController_1.VerifyAuthMatriculaController();
@@ -159,6 +160,7 @@ const fetchPrestadorHorariosController = new FetchPrestadorHorariosController_1.
 const createPrestadorHorariosController = new CreatePrestadorHorariosController_1.CreatePrestadorHorariosController();
 const deletePrestadorHorariosController = new DeletePrestadorHorariosController_1.DeletePrestadorHorariosController();
 const downloadValidacoesCSVController = new DownloadValidacoesCSVController_1.DownloadValidacoesCSVController();
+const deleteAvaliacaoAdminController = new DeleteAvaliacaoAdminController_1.DeleteAvaliacaoAdminController();
 authRoutes.post('/admin/users', ensureIsAdmin_1.ensureIsAdmin, createUserController.handle);
 authRoutes.post('/users', createUserCargaController.handle);
 authRoutes.put('/admin/users/:usuarioId', ensureIsAdmin_1.ensureIsAdmin, updateUserController.handle);
@@ -233,6 +235,7 @@ authRoutes.get('/avaliacoes', ensureIsAuthenticated_1.ensureAuthenticated, fetch
 authRoutes.post('/avaliaLoja/:id', ensureIsAuthenticated_1.ensureAuthenticated, avaliaAtendimentoController.handle);
 authRoutes.get('/store/avaliacoes', ensureIsAuthenticated_1.ensureAuthenticated, fetchStoreAvaliacoesController.handle);
 authRoutes.get('/admin/avaliacoes', ensureIsAdmin_1.ensureIsAdmin, fetchAdminAvaliacoesController.handle);
+authRoutes.delete('/admin/avaliacoes/:id', ensureIsAdmin_1.ensureIsAdmin, deleteAvaliacaoAdminController.handle);
 authRoutes.get('/admin/validacoes', ensureIsAdmin_1.ensureIsAdmin, fetchAdminValidacoesController.handle);
 authRoutes.get('/admin/validacoesBrindes', ensureIsAdmin_1.ensureIsAdmin, fetchAdminValidacoesBrindesController.handle);
 authRoutes.post('/trocaAvatar', ensureIsAuthenticated_1.ensureAuthenticated, upload_1.upload.single('file'), (req, res) => {

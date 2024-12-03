@@ -35,11 +35,7 @@ class ReadQrCodeService {
                 include: {
                     prestador: true,
                     usuario: true,
-                    servico: {
-                        include: {
-                            opcoesAdicionais: true, // Incluir as opções adicionais relacionadas ao serviço
-                        },
-                    },
+                    servico: true,
                 },
             });
             if (!agendamento) {
@@ -59,7 +55,6 @@ class ReadQrCodeService {
             if (!agendamento.ativo) {
                 throw new Error('Esse agendamento está inativo.');
             }
-            const opcoesAdicionais = agendamento.opcoesAdicionais.map((opcaoId) => agendamento.servico.opcoesAdicionais.find((opcao) => opcao.id === opcaoId));
             let dadosVeiculo;
             if (agendamento.veiculoId) {
                 dadosVeiculo = await prismaClient_1.prismaClient.veiculo.findFirst({
@@ -85,11 +80,7 @@ class ReadQrCodeService {
                     ativo: agendamento.prestador.ativo,
                 },
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                opcoesAdicionais: opcoesAdicionais.map((opcao) => ({
-                    id: opcao.id,
-                    nome: opcao.nome,
-                    value: opcao.value,
-                })),
+                opcoesAdicionais: JSON.parse(agendamento.opcoesAdicionais),
                 veiculo: dadosVeiculo,
             };
         }

@@ -46,6 +46,7 @@ class CreateProductService {
         // const precoCarroPequenoCents = precoCarroPequeno
         //  ? precoCarroPequeno * 100
         //  : 0
+        const opcoesAdicionaisString = JSON.stringify(opcoesAdicionais);
         const product = await prismaClient_1.prismaClient.servico.create({
             data: {
                 nome,
@@ -54,28 +55,11 @@ class CreateProductService {
                 usoMensal,
                 diaResetLimite,
                 exigeVeiculo,
+                opcoesAdicionais: opcoesAdicionaisString,
                 ativo,
                 created_at: new Date(),
             },
-            include: {
-                opcoesAdicionais: true,
-            },
         });
-        if (opcoesAdicionais.length > 0) {
-            for (const opcao of opcoesAdicionais) {
-                await prismaClient_1.prismaClient.opcaoAdicional.create({
-                    data: {
-                        servico: {
-                            connect: {
-                                id: product.id,
-                            },
-                        },
-                        nome: opcao.nome,
-                        usoMensal: opcao.usoMensal,
-                    },
-                });
-            }
-        }
         return product;
     }
 }

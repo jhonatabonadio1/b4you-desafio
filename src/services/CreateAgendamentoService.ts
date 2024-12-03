@@ -17,6 +17,11 @@ interface IRequest {
   veiculoId: string
 }
 
+interface OpcoesAdicionais {
+  nome: string
+  usoMensal?: number
+}
+
 class CreateAgendamentoService {
   async execute({
     userId,
@@ -161,18 +166,20 @@ class CreateAgendamentoService {
     }
 
     if (opcoesAdicionais) {
-      for (const id of opcoesAdicionais) {
-        const findOpcao = await prismaClient.opcaoAdicional.findFirst({
-          where: { id },
-        })
+      for (const opcao of opcoesAdicionais) {
+        const opcoesDisponiveis = JSON.parse(
+          findServico.opcoesAdicionais,
+        ) as unknown as OpcoesAdicionais[]
+
+        const buscaOpcao = opcoesDisponiveis.find((item) => item.nome === opcao)
 
         // valor += findOpcao.value
 
-        if (!findOpcao) {
+        if (!buscaOpcao) {
           throw new Error('Opção adicional não encontrada')
         }
 
-        const limiteUsoMensal = findOpcao.usoMensal
+        const limiteUsoMensal = buscaOpcao.usoMensal
 
         if (limiteUsoMensal) {
           // Data de hoje
@@ -191,7 +198,7 @@ class CreateAgendamentoService {
               usuarioId: userId,
               servicoId: findServico.id,
               opcoesAdicionais: {
-                has: id,
+                contains: opcao,
               },
               deleted: false,
               // Verifica se o agendamento foi feito neste mês
@@ -208,7 +215,7 @@ class CreateAgendamentoService {
               usuarioId: userId,
               servicoId: findServico.id,
               opcoesAdicionais: {
-                has: id,
+                contains: opcao,
               },
               deleted: false,
             },
@@ -240,6 +247,8 @@ class CreateAgendamentoService {
       }
     }
 
+    const opcoesAdicionaisString = JSON.stringify(opcoesAdicionais)
+
     const agendamento = await prismaClient.agendamento.create({
       data: {
         data: horarioDate,
@@ -247,7 +256,7 @@ class CreateAgendamentoService {
         observacao,
         veiculo: veiculoId ? { connect: { id: veiculoId } } : undefined,
         usuario: { connect: { id: userId } },
-        opcoesAdicionais,
+        opcoesAdicionais: opcoesAdicionaisString,
         prestador: { connect: { id: prestadorId } },
         servico: { connect: { id: servicoId } },
       },

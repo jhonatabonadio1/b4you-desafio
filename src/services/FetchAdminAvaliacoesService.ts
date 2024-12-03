@@ -7,7 +7,7 @@ interface IUser {
 
 class FetchAdminAvaliacoesService {
   async execute({ page, search }: IUser, pageSize = 10) {
-    const baseWhere = { avaliado: true }
+    const baseWhere = { avaliado: true, deletedAvaliacao: false || undefined }
     const searchWhere = search
       ? {
           AND: [

@@ -96,8 +96,15 @@ class FetchAgendamentosService {
       orderBy: { created_at: 'desc' },
     })
 
+    const agendamentosComParsedOpcoes = agendamentos.map((agendamento) => ({
+      ...agendamento,
+      opcoesAdicionais: agendamento.opcoesAdicionais
+        ? JSON.parse(agendamento.opcoesAdicionais as unknown as string)
+        : null,
+    }))
+
     return {
-      agendamentos,
+      agendamentos: agendamentosComParsedOpcoes,
       currentPage: page,
       totalPages,
       totalAgendamentos,

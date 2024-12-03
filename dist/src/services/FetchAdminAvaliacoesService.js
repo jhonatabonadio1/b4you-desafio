@@ -4,7 +4,7 @@ exports.FetchAdminAvaliacoesService = void 0;
 const prismaClient_1 = require("../database/prismaClient");
 class FetchAdminAvaliacoesService {
     async execute({ page, search }, pageSize = 10) {
-        const baseWhere = { avaliado: true };
+        const baseWhere = { avaliado: true, deletedAvaliacao: false || undefined };
         const searchWhere = search
             ? {
                 AND: [

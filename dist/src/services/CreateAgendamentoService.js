@@ -113,15 +113,14 @@ class CreateAgendamentoService {
                 : findServico.precoCarroPequeno**/
         }
         if (opcoesAdicionais) {
-            for (const id of opcoesAdicionais) {
-                const findOpcao = await prismaClient_1.prismaClient.opcaoAdicional.findFirst({
-                    where: { id },
-                });
+            for (const opcao of opcoesAdicionais) {
+                const opcoesDisponiveis = JSON.parse(findServico.opcoesAdicionais);
+                const buscaOpcao = opcoesDisponiveis.find((item) => item.nome === opcao);
                 // valor += findOpcao.value
-                if (!findOpcao) {
+                if (!buscaOpcao) {
                     throw new Error('Opção adicional não encontrada');
                 }
-                const limiteUsoMensal = findOpcao.usoMensal;
+                const limiteUsoMensal = buscaOpcao.usoMensal;
                 if (limiteUsoMensal) {
                     // Data de hoje
                     const hoje = new Date();
@@ -135,7 +134,7 @@ class CreateAgendamentoService {
                             usuarioId: userId,
                             servicoId: findServico.id,
                             opcoesAdicionais: {
-                                has: id,
+                                contains: opcao,
                             },
                             deleted: false,
                             // Verifica se o agendamento foi feito neste mês
@@ -151,7 +150,7 @@ class CreateAgendamentoService {
                             usuarioId: userId,
                             servicoId: findServico.id,
                             opcoesAdicionais: {
-                                has: id,
+                                contains: opcao,
                             },
                             deleted: false,
                         },
@@ -181,6 +180,7 @@ class CreateAgendamentoService {
                 }
             }
         }
+        const opcoesAdicionaisString = JSON.stringify(opcoesAdicionais);
         const agendamento = await prismaClient_1.prismaClient.agendamento.create({
             data: {
                 data: horarioDate,
@@ -188,7 +188,7 @@ class CreateAgendamentoService {
                 observacao,
                 veiculo: veiculoId ? { connect: { id: veiculoId } } : undefined,
                 usuario: { connect: { id: userId } },
-                opcoesAdicionais,
+                opcoesAdicionais: opcoesAdicionaisString,
                 prestador: { connect: { id: prestadorId } },
                 servico: { connect: { id: servicoId } },
             },

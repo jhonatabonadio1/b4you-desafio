@@ -28,10 +28,12 @@ class FetchProductsService {
             where: searchWhere,
             skip: (page - 1) * pageSize,
             take: pageSize,
-            orderBy: { created_at: 'desc' },
-            include: {
-                opcoesAdicionais: true,
+            select: {
+                id: true,
+                nome: true,
+                created_at: true,
             },
+            orderBy: { created_at: 'desc' },
         });
         return {
             produtos,

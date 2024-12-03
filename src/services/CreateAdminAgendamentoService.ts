@@ -11,6 +11,11 @@ interface IRequest {
   veiculoId: string
 }
 
+interface OpcoesAdicionais {
+  nome: string
+  usoMensal?: number
+}
+
 class CreateAdminAgendamentoService {
   async execute({
     userId,
@@ -94,18 +99,22 @@ class CreateAdminAgendamentoService {
     }
 
     if (opcoesAdicionais) {
-      for (const id of opcoesAdicionais) {
-        const findOpcao = await prismaClient.opcaoAdicional.findFirst({
-          where: { id },
-        })
+      for (const opcao of opcoesAdicionais) {
+        const opcoesDisponiveis = JSON.parse(
+          findServico.opcoesAdicionais,
+        ) as unknown as OpcoesAdicionais[]
+
+        const buscaOpcao = opcoesDisponiveis.find((item) => item.nome === opcao)
 
         // valor += findOpcao.value
 
-        if (!findOpcao) {
+        if (!buscaOpcao) {
           throw new Error('Opção adicional não encontrada')
         }
       }
     }
+
+    const opcoesAdicionaisString = JSON.stringify(opcoesAdicionais)
 
     const agendamento = await prismaClient.agendamento.create({
       data: {
@@ -114,7 +123,7 @@ class CreateAdminAgendamentoService {
         ativo: true,
         veiculo: veiculoId ? { connect: { id: veiculoId } } : undefined,
         usuario: { connect: { id: findUser.id } },
-        opcoesAdicionais,
+        opcoesAdicionais: opcoesAdicionaisString,
         observacao,
         prestador: { connect: { id: prestadorId } },
         servico: { connect: { id: servicoId } },
