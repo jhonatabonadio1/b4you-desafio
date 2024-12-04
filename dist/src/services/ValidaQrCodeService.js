@@ -120,12 +120,6 @@ class ValidaQrCodeService {
                     prestadorId: findPrestador.id,
                 },
             });
-            await prismaClient_1.prismaClient.brinde.update({
-                where: { id: brinde.id, deleted: false },
-                data: {
-                    ativo: false,
-                },
-            });
             return { success: true, message: 'Brinde validado com sucesso.' };
         }
         throw new Error('Dados inválidos.');

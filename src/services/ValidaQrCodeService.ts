@@ -165,13 +165,6 @@ class ValidaQrCodeService {
         },
       })
 
-      await prismaClient.brinde.update({
-        where: { id: brinde.id, deleted: false },
-        data: {
-          ativo: false,
-        },
-      })
-
       return { success: true, message: 'Brinde validado com sucesso.' }
     }
 
