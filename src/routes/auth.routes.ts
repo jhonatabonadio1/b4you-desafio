@@ -101,6 +101,7 @@ import { CreatePrestadorHorariosController } from '../controllers/CreatePrestado
 import { DeletePrestadorHorariosController } from '../controllers/DeletePrestadorHorariosController'
 import { DownloadValidacoesCSVController } from '../controllers/DownloadValidacoesCSVController'
 import { DeleteAvaliacaoAdminController } from '../controllers/DeleteAvaliacaoAdminController'
+import { DownloadBrindesCSVController } from '../controllers/DownloadBrindesCSVController'
 
 const authRoutes = Router()
 
@@ -216,6 +217,7 @@ const deletePrestadorHorariosController =
   new DeletePrestadorHorariosController()
 
 const downloadValidacoesCSVController = new DownloadValidacoesCSVController()
+const downloadBrindesCSVController = new DownloadBrindesCSVController()
 
 const deleteAvaliacaoAdminController = new DeleteAvaliacaoAdminController()
 
@@ -612,6 +614,12 @@ authRoutes.get(
   '/admin/download-validacoes-csv',
   ensureIsAdmin,
   downloadValidacoesCSVController.handle,
+)
+
+authRoutes.get(
+  '/admin/download-brindes-csv',
+  ensureIsAdmin,
+  downloadBrindesCSVController.handle,
 )
 
 export { authRoutes }

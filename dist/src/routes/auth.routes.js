@@ -82,6 +82,7 @@ const CreatePrestadorHorariosController_1 = require("../controllers/CreatePresta
 const DeletePrestadorHorariosController_1 = require("../controllers/DeletePrestadorHorariosController");
 const DownloadValidacoesCSVController_1 = require("../controllers/DownloadValidacoesCSVController");
 const DeleteAvaliacaoAdminController_1 = require("../controllers/DeleteAvaliacaoAdminController");
+const DownloadBrindesCSVController_1 = require("../controllers/DownloadBrindesCSVController");
 const authRoutes = (0, express_1.Router)();
 exports.authRoutes = authRoutes;
 const verifyAuthMatriculaController = new VerifyAuthMatriculaController_1.VerifyAuthMatriculaController();
@@ -160,6 +161,7 @@ const fetchPrestadorHorariosController = new FetchPrestadorHorariosController_1.
 const createPrestadorHorariosController = new CreatePrestadorHorariosController_1.CreatePrestadorHorariosController();
 const deletePrestadorHorariosController = new DeletePrestadorHorariosController_1.DeletePrestadorHorariosController();
 const downloadValidacoesCSVController = new DownloadValidacoesCSVController_1.DownloadValidacoesCSVController();
+const downloadBrindesCSVController = new DownloadBrindesCSVController_1.DownloadBrindesCSVController();
 const deleteAvaliacaoAdminController = new DeleteAvaliacaoAdminController_1.DeleteAvaliacaoAdminController();
 authRoutes.post('/admin/users', ensureIsAdmin_1.ensureIsAdmin, createUserController.handle);
 authRoutes.post('/users', createUserCargaController.handle);
@@ -255,3 +257,4 @@ authRoutes.get('/store/horarios', ensureIsAuthenticated_1.ensureAuthenticated, f
 authRoutes.post('/store/horarios', ensureIsAuthenticated_1.ensureAuthenticated, createPrestadorHorariosController.handle);
 authRoutes.delete('/store/horarios', ensureIsAuthenticated_1.ensureAuthenticated, deletePrestadorHorariosController.handle);
 authRoutes.get('/admin/download-validacoes-csv', ensureIsAdmin_1.ensureIsAdmin, downloadValidacoesCSVController.handle);
+authRoutes.get('/admin/download-brindes-csv', ensureIsAdmin_1.ensureIsAdmin, downloadBrindesCSVController.handle);
