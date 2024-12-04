@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { DownloadBrindesCSVService } from '../services/DownloadBrindesCSVService'
+import { DownloadUsuariosCSVService } from '../services/DownloadUsuariosCSVService'
 
-class DownloadBrindesCSVController {
+class DownloadUsuariosCSVController {
   async handle(request: Request, response: Response) {
     const { fromDate, toDate } = request.query
 
@@ -9,7 +9,7 @@ class DownloadBrindesCSVController {
       return response.status(400).json({ error: 'Datas inválidas' })
     }
 
-    const downloadExcelService = new DownloadBrindesCSVService()
+    const downloadExcelService = new DownloadUsuariosCSVService()
     const workbook = await downloadExcelService.execute({
       fromDate: fromDate.toString(),
       toDate: toDate.toString(),
@@ -17,7 +17,7 @@ class DownloadBrindesCSVController {
 
     response.setHeader(
       'Content-Disposition',
-      'attachment; filename="brindes.xlsx"',
+      'attachment; filename="usuarios.xlsx"',
     )
     response.setHeader(
       'Content-Type',
@@ -29,4 +29,4 @@ class DownloadBrindesCSVController {
   }
 }
 
-export { DownloadBrindesCSVController }
+export { DownloadUsuariosCSVController }

@@ -83,6 +83,7 @@ const DeletePrestadorHorariosController_1 = require("../controllers/DeletePresta
 const DownloadValidacoesCSVController_1 = require("../controllers/DownloadValidacoesCSVController");
 const DeleteAvaliacaoAdminController_1 = require("../controllers/DeleteAvaliacaoAdminController");
 const DownloadBrindesCSVController_1 = require("../controllers/DownloadBrindesCSVController");
+const DownloadUsuariosCSVController_1 = require("../controllers/DownloadUsuariosCSVController");
 const authRoutes = (0, express_1.Router)();
 exports.authRoutes = authRoutes;
 const verifyAuthMatriculaController = new VerifyAuthMatriculaController_1.VerifyAuthMatriculaController();
@@ -162,6 +163,7 @@ const createPrestadorHorariosController = new CreatePrestadorHorariosController_
 const deletePrestadorHorariosController = new DeletePrestadorHorariosController_1.DeletePrestadorHorariosController();
 const downloadValidacoesCSVController = new DownloadValidacoesCSVController_1.DownloadValidacoesCSVController();
 const downloadBrindesCSVController = new DownloadBrindesCSVController_1.DownloadBrindesCSVController();
+const downloadUsuariosCSVController = new DownloadUsuariosCSVController_1.DownloadUsuariosCSVController();
 const deleteAvaliacaoAdminController = new DeleteAvaliacaoAdminController_1.DeleteAvaliacaoAdminController();
 authRoutes.post('/admin/users', ensureIsAdmin_1.ensureIsAdmin, createUserController.handle);
 authRoutes.post('/users', createUserCargaController.handle);
@@ -258,3 +260,4 @@ authRoutes.post('/store/horarios', ensureIsAuthenticated_1.ensureAuthenticated, 
 authRoutes.delete('/store/horarios', ensureIsAuthenticated_1.ensureAuthenticated, deletePrestadorHorariosController.handle);
 authRoutes.get('/admin/download-validacoes-csv', ensureIsAdmin_1.ensureIsAdmin, downloadValidacoesCSVController.handle);
 authRoutes.get('/admin/download-brindes-csv', ensureIsAdmin_1.ensureIsAdmin, downloadBrindesCSVController.handle);
+authRoutes.get('/admin/download-usuarios-csv', ensureIsAdmin_1.ensureIsAdmin, downloadUsuariosCSVController.handle);
