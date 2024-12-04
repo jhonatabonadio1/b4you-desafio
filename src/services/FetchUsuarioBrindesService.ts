@@ -1,5 +1,4 @@
 import { prismaClient } from '../database/prismaClient'
-import moment from 'moment-timezone'
 
 interface IUser {
   userId: string
@@ -30,9 +29,6 @@ class FetchUsuarioBrindesService {
       throw new Error('Usuário não encontrado')
     }
 
-    const agoraBrasil = moment.tz('America/Sao_Paulo')
-    const hojeBrasilStr = agoraBrasil.format('YYYY-MM-DD')
-
     const buscaBrindes = await prismaClient.brinde.findMany({
       where: {
         deleted: false,
@@ -43,7 +39,7 @@ class FetchUsuarioBrindesService {
           },
           {
             dataLimite: {
-              gte: new Date(`${hojeBrasilStr}T00:00:00.000Z`),
+              gte: new Date(),
             },
           },
         ],

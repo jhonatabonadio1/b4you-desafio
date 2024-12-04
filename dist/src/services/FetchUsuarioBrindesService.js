@@ -1,11 +1,7 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FetchUsuarioBrindesService = void 0;
 const prismaClient_1 = require("../database/prismaClient");
-const moment_timezone_1 = __importDefault(require("moment-timezone"));
 // Função exclude ajustada para aceitar arrays de objetos
 function excludeArray(brindes, keys) {
     return brindes.map((brinde) => {
@@ -25,8 +21,6 @@ class FetchUsuarioBrindesService {
         if (!user) {
             throw new Error('Usuário não encontrado');
         }
-        const agoraBrasil = moment_timezone_1.default.tz('America/Sao_Paulo');
-        const hojeBrasilStr = agoraBrasil.format('YYYY-MM-DD');
         const buscaBrindes = await prismaClient_1.prismaClient.brinde.findMany({
             where: {
                 deleted: false,
@@ -37,7 +31,7 @@ class FetchUsuarioBrindesService {
                     },
                     {
                         dataLimite: {
-                            gte: new Date(`${hojeBrasilStr}T00:00:00.000Z`),
+                            gte: new Date(),
                         },
                     },
                 ],
