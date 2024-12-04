@@ -66,6 +66,7 @@ class DownloadValidacoesCSVService {
       { header: 'Prestador', key: 'prestador', width: 30 },
       { header: 'Prestador (CNPJ)', key: 'inscricao', width: 30 },
       { header: 'Data Validação', key: 'dataValidacao', width: 15 },
+      { header: 'Adicionais', key: 'adicionais', width: 15 },
       { header: 'Placa', key: 'placa', width: 20 },
       { header: 'Veículo Categoria', key: 'categoria', width: 15 },
       { header: 'Veículo Modelo', key: 'modelo', width: 15 },
@@ -101,6 +102,9 @@ class DownloadValidacoesCSVService {
         prestador: validacao.prestador?.razaoSocial,
         inscricao: validacao.prestador?.inscricao,
         dataValidacao,
+        adicionais: JSON.parse(validacao.agendamento.opcoesAdicionais).map(
+          (item: string) => item + ', ',
+        ),
         placa: validacao.agendamento.veiculo?.placa,
         categoria: validacao.agendamento.veiculo?.categoria,
         marca: validacao.agendamento.veiculo?.marca,
