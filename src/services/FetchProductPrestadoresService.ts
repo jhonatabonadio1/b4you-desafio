@@ -1,6 +1,6 @@
 import { prismaClient } from '../database/prismaClient'
 import { isAfter } from 'date-fns'
-import { toZonedTime } from 'date-fns-tz'
+import moment from 'moment-timezone'
 
 type IProduto = {
   produtoId: string
@@ -19,7 +19,7 @@ function exclude<Prestador, Key extends keyof Prestador>(
 class FetchProductPrestadoresService {
   async execute({ produtoId }: IProduto) {
     const timeZone = 'America/Sao_Paulo' // Fuso horário de São Paulo
-    const agora = toZonedTime(new Date(), timeZone) // Converte a hora atual no timezone para UTC
+    const agora = moment().tz(timeZone).format('YYYY-MM-DDTHH:mm:ss.000') + 'Z' // Converte a hora atual no timezone para UTC
     const prestadoresComHorariosDisponiveis = []
 
     // Busca o produto/serviço com base no ID do produto
@@ -38,8 +38,7 @@ class FetchProductPrestadoresService {
           // Filtra as datas disponíveis para manter apenas as que estão no presente ou futuro
           const horariosDisponiveis = buscaPrestador.datasDisponiveis?.filter(
             (horario) => {
-              const horarioUtc = toZonedTime(new Date(horario), timeZone)
-              return isAfter(horarioUtc, agora)
+              return isAfter(horario, agora)
             },
           )
 
@@ -57,23 +56,36 @@ class FetchProductPrestadoresService {
           })
 
           // Filtra os horários disponíveis, excluindo aqueles que já foram reservados
-          const horariosFiltrados = horariosDisponiveis?.filter(
-            (horario) =>
-              !agendamentos.some((agendamento) => {
-                const agendamentoData = agendamento.data
-                  ? toZonedTime(new Date(agendamento.data), timeZone).getTime()
-                  : null
-                const horarioData = horario
-                  ? toZonedTime(new Date(horario), timeZone).getTime()
-                  : null
+          const horariosFiltrados = []
 
-                return (
-                  agendamentoData !== null &&
-                  horarioData !== null &&
-                  agendamentoData === horarioData
-                )
-              }),
-          )
+          for (const horario of horariosDisponiveis || []) {
+            let horarioConflitante = false
+
+            for (const agendamento of agendamentos || []) {
+              // Extrair o horário do agendamento no formato HH:mm:ss
+              const agendamentoData = agendamento.data
+                ? new Date(agendamento.data).toISOString()
+                : null
+
+              // Extrair o horário disponível no formato HH:mm:ss
+              const horarioData = horario || null
+
+              // Verificar se os horários coincidem
+              if (
+                agendamentoData &&
+                horarioData &&
+                agendamentoData === horarioData
+              ) {
+                horarioConflitante = true
+                break // Para de verificar outros agendamentos
+              }
+            }
+
+            // Adiciona o horário à lista se não houver conflito
+            if (!horarioConflitante) {
+              horariosFiltrados.push(horario)
+            }
+          }
 
           // Se houver horários filtrados e no futuro, adiciona o prestador à lista final
           if (horariosFiltrados && horariosFiltrados.length > 0) {
