@@ -1,10 +1,3 @@
-
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,241 +6,172 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
-model Usuario {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  nome        String    
-  matricula   String
-  avatarUrl   String?
-  email       String
-  cpf         String
-  phone       String
-  birth       DateTime
-  password    String
-  tipoAcesso  String?   @default("associado")
 
-  agendamentos  Agendamento[]
-  validacao_brinde ValidacaoBrinde[]
-  veiculos  Veiculo[]
-  validacao_agendamento ValidacaoAgendamento[]
-
-  deleted     Boolean   @default(false)
-  created_at  DateTime  @default(now())
-
-  @@map("usuarios")
+type ImovelsCondominium {
+  academia           Boolean
+  elevador           Boolean
+  lavanderiaColetiva Boolean
+  piscina            Boolean
+  playground         Boolean
+  portaria24hrs      Boolean
+  salaoDeFesta       Boolean
+  sauna              Boolean
 }
 
-model Prestador {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  razaoSocial String    
-  avatarUrl   String?
-  latitude    Float
-  longitude   Float
-  inscricao   String
-  tipoInscricao   String?     @default("cnpj")
-  endereco    String
-  cidade      String
-  estado      String
-  bairro      String
-  cep         String
-  ativo       Boolean   @default(true)
-  password    String
-  email       String
-  datasDisponiveis  String[]
-
-  agendamentos Agendamento[]
-  validacao_brinde ValidacaoBrinde[]
-  validacao_agendamento ValidacaoAgendamento[]
-
-  deleted     Boolean   @default(false)
-  created_at  DateTime  @default(now())
-
-  @@map("prestadores")
+type ImovelsDetails {
+  armariosPlanejados Boolean
+  churrasqueira      Boolean
+  closet             Boolean
+  mobiliado          Boolean
+  piscina            Boolean
+  quintal            Boolean
+  suite              Boolean
+  varanda            Boolean
 }
 
-model Brinde {
-  id                    String          @id @default(auto()) @map("_id") @db.ObjectId
-  nome                  String 
-  qrcode                String?
-  dataLimite            DateTime?
-
-  imageUrl              String?
-  data                  String?
-  dataDisponibilidade   DateTime
-  ativo                 Boolean         @default(false)
-  
-  created_at            DateTime        @default(now())
-
-  todosUsuarios         Boolean
-  todosPrestadores      Boolean
-
-  usuariosEspecificos              String[]
-  prestadoresEspecificos           String[]
-
-  validacao_brinde ValidacaoBrinde[]
-
-  deleted     Boolean   @default(false)
-
-  @@map("brindes")
+type ImovelsMetragens {
+  id    String @map("_id") @db.ObjectId
+  value String
 }
 
-model ValidacaoBrinde{
-   id                    String          @id @default(auto()) @map("_id") @db.ObjectId
-   usuario   Usuario     @relation(fields: [usuarioId], references: [id])
-   usuarioId String      @db.ObjectId
-
-   prestador   Prestador     @relation(fields: [prestadorId], references: [id])
-   prestadorId String       @db.ObjectId
-
-   created_at DateTime    @default(now())
-
-   brinde   Brinde     @relation(fields: [brindeId], references: [id])
-   brindeId String       @db.ObjectId
-   
-   @@map("validacao_brindes")
+type PropertiesCidades {
+  id    String @map("_id") @db.ObjectId
+  value String
 }
 
-model Servico {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
-  nome        String
-  imageUrl    String?
-
-  agendamentos  Agendamento[]
-  prestadores   String[]
-
-  exigeVeiculo Boolean? @default(false)
-  precoCarroGrande Int?
-  precoCarroPequeno Int?
-  preco Int?
-
-  diaResetLimite  Int    @default(20)
-
-  opcoesAdicionais String
-
-  usoMensal   Int?
-
-  ativo       Boolean     @default(true)
-  deleted     Boolean     @default(false)
-  created_at  DateTime    @default(now())
-
-  @@map("servicos")
+type PropertiesCondominium {
+  academia           Boolean
+  elevador           Boolean
+  lavanderiaColetiva Boolean
+  piscina            Boolean
+  playground         Boolean
+  portaria24hrs      Boolean
+  salaoDeFesta       Boolean
+  sauna              Boolean
 }
 
-
-model ValidacaoAgendamento {
-  id             String        @id @default(auto()) @map("_id") @db.ObjectId
-  usuario        Usuario       @relation(fields: [usuarioId], references: [id])
-  usuarioId      String        @db.ObjectId
-
-  prestador      Prestador     @relation(fields: [prestadorId], references: [id])
-  prestadorId    String        @db.ObjectId
-
-  estrelas       Int?        
-  message        String?
-  avaliado       Boolean?      @default(false)
-  dataAvaliacao  DateTime?       
-
-  bomAtendimento  Boolean?
-  servicoCompleto Boolean?
-
-  agendamento    Agendamento   @relation(fields: [agendamentoId], references: [id])
-  agendamentoId  String        @db.ObjectId
-
-  created_at     DateTime      @default(now())
-  deletedAvaliacao       Boolean?
-
-  @@map("validacao_agendamentos")
+type PropertiesDetails {
+  armariosPlanejados Boolean
+  churrasqueira      Boolean
+  closet             Boolean
+  mobiliado          Boolean
+  piscina            Boolean
+  quintal            Boolean
+  suite              Boolean
+  varanda            Boolean
 }
 
-model Agendamento {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-
-  prestador   Prestador @relation(fields: [prestadorId], references: [id])
-  prestadorId String    @db.ObjectId
-  usuario     Usuario   @relation(fields: [usuarioId], references: [id])
-  usuarioId   String    @db.ObjectId
-  observacao    String?
-  
-  servico     Servico  @relation(fields: [servicoId], references: [id])
-  servicoId   String    @db.ObjectId
-
-  opcoesAdicionais String
-
-  veiculo Veiculo? @relation(fields: [veiculoId], references: [id])
-  veiculoId String?    @db.ObjectId
-
-  valor       Int?
-
-  qrcode      String?
-  data        DateTime?
-  ativo       Boolean   @default(true)
-
-  semValidade   Boolean?  @default(false)
-
-  validacao_agendamento ValidacaoAgendamento[]
-
-  deleted     Boolean   @default(false)
-  created_at  DateTime  @default(now())
-
-  @@map("agendamentos")
-}
-
-model Veiculo{
-   id          String    @id @default(auto()) @map("_id") @db.ObjectId
-   nome        String
-   usuario     Usuario   @relation(fields: [usuarioId], references: [id])
-   usuarioId   String    @db.ObjectId
-   placa       String
-   categoria   String
-   marca       String?
-   modelo      String?
-
-   agendamentos Agendamento[]
-
-   deleted     Boolean   @default(false)
-   created_at  DateTime  @default(now())
-}
-
-model Informativos {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  titulo      String
-  texto       String?
-  bannerUrl   String?
-  url         String?
-  html        String?
-
-  deleted     Boolean     @default(false)
-  created_at  DateTime    @default(now())
-
-  @@map("informativos")
-}
-
-model Convenios {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  titulo      String
-  texto       String?
-  bannerUrl   String
-  url         String
-  html        String?
-  categoria   String
-  ativo       Boolean     @default(false)
-
-  deleted     Boolean     @default(false)
-  created_at  DateTime    @default(now())
-
-  @@map("convenios")
-}
-
-
-model Carga {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  
+type PropertiesLinks {
+  id          String   @map("_id") @db.ObjectId
+  encaminhado Boolean
   link        String
-  size        Float?
-  name        String
-  rows        Float?
+  motivo      String
+  timestamp   DateTime @db.Date @default(now())
+}
 
-  deleted     Boolean     @default(false)
-  created_at  DateTime    @default(now())
+type PropertiesMetragens {
+  id    String @map("_id") @db.ObjectId
+  value String
+}
 
-  @@map("cargas")
+type PropertiesPropertyType {
+  value String
+}
+
+type PropertiesValores {
+  id    String @map("_id") @db.ObjectId
+  value String
+}
+
+model envios {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  v           Int      @map("__v")
+  clientId    String?
+  imovelId    String?
+  message     String
+  phoneNumber String
+  timestamp   DateTime @db.Date @default(now())
+  user        String
+}
+
+model fontes {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  v    Int    @map("__v")
+  nome String
+}
+
+model imovels {
+  id            String             @id @default(auto()) @map("_id") @db.ObjectId
+  v             Int                @map("__v")
+  banheiros     Int
+  cidade        String
+  condominium   ImovelsCondominium
+  descricao     String
+  details       ImovelsDetails
+  garagem       Int
+  images        String[]
+  imovelCode    String
+  metragens     ImovelsMetragens[]
+  ownerEmail    String?
+  ownerName     String
+  ownerPhone    String
+  ownerWhatsapp String?
+  propertyType  String
+  quartos       Int
+  state         String
+  timestamp   DateTime @db.Date @default(now())
+  user          String
+  valor         String
+  valorComissao String?
+  valorCondo    String?
+}
+
+model locations {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  v       Int?     @map("__v")
+  cidades String[]
+  nome    String?
+  sigla   String
+}
+
+model properties {
+  id            String                   @id @default(auto()) @map("_id") @db.ObjectId
+  v             Int                      @map("__v")
+  banheiros     Int
+  cidades       PropertiesCidades[]
+  clientCode    String
+  clienteFuturo Boolean?
+  condominium   PropertiesCondominium
+  descricao     String
+  details       PropertiesDetails
+  encaminhado   Boolean?
+  fonte         String?
+  garagem       Int
+  interessou    Boolean?
+  linkImovel    String?
+  links         PropertiesLinks[]
+  metragens     PropertiesMetragens[]
+  nome          String
+  paymentMethod String
+  propertyType  PropertiesPropertyType[]
+  quartos       Int
+  state         String
+  timestamp   DateTime @db.Date @default(now())
+  user          String
+  valores       PropertiesValores[]
+}
+
+model tipos {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  v    Int    @map("__v")
+  nome String
+}
+
+model users {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  v        Int    @map("__v")
+  email    String @unique(map: "email_1")
+  nome     String
+  password String
+  role     String
 }

@@ -22,7 +22,7 @@ export function ensureAuthenticated(
 
   try {
     // Validar se token é válido
-    const { sub } = verify(token, process.env.AUTH_TOKEN as string) as IPayload
+    const { sub } = verify(token, process.env.JWT_SECRET as string) as IPayload
 
     // Recuperar informações do usuário
     request.userId = sub

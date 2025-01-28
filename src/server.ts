@@ -2,10 +2,7 @@ import 'express-async-errors'
 import express, { Request, Response, NextFunction } from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
-import { authRoutes } from './routes/auth.routes'
-
-import './jobs/verificacaoBrindes'
-import './jobs/desativarAgendamentos'
+import { authRoutes } from './routes/routes'
 
 import helmet from 'helmet'
 
@@ -20,7 +17,7 @@ const PORT = process.env.PORT || 3333
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(authRoutes)
+app.use('/api', authRoutes)
 
 app.use(
   (err: Error, request: Request, response: Response, next: NextFunction) => {

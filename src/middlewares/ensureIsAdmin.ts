@@ -12,7 +12,7 @@ export async function ensureIsAdmin(
   response: Response,
   next: NextFunction,
 ) {
-  // Receber o tokenwww
+  // Receber o token
   const authToken = request.headers.authorization
 
   // Validar se token está preenchido
@@ -24,15 +24,16 @@ export async function ensureIsAdmin(
 
   try {
     // Validar se token é válido
-    const { sub } = verify(token, process.env.AUTH_TOKEN as string) as IPayload
+    const { sub } = verify(token, process.env.JWT_SECRET as string) as IPayload
 
     // Recuperar informações do usuário
     request.userId = sub
 
-    const buscaUsuario = await prismaClient.usuario.findFirst({
+    console.log(sub)
+
+    const buscaUsuario = await prismaClient.users.findFirst({
       where: {
         id: sub,
-        deleted: false,
       },
     })
 
@@ -40,7 +41,8 @@ export async function ensureIsAdmin(
       return response.status(404).end()
     }
 
-    if (buscaUsuario.tipoAcesso !== 'admin') {
+    if (buscaUsuario.role !== 'admin') {
+      console.log(buscaUsuario)
       return response.status(401).end()
     }
 
