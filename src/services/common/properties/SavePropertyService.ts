@@ -1,28 +1,27 @@
 import { prismaClient } from '../../../database/prismaClient'
 import { ObjectId } from 'mongodb' // Para gerar IDs de metragens, valores e cidades, se necessário
 
-type PropertiesCondominium {
-    academia           Boolean
-    elevador           Boolean
-    lavanderiaColetiva Boolean
-    piscina            Boolean
-    playground         Boolean
-    portaria24hrs      Boolean
-    salaoDeFesta       Boolean
-    sauna              Boolean
-  }
-  
-  type PropertiesDetails {
-    armariosPlanejados Boolean
-    churrasqueira      Boolean
-    closet             Boolean
-    mobiliado          Boolean
-    piscina            Boolean
-    quintal            Boolean
-    suite              Boolean
-    varanda            Boolean
-  }
-  
+type ImovelsCondominium = {
+  academia: boolean
+  elevador: boolean
+  lavanderiaColetiva: boolean
+  piscina: boolean
+  playground: boolean
+  portaria24hrs: boolean
+  salaoDeFesta: boolean
+  sauna: boolean
+}
+
+type ImovelsDetails = {
+  armariosPlanejados: boolean
+  churrasqueira: boolean
+  closet: boolean
+  mobiliado: boolean
+  piscina: boolean
+  quintal: boolean
+  suite: boolean
+  varanda: boolean
+}
 
 class SavePropertyService {
   async execute(data: {
