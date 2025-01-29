@@ -3,7 +3,7 @@ import { prismaClient } from '../../../database/prismaClient'
 class ListAllPropertiesService {
   async execute() {
     // Busca todas as propriedades no banco de dados
-    const properties = await prismaClient.properties.findMany()
+    const properties = await prismaClient.properties.findMany({})
 
     // Adiciona o nome do usuário relacionado às propriedades
     const data = await Promise.all(
@@ -14,7 +14,7 @@ class ListAllPropertiesService {
 
         return {
           ...property,
-          userName: user?.nome || null, // Adiciona o nome do usuário
+          userName: user?.nome || 'Usuário Desconhecido', // Adiciona o nome do usuário
         }
       }),
     )

@@ -4,8 +4,8 @@ import { UpdatePropertyService } from '../../../services/common/properties/Updat
 class UpdatePropertyController {
   async handle(request: Request, response: Response) {
     const { userId } = request // Obtido do middleware de autenticação
+    const { propertyId } = request.query
     const {
-      propertyId,
       propertyType,
       quartos,
       banheiros,
@@ -28,7 +28,7 @@ class UpdatePropertyController {
       const updatePropertyService = new UpdatePropertyService()
 
       const updatedProperty = await updatePropertyService.execute({
-        propertyId,
+        propertyId: propertyId as string,
         propertyType,
         quartos: parseInt(quartos, 10),
         banheiros: parseInt(banheiros, 10),

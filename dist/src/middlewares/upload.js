@@ -13,7 +13,6 @@ const upload = (0, multer_1.default)({
         filename: (req, file, cb) => {
             // Extrai a extensão do arquivo original
             const ext = path_1.default.extname(file.originalname);
-            console.log(`Extensão do arquivo: ${ext}`); // Adicione um log para verificar a extensão
             // Garante que o arquivo seja salvo com a extensão correta
             cb(null, `${file.fieldname}-${Date.now()}${ext}`);
         },

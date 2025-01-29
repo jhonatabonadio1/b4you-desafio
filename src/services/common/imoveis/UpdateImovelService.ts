@@ -13,7 +13,7 @@ class UpdateImovelService {
     cidade?: string
     valor?: string
     valorCondo?: string
-    metragens?: { value: string }[]
+    metragens?: string[]
     images?: string[]
     valorComissao?: string
     details?: any
@@ -68,7 +68,7 @@ class UpdateImovelService {
     const metragensWithIds = metragens
       ? metragens.map((metragem) => ({
           id: new ObjectId().toHexString(), // Gera um novo ObjectId para cada metragem
-          value: metragem.value,
+          value: metragem,
         }))
       : undefined
 

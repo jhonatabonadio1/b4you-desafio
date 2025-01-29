@@ -40,6 +40,7 @@ import { UploadImageController } from '../controllers/common/images/UploadImageC
 import { FetchUsersController } from '../controllers/admin/users/FetchUsersController'
 import { UpdateUserController } from '../controllers/admin/users/UpdateUserController'
 import { DeleteUserController } from '../controllers/admin/users/DeleteUserController'
+import { upload } from '../middlewares/upload'
 
 const authRoutes = Router()
 
@@ -88,7 +89,7 @@ const deleteUserController = new DeleteUserController()
 
 authRoutes.post('/auth/login', signInController.handle)
 authRoutes.post('/auth/register', ensureIsAdmin, createUserController.handle)
-authRoutes.post(
+authRoutes.put(
   '/add-option/:id',
   ensureAuthenticated,
   createOptionController.handle,
@@ -103,7 +104,7 @@ authRoutes.get(
   ensureAuthenticated,
   listAllPropertiesController.handle,
 )
-authRoutes.get('/all-users', ensureIsAdmin, listAllUsersController.handle)
+authRoutes.get('/all-users', ensureAuthenticated, listAllUsersController.handle)
 authRoutes.get(
   '/buscaCliente',
   ensureAuthenticated,
@@ -196,7 +197,9 @@ authRoutes.put(
   updatePropertyController.handle,
 )
 
-authRoutes.post('/upload-image', uploadImageController.handle)
+authRoutes.post('/upload-image', upload.single('file'), (req, res) => {
+  uploadImageController.handle(req, res)
+})
 
 authRoutes.get('/users', ensureIsAdmin, fetchUsersController.handle)
 authRoutes.put('/users', ensureIsAdmin, updateUserController.handle)

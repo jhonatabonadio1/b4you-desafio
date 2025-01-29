@@ -10,7 +10,6 @@ class FetchUserPropertiesService {
     const properties = await prismaClient.properties.findMany({
       where: {
         user: userId,
-        deleted: false, // Garante que propriedades deletadas não sejam retornadas
       },
     })
 
@@ -18,7 +17,20 @@ class FetchUserPropertiesService {
       throw new Error('Nenhuma propriedade encontrada para este usuário.')
     }
 
-    return properties
+    const data = await Promise.all(
+      properties.map(async (property) => {
+        const user = await prismaClient.users.findUnique({
+          where: { id: property.user },
+        })
+
+        return {
+          ...property,
+          userName: user?.nome || 'Usuário Desconhecido', // Adiciona o nome do usuário
+        }
+      }),
+    )
+
+    return data
   }
 }
 

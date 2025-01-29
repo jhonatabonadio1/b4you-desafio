@@ -30,12 +30,10 @@ type ImovelsDetails {
 }
 
 type ImovelsMetragens {
-  id    String @map("_id") @db.ObjectId
   value String
 }
 
 type PropertiesCidades {
-  id    String @map("_id") @db.ObjectId
   value String
 }
 
@@ -62,7 +60,7 @@ type PropertiesDetails {
 }
 
 type PropertiesLinks {
-  id          String   @map("_id") @db.ObjectId
+  id           String  @map("_id") @db.ObjectId
   encaminhado Boolean
   link        String
   motivo      String
@@ -70,7 +68,6 @@ type PropertiesLinks {
 }
 
 type PropertiesMetragens {
-  id    String @map("_id") @db.ObjectId
   value String
 }
 
@@ -79,7 +76,6 @@ type PropertiesPropertyType {
 }
 
 type PropertiesValores {
-  id    String @map("_id") @db.ObjectId
   value String
 }
 
@@ -151,7 +147,7 @@ model properties {
   linkImovel    String?
   links         PropertiesLinks[]
   metragens     PropertiesMetragens[]
-  nome          String
+  nome          String?
   paymentMethod String
   propertyType  PropertiesPropertyType[]
   quartos       Int

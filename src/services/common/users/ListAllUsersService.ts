@@ -15,6 +15,7 @@ class ListAllUsersService {
         : {}
 
       // Busca usuários no banco de dados com ordenação por nome
+
       const users = await prismaClient.users.findMany({
         where: query,
         orderBy: {

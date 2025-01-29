@@ -17,12 +17,12 @@ const PORT = process.env.PORT || 3333
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
 app.use('/api', authRoutes)
 
 app.use(
   (err: Error, request: Request, response: Response, next: NextFunction) => {
     if (err instanceof Error) {
-      console.log(err.message)
       return response.status(400).json({
         error: err.message,
       })

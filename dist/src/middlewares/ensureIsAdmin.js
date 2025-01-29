@@ -4,7 +4,7 @@ exports.ensureIsAdmin = void 0;
 const jsonwebtoken_1 = require("jsonwebtoken");
 const prismaClient_1 = require("../database/prismaClient");
 async function ensureIsAdmin(request, response, next) {
-    // Receber o tokenwww
+    // Receber o token
     const authToken = request.headers.authorization;
     // Validar se token está preenchido
     if (!authToken) {
@@ -13,19 +13,18 @@ async function ensureIsAdmin(request, response, next) {
     const [, token] = authToken.split(' ');
     try {
         // Validar se token é válido
-        const { sub } = (0, jsonwebtoken_1.verify)(token, process.env.AUTH_TOKEN);
+        const { sub } = (0, jsonwebtoken_1.verify)(token, process.env.JWT_SECRET);
         // Recuperar informações do usuário
         request.userId = sub;
-        const buscaUsuario = await prismaClient_1.prismaClient.usuario.findFirst({
+        const buscaUsuario = await prismaClient_1.prismaClient.users.findFirst({
             where: {
                 id: sub,
-                deleted: false,
             },
         });
         if (!buscaUsuario) {
             return response.status(404).end();
         }
-        if (buscaUsuario.tipoAcesso !== 'admin') {
+        if (buscaUsuario.role !== 'admin') {
             return response.status(401).end();
         }
         return next();

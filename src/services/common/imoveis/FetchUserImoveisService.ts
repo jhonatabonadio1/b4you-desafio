@@ -10,13 +10,8 @@ class FetchUserImoveisService {
     const properties = await prismaClient.imovels.findMany({
       where: {
         user: userId,
-        deleted: false, // Garante que não retorne imóveis deletados
       },
     })
-
-    if (!properties || properties.length === 0) {
-      throw new Error('Nenhum imóvel encontrado para este usuário.')
-    }
 
     return properties
   }

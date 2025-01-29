@@ -29,8 +29,6 @@ export async function ensureIsAdmin(
     // Recuperar informações do usuário
     request.userId = sub
 
-    console.log(sub)
-
     const buscaUsuario = await prismaClient.users.findFirst({
       where: {
         id: sub,
@@ -42,7 +40,6 @@ export async function ensureIsAdmin(
     }
 
     if (buscaUsuario.role !== 'admin') {
-      console.log(buscaUsuario)
       return response.status(401).end()
     }
 

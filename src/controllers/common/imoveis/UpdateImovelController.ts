@@ -4,8 +4,8 @@ import { UpdateImovelService } from '../../../services/common/imoveis/UpdateImov
 class UpdateImovelController {
   async handle(request: Request, response: Response) {
     const { userId } = request // Obtido do middleware de autenticação
+    const { id } = request.query
     const {
-      _id,
       propertyType,
       quartos,
       banheiros,
@@ -30,7 +30,7 @@ class UpdateImovelController {
       const updateImovelService = new UpdateImovelService()
 
       const updatedProperty = await updateImovelService.execute({
-        _id,
+        _id: id as string,
         propertyType,
         quartos: parseInt(quartos, 10),
         banheiros: parseInt(banheiros, 10),

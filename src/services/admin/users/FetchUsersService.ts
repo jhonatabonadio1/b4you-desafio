@@ -1,5 +1,14 @@
 import { prismaClient } from '../../../database/prismaClient'
 
+function exclude<User, Key extends keyof User>(
+  user: User,
+  keys: Key[],
+): Omit<User, Key> {
+  const userCopy = { ...user }
+  keys.forEach((key) => delete userCopy[key])
+  return userCopy
+}
+
 class FetchUsersService {
   async execute(id?: string) {
     if (id) {
@@ -11,7 +20,7 @@ class FetchUsersService {
         throw new Error('Usuário não encontrado.')
       }
 
-      return user
+      return exclude(user, ['password'])
     }
 
     const users = await prismaClient.users.findMany()

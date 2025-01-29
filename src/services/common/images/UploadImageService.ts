@@ -1,6 +1,7 @@
 import AWS from 'aws-sdk'
 import sharp from 'sharp'
 import { v4 as uuidv4 } from 'uuid'
+import fs from 'fs/promises'
 
 class UploadImageService {
   private s3: AWS.S3
@@ -37,6 +38,8 @@ class UploadImageService {
     }
 
     const uploadResult = await this.s3.upload(uploadParams).promise()
+
+    await fs.unlink(filePath)
 
     return uploadResult.Location
   }

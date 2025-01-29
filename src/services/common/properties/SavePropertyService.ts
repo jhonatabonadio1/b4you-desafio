@@ -1,5 +1,4 @@
 import { prismaClient } from '../../../database/prismaClient'
-import { ObjectId } from 'mongodb' // Para gerar IDs de metragens, valores e cidades, se necessário
 
 type ImovelsCondominium = {
   academia: boolean
@@ -60,13 +59,23 @@ class SavePropertyService {
     // Gera um código único para o cliente
     const clientCode = await this.gerarNumeroUnicoDeQuatroDigitos()
 
+    const metragensWithId = metragens.map((value) => ({
+      value: value.value,
+    }))
+    const typesWithId = propertyType.map((value) => ({
+      value: value.value,
+    }))
+    const valuesWithId = valores.map((value) => ({
+      value: value.value,
+    }))
+    const cidadesWithId = cidades.map((value) => ({
+      value: value.value,
+    }))
+
     // Salva a propriedade no banco de dados
     const property = await prismaClient.properties.create({
       data: {
-        propertyType: propertyType.map((type) => ({
-          id: new ObjectId().toHexString(),
-          value: type.value,
-        })),
+        propertyType: typesWithId,
         v: 0,
         quartos,
         details,
@@ -77,19 +86,9 @@ class SavePropertyService {
         paymentMethod,
         descricao,
         state,
-        cidades: cidades.map((cidade) => ({
-          id: new ObjectId().toHexString(),
-          value: cidade.value,
-        })),
-        metragens: metragens.map((metragem) => ({
-          id: new ObjectId().toHexString(),
-          value: metragem.value,
-        })),
-
-        valores: valores.map((valor) => ({
-          id: new ObjectId().toHexString(),
-          value: valor.value,
-        })),
+        cidades: cidadesWithId,
+        metragens: metragensWithId,
+        valores: valuesWithId,
         user: userId,
 
         clientCode: clientCode.toString(),

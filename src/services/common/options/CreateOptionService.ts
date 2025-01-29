@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb'
 import { prismaClient } from '../../../database/prismaClient'
 
 interface ICreateOptionRequest {
@@ -63,7 +64,7 @@ class CreateOptionService {
 
     // Criação de um novo link
     const newLink = {
-      id: crypto.randomUUID(), // Gera um ID único para o link
+      id: new ObjectId().toHexString(), // Gera um ID único para o link
       link,
       motivo,
       encaminhado,

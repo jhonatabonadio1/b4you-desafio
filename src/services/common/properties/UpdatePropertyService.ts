@@ -1,5 +1,4 @@
 import { prismaClient } from '../../../database/prismaClient'
-import { ObjectId } from 'mongodb' // Para gerar IDs únicos
 
 type ImovelsCondominium = {
   academia: boolean
@@ -87,18 +86,15 @@ class UpdatePropertyService {
     })
 
     const formattedValores = valores.map((valor) => ({
-      id: new ObjectId().toHexString(), // Gera um ID único
       value: formatter.format(parseFloat(valor.value.replace(',', '.'))),
     }))
 
     // Adicionar IDs aos itens de `cidades` e `metragens`
     const cidadesWithIds = cidades.map((cidade) => ({
-      id: new ObjectId().toHexString(), // Gera um ID único
       value: cidade.value,
     }))
 
     const metragensWithIds = metragens.map((metragem) => ({
-      id: new ObjectId().toHexString(), // Gera um ID único
       value: metragem.value,
     }))
 
@@ -108,7 +104,6 @@ class UpdatePropertyService {
       data: {
         propertyType: {
           set: propertyType.map((type) => ({
-            id: new ObjectId().toHexString(), // Gera ID único para cada tipo
             value: type.value,
           })),
         },

@@ -6,7 +6,7 @@ class CreateOptionController {
   async handle(request: Request, response: Response) {
     const token = request.headers.authorization?.split(' ')[1]
     const { id: propertyId } = request.params // ID da propriedade
-    const { link, motivo, encaminhado } = request.body
+    const { link, motivo, enviado } = request.body
 
     const createOptionService = new CreateOptionService()
 
@@ -18,7 +18,7 @@ class CreateOptionController {
         propertyId,
         link,
         motivo,
-        encaminhado,
+        encaminhado: enviado,
         userId,
       })
       return response.status(200).json(result)
