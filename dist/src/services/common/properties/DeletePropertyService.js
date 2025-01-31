@@ -8,8 +8,8 @@ class DeletePropertyService {
             throw new Error('O ID da propriedade é obrigatório.');
         }
         // Busca o usuário pelo ID
-        const user = await prismaClient_1.prismaClient.users.findUnique({
-            where: { id: userId },
+        const user = await prismaClient_1.prismaClient.users.findFirst({
+            where: { id: userId, deleted: false },
         });
         if (!user) {
             throw new Error('Usuário não encontrado.');

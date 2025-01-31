@@ -82,7 +82,24 @@ class CreateOptionService {
       },
     })
 
-    return { newLinkId: newLink.id }
+    const findProperty = await prismaClient.properties.findFirst({
+      where: {
+        id: propertyId, // Certifica-se de buscar na propriedade correta
+        links: {
+          some: {
+            id: newLink.id, // Busca pelo ID do link dentro do array
+          },
+        },
+      },
+      select: {
+        links: true, // Retorna apenas os links
+      },
+    })
+
+    // Filtrar o link exato dentro do array retornado (caso necessário)
+    const foundLink = findProperty?.links.find((l) => l.id === newLink.id)
+
+    return foundLink
   }
 }
 

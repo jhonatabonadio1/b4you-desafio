@@ -65,6 +65,7 @@ type PropertiesLinks {
   link        String
   motivo      String
   timestamp   DateTime @db.Date @default(now())
+  updated_at  DateTime? @db.Date @default(now())
 }
 
 type PropertiesMetragens {

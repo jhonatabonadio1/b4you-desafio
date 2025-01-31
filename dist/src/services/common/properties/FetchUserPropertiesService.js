@@ -17,8 +17,8 @@ class FetchUserPropertiesService {
             throw new Error('Nenhuma propriedade encontrada para este usuário.');
         }
         const data = await Promise.all(properties.map(async (property) => {
-            const user = await prismaClient_1.prismaClient.users.findUnique({
-                where: { id: property.user },
+            const user = await prismaClient_1.prismaClient.users.findFirst({
+                where: { id: property.user, deleted: false },
             });
             return Object.assign(Object.assign({}, property), { userName: (user === null || user === void 0 ? void 0 : user.nome) || 'Usuário Desconhecido' });
         }));

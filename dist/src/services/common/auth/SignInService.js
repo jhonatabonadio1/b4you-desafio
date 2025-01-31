@@ -19,9 +19,10 @@ class SignInService {
             throw new Error('Senha é obrigatória.');
         }
         // Busca o usuário no banco de dados
-        const user = await prismaClient_1.prismaClient.users.findUnique({
+        const user = await prismaClient_1.prismaClient.users.findFirst({
             where: {
                 email,
+                deleted: false,
             },
         });
         if (!user) {

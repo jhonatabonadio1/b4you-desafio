@@ -1,20 +1,23 @@
 import { prismaClient } from '../../../database/prismaClient'
+import { CalculateLastUpdateService } from './CalculateLastUpdateService'
 
 class ListAllPropertiesService {
   async execute() {
-    // Busca todas as propriedades no banco de dados
     const properties = await prismaClient.properties.findMany({})
+    const calculateLastUpdateService = new CalculateLastUpdateService()
 
-    // Adiciona o nome do usuário relacionado às propriedades
     const data = await Promise.all(
       properties.map(async (property) => {
         const user = await prismaClient.users.findFirst({
           where: { id: property.user },
         })
 
+        const lastUpdate = await calculateLastUpdateService.execute(property.id)
+
         return {
           ...property,
-          userName: user?.nome || 'Usuário Desconhecido', // Adiciona o nome do usuário
+          userName: user?.nome || 'Usuário Desconhecido',
+          lastLinkUpdate: lastUpdate, // Adiciona a data do último link atualizado
         }
       }),
     )

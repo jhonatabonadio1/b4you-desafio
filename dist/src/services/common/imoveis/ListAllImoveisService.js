@@ -10,9 +10,10 @@ class ListAllImoveisService {
             // Mapeia os imóveis para buscar o nome do usuário associado
             const data = await Promise.all(properties.map(async (property) => {
                 // Busca o usuário pelo ID armazenado no campo `user`
-                const user = await prismaClient_1.prismaClient.users.findUnique({
+                const user = await prismaClient_1.prismaClient.users.findFirst({
                     where: {
-                        id: property.user, // `user` é uma string com o ID
+                        id: property.user,
+                        deleted: false, // `user` é uma string com o ID
                     },
                 });
                 return Object.assign(Object.assign({}, property), { userName: (user === null || user === void 0 ? void 0 : user.nome) || null });

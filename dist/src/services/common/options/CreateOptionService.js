@@ -6,8 +6,8 @@ const prismaClient_1 = require("../../../database/prismaClient");
 class CreateOptionService {
     async execute({ token, propertyId, link, motivo, encaminhado, userId, }) {
         // Verifica se o token foi fornecido
-        const findUser = await prismaClient_1.prismaClient.users.findUnique({
-            where: { id: userId },
+        const findUser = await prismaClient_1.prismaClient.users.findFirst({
+            where: { id: userId, deleted: false },
         });
         if (!findUser) {
             throw new Error('Usuário não encontrado');
@@ -57,7 +57,22 @@ class CreateOptionService {
                 },
             },
         });
-        return { newLinkId: newLink.id };
+        const findProperty = await prismaClient_1.prismaClient.properties.findFirst({
+            where: {
+                id: propertyId, // Certifica-se de buscar na propriedade correta
+                links: {
+                    some: {
+                        id: newLink.id, // Busca pelo ID do link dentro do array
+                    },
+                },
+            },
+            select: {
+                links: true, // Retorna apenas os links
+            },
+        });
+        // Filtrar o link exato dentro do array retornado (caso necessário)
+        const foundLink = findProperty === null || findProperty === void 0 ? void 0 : findProperty.links.find((l) => l.id === newLink.id);
+        return foundLink;
     }
 }
 exports.CreateOptionService = CreateOptionService;

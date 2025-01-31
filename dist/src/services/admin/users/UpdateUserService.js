@@ -11,8 +11,8 @@ class UpdateUserService {
         if (!id) {
             throw new Error('ID é obrigatório.');
         }
-        const user = await prismaClient_1.prismaClient.users.findUnique({
-            where: { id },
+        const user = await prismaClient_1.prismaClient.users.findFirst({
+            where: { id, deleted: false },
         });
         if (!user) {
             throw new Error('Usuário não encontrado.');

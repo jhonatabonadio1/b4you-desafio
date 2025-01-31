@@ -15,8 +15,8 @@ class EditOptionService {
             }
         }
         // Busca o usuário pelo ID
-        const user = await prismaClient_1.prismaClient.users.findUnique({
-            where: { id: userId },
+        const user = await prismaClient_1.prismaClient.users.findFirst({
+            where: { id: userId, deleted: false },
         });
         if (!user) {
             throw new Error('Usuário não encontrado.');
@@ -49,6 +49,7 @@ class EditOptionService {
                             link: data.link,
                             motivo: data.motivo,
                             encaminhado: data.encaminhado,
+                            updated_at: new Date(),
                         },
                     },
                 },

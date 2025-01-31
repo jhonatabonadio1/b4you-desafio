@@ -7,14 +7,17 @@ class DeleteUserService {
         if (!id) {
             throw new Error('ID é obrigatório.');
         }
-        const user = await prismaClient_1.prismaClient.users.findUnique({
-            where: { id },
+        const user = await prismaClient_1.prismaClient.users.findFirst({
+            where: { id, deleted: false },
         });
         if (!user) {
             throw new Error('Usuário não encontrado.');
         }
-        await prismaClient_1.prismaClient.users.delete({
+        await prismaClient_1.prismaClient.users.update({
             where: { id },
+            data: {
+                deleted: true,
+            },
         });
         return { message: 'Usuário deletado com sucesso.' };
     }

@@ -61,6 +61,7 @@ class EditOptionService {
               link: data.link,
               motivo: data.motivo,
               encaminhado: data.encaminhado,
+              updated_at: new Date(),
             },
           },
         },
