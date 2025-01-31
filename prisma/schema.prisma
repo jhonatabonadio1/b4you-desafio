@@ -170,4 +170,5 @@ model users {
   nome     String
   password String
   role     String
+  deleted  Boolean? @default(false)
 }

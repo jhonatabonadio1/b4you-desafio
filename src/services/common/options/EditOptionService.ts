@@ -20,8 +20,8 @@ class EditOptionService {
     }
 
     // Busca o usuário pelo ID
-    const user = await prismaClient.users.findUnique({
-      where: { id: userId },
+    const user = await prismaClient.users.findFirst({
+      where: { id: userId, deleted: false },
     })
 
     if (!user) {

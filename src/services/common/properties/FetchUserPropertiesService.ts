@@ -19,8 +19,8 @@ class FetchUserPropertiesService {
 
     const data = await Promise.all(
       properties.map(async (property) => {
-        const user = await prismaClient.users.findUnique({
-          where: { id: property.user },
+        const user = await prismaClient.users.findFirst({
+          where: { id: property.user, deleted: false },
         })
 
         return {

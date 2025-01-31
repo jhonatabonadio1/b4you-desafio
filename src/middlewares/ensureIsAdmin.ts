@@ -32,6 +32,7 @@ export async function ensureIsAdmin(
     const buscaUsuario = await prismaClient.users.findFirst({
       where: {
         id: sub,
+        deleted: false,
       },
     })
 

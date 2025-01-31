@@ -21,8 +21,8 @@ class CreateOptionService {
   }: ICreateOptionRequest) {
     // Verifica se o token foi fornecido
 
-    const findUser = await prismaClient.users.findUnique({
-      where: { id: userId },
+    const findUser = await prismaClient.users.findFirst({
+      where: { id: userId, deleted: false },
     })
 
     if (!findUser) {

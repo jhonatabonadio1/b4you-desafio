@@ -8,7 +8,7 @@ class ListAllPropertiesService {
     // Adiciona o nome do usuário relacionado às propriedades
     const data = await Promise.all(
       properties.map(async (property) => {
-        const user = await prismaClient.users.findUnique({
+        const user = await prismaClient.users.findFirst({
           where: { id: property.user },
         })
 

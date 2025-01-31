@@ -28,9 +28,10 @@ class SignInService {
     }
 
     // Busca o usuário no banco de dados
-    const user = await prismaClient.users.findUnique({
+    const user = await prismaClient.users.findFirst({
       where: {
         email,
+        deleted: false,
       },
     })
 

@@ -12,8 +12,8 @@ function exclude<User, Key extends keyof User>(
 class FetchUsersService {
   async execute(id?: string) {
     if (id) {
-      const user = await prismaClient.users.findUnique({
-        where: { id },
+      const user = await prismaClient.users.findFirst({
+        where: { id, deleted: false },
       })
 
       if (!user) {

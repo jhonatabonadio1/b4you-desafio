@@ -35,8 +35,8 @@ class DeleteImovelService {
       throw new Error('O ID do imóvel é obrigatório.')
     }
 
-    const buscaUsuario = await prismaClient.users.findUnique({
-      where: { id: userId },
+    const buscaUsuario = await prismaClient.users.findFirst({
+      where: { id: userId, deleted: false },
     })
 
     if (!buscaUsuario) {
