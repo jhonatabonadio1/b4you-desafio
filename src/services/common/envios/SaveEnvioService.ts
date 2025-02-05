@@ -10,7 +10,7 @@ class SaveEnvioService {
   }) {
     const { phoneNumber, imovelId, clientId, message, userId } = data
 
-    if (!phoneNumber || !imovelId || !clientId || !message || !userId) {
+    if (!phoneNumber || !message || !userId) {
       throw new Error('Todos os campos são obrigatórios.')
     }
 

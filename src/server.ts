@@ -37,7 +37,12 @@ const speedLimiter = slowDown({
 
 // 🚀 Middlewares essenciais
 const allowedOriginsProd = ['https://app.ymobis.com']
-const allowedOriginsDev = ['http://localhost:3000']
+const allowedOriginsDev = [
+  'http://localhost:3000',
+  'http://192.168.0.24:3000',
+  'http://192.168.0.10:3000',
+  'http://192.168.5.158:3000',
+]
 
 app.use(
   cors({

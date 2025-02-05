@@ -33,8 +33,8 @@ class UpdatePropertyService {
     descricao: string
     state: string
     cidades: { value: string }[]
-    metragens: { value: string }[]
-    valores: { value: string }[]
+    metragens: { value: number }[]
+    valores: { value: number }[]
     nome: string
     details: ImovelsDetails
     condominium: ImovelsCondominium
@@ -77,16 +77,8 @@ class UpdatePropertyService {
       throw new Error('Propriedade não encontrada ou usuário não autorizado.')
     }
 
-    // Formatar valores como moeda local (BRL)
-    const formatter = new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    })
-
     const formattedValores = valores.map((valor) => ({
-      value: formatter.format(parseFloat(valor.value.replace(',', '.'))),
+      value: valor.value,
     }))
 
     // Adicionar IDs aos itens de `cidades` e `metragens`

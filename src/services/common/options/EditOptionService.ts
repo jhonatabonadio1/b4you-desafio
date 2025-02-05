@@ -51,7 +51,7 @@ class EditOptionService {
     }
 
     // Atualiza o link específico
-    await prismaClient.properties.update({
+    const atualizaLink = await prismaClient.properties.update({
       where: { id: propertyId },
       data: {
         links: {
@@ -68,7 +68,13 @@ class EditOptionService {
       },
     })
 
-    return { message: 'Link atualizado com sucesso.' }
+    if (!atualizaLink) {
+      throw new Error('Não foi possível atualizar o link')
+    }
+
+    const linkUpdated = atualizaLink.links.find((link) => link.id === linkId)
+
+    return linkUpdated
   }
 }
 

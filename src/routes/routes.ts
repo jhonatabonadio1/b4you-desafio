@@ -99,7 +99,7 @@ authRoutes.get(
   ensureAuthenticated,
   listAllImoveisController.handle,
 )
-authRoutes.get(
+authRoutes.post(
   '/all-properties',
   ensureAuthenticated,
   listAllPropertiesController.handle,

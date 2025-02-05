@@ -32,8 +32,8 @@ class SavePropertyService {
     descricao: string
     state: string
     cidades: { value: string }[]
-    metragens: { value: string }[]
-    valores: { value: string }[]
+    metragens: { value: number }[]
+    valores: { value: number }[]
     userId: string
     nome: string
     details: ImovelsDetails
