@@ -37,6 +37,7 @@ class SavePropertyController {
       state,
       cidades,
       metragens,
+      fonte,
       valores,
       nome,
       details,
@@ -48,10 +49,11 @@ class SavePropertyController {
       garagem: number
       paymentMethod: string
       descricao: string
+      fonte: string
       state: string
       cidades: { value: string }[]
-      metragens: { value: number }[]
-      valores: { value: number }[]
+      metragens: { value: number | string }[]
+      valores: { value: number | string }[]
       nome: string
       details: ImovelsDetails
       condominium: ImovelsCondominium
@@ -131,21 +133,57 @@ class SavePropertyController {
           .json({ error: "Objeto 'condomínio' é obrigatório." })
       }
 
+      const filteredPropertyType = propertyType.filter((pt) => pt.value !== '') // remove onde value=''
+
+      // cidades
+      const filteredCidades = cidades.filter((c) => c.value !== '') // remove onde value=''
+
+      // metragens
+      const filteredMetragens = metragens
+        .filter(
+          (m) =>
+            m.value !== null &&
+            m.value !== undefined &&
+            m.value !== 0 &&
+            m.value !== '',
+        )
+        .map((item) => {
+          const value = Number(item.value)
+
+          return { value }
+        })
+
+      // valores
+      const filteredValores = valores
+        .filter(
+          (v) =>
+            v.value !== null &&
+            v.value !== undefined &&
+            v.value !== 0 &&
+            v.value !== '',
+        )
+        .map((item) => {
+          const value = Number(item.value)
+
+          return { value }
+        })
+
       // 2) Se passou pelas validações, chama o service
       const savePropertyService = new SavePropertyService()
 
       const property = await savePropertyService.execute({
-        propertyType,
+        propertyType: filteredPropertyType,
         quartos: parseInt(quartos.toString(), 10),
         banheiros: parseInt(banheiros.toString(), 10),
         garagem: parseInt(garagem.toString(), 10),
         paymentMethod,
         descricao,
         state,
-        cidades,
-        metragens,
-        valores,
+        cidades: filteredCidades,
+        metragens: filteredMetragens,
+        valores: filteredValores,
         nome,
+        fonte,
         details,
         condominium,
         userId,

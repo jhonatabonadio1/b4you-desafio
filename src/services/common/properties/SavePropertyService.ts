@@ -31,6 +31,7 @@ class SavePropertyService {
     paymentMethod: string
     descricao: string
     state: string
+    fonte: string
     cidades: { value: string }[]
     metragens: { value: number }[]
     valores: { value: number }[]
@@ -54,6 +55,7 @@ class SavePropertyService {
       nome,
       details,
       condominium,
+      fonte,
     } = data
 
     // Gera um código único para o cliente
@@ -83,6 +85,7 @@ class SavePropertyService {
         nome,
         banheiros,
         garagem,
+        fonte,
         paymentMethod,
         descricao,
         state,
@@ -90,6 +93,7 @@ class SavePropertyService {
         metragens: metragensWithId,
         valores: valuesWithId,
         user: userId,
+
         clientCode: clientCode.toString(),
         timestamp: new Date(),
       },

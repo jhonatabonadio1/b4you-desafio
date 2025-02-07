@@ -165,10 +165,14 @@ authRoutes.get(
   ensureAuthenticated,
   fetchUserPropertyController.handle,
 )
-authRoutes.get('/fontes', ensureIsAdmin, fetchFontesController.handle)
+authRoutes.get('/fontes', ensureAuthenticated, fetchFontesController.handle)
 authRoutes.post('/fontes', ensureIsAdmin, createFonteController.handle)
 authRoutes.delete('/fontes', ensureIsAdmin, deleteFontesController.handle)
-authRoutes.get('/locations', ensureIsAdmin, fetchLocationsController.handle)
+authRoutes.get(
+  '/locations',
+  ensureAuthenticated,
+  fetchLocationsController.handle,
+)
 authRoutes.post('/locations', ensureIsAdmin, createLocationController.handle)
 authRoutes.delete('/locations', ensureIsAdmin, deleteLocationController.handle)
 authRoutes.get('/me', ensureAuthenticated, fetchUserDataController.handle)
@@ -183,7 +187,7 @@ authRoutes.post(
   ensureAuthenticated,
   savePropertyController.handle,
 )
-authRoutes.get('/tipos', ensureIsAdmin, fetchTiposController.handle)
+authRoutes.get('/tipos', ensureAuthenticated, fetchTiposController.handle)
 authRoutes.post('/tipos', ensureIsAdmin, createTipoController.handle)
 authRoutes.delete('/tipos', ensureIsAdmin, deleteTipoController.handle)
 authRoutes.put(
