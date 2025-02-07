@@ -90,7 +90,6 @@ class SavePropertyService {
         metragens: metragensWithId,
         valores: valuesWithId,
         user: userId,
-
         clientCode: clientCode.toString(),
         timestamp: new Date(),
       },

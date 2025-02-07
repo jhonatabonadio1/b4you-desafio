@@ -1,4 +1,5 @@
 import { prismaClient } from '../../../database/prismaClient'
+import { CalculateLastUpdateService } from './CalculateLastUpdateService'
 
 type FilterType = {
   quartos: string
@@ -28,12 +29,14 @@ class ListAllPropertiesService {
     clienteFuturo,
     filters,
     userId,
+    me,
   }: {
     page?: number
     search?: string
     clienteFuturo?: boolean
     userId?: string
     filters?: FilterType
+    me?: boolean
   }) {
     const pageSize = 10
     const conditions: any = {}
@@ -42,7 +45,7 @@ class ListAllPropertiesService {
       conditions.clienteFuturo = clienteFuturo
     }
 
-    if (userId) {
+    if (me) {
       conditions.user = userId
     }
 
@@ -133,7 +136,12 @@ class ListAllPropertiesService {
       where: conditions,
       take: pageSize,
       skip: (page - 1) * pageSize,
+      orderBy: {
+        timestamp: 'desc',
+      },
     })
+
+    const calculateLastUpdateService = new CalculateLastUpdateService()
 
     const data = await Promise.all(
       properties.map(async (property) => {
@@ -141,9 +149,12 @@ class ListAllPropertiesService {
           where: { id: property.user, deleted: false },
         })
 
+        const lastUpdate = await calculateLastUpdateService.execute(property.id)
+
         return {
           ...property,
-          userName: user?.nome || 'Usuário Desconhecido', // Adiciona o nome do usuário
+          userName: user?.nome || 'Usuário Desconhecido',
+          lastLinkUpdate: lastUpdate,
         }
       }),
     )

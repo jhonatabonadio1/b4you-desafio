@@ -137,7 +137,7 @@ model properties {
   banheiros     Int
   cidades       PropertiesCidades[]
   clientCode    String
-  clienteFuturo Boolean?
+  clienteFuturo Boolean? @default(false)
   condominium   PropertiesCondominium
   descricao     String
   details       PropertiesDetails

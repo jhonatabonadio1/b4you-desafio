@@ -25,7 +25,7 @@ type FilterType = {
 
 class ListAllPropertiesController {
   async handle(request: Request, response: Response) {
-    const { clienteFuturo, page, search } = request.query
+    const { clienteFuturo, page, search, me } = request.query
     const { filters } = request.body
     const { userId } = request
 
@@ -38,6 +38,7 @@ class ListAllPropertiesController {
         search: search as string | undefined,
         filters: filters as FilterType | undefined,
         userId,
+        me: !!me,
       })
 
       return response.status(200).json(properties)
