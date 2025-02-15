@@ -37,12 +37,7 @@ const speedLimiter = slowDown({
 
 // 🚀 Middlewares essenciais
 const allowedOriginsProd = ['https://app.ymobis.com']
-const allowedOriginsDev = [
-  'http://localhost:3000',
-  'http://192.168.0.24:3000',
-  'http://192.168.0.10:3000',
-  'http://192.168.5.158:3000',
-]
+const allowedOriginsDev = ['http://localhost:3000']
 
 app.use(
   cors({
@@ -94,11 +89,11 @@ app.use(sanitizeResponse)
 app.get('/api/csrf', (req, res) => {
   const token = tokens.create(secret)
 
-  // Set CSRF token as an HTTP-only cookie
-  const response = res.json({ csrfToken: token })
-  response.cookie('XSRF-TOKEN', token, { httpOnly: true })
+  // ✅ Primeiro, define o cookie
+  res.cookie('XSRF-TOKEN', token, { httpOnly: true })
 
-  return response
+  // ✅ Depois, retorna a resposta JSON
+  return res.json({ csrfToken: token })
 })
 
 // 🚀 Middleware para processar cookies (necessário para CSRF)
@@ -111,6 +106,10 @@ app.use('/api', authRoutes)
 
 // 🚀 Middleware de erro global
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  if (res.headersSent) {
+    return next(err)
+  }
+
   if (err instanceof Error) {
     return res.status(400).json({
       error: err.message,

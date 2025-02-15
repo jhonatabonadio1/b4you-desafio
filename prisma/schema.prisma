@@ -7,169 +7,108 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-type ImovelsCondominium {
-  academia           Boolean
-  elevador           Boolean
-  lavanderiaColetiva Boolean
-  piscina            Boolean
-  playground         Boolean
-  portaria24hrs      Boolean
-  salaoDeFesta       Boolean
-  sauna              Boolean
+model User {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  email     String  @unique
+  password  String
+  firstName String
+  lastName  String
+  empresa   String?
+
+  stripeCustomerId String?
+
+  subscription Subscription?
+  pdfs         Document[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Payment Payment[]
+
+  @@map("users")
 }
 
-type ImovelsDetails {
-  armariosPlanejados Boolean
-  churrasqueira      Boolean
-  closet             Boolean
-  mobiliado          Boolean
-  piscina            Boolean
-  quintal            Boolean
-  suite              Boolean
-  varanda            Boolean
+model Subscription {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique @db.ObjectId
+
+  stripeSubscriptionId String?
+
+  plan   Plan?   @relation(fields: [planId], references: [id])
+  planId String? @db.ObjectId
+
+  status String
+
+  startDate DateTime  @default(now())
+  endDate   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-type ImovelsMetragens {
-  value String
+model Plan {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name String
+
+  monthlyPrice Float?
+  annualPrice  Float?
+
+  monthlyPriceId String?
+  annualPriceId  String?
+
+  pdfLimit     Int
+  storageLimit Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Subscription Subscription[]
+
+  @@map("plans")
 }
 
-type PropertiesCidades {
-  value String
+model Document {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  s3Key       String
+  iframe      String
+  sizeInBytes Int
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("documents")
+  Heatmap Heatmap[]
 }
 
-type PropertiesCondominium {
-  academia           Boolean
-  elevador           Boolean
-  lavanderiaColetiva Boolean
-  piscina            Boolean
-  playground         Boolean
-  portaria24hrs      Boolean
-  salaoDeFesta       Boolean
-  sauna              Boolean
+model Payment {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  stripeInvoiceId String
+  amount          Int
+  status          String
+  currency        String
+  userId          String @db.ObjectId
+  user            User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("payments")
 }
 
-type PropertiesDetails {
-  armariosPlanejados Boolean
-  churrasqueira      Boolean
-  closet             Boolean
-  mobiliado          Boolean
-  piscina            Boolean
-  quintal            Boolean
-  suite              Boolean
-  varanda            Boolean
-}
+model Heatmap {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  docId        String    @db.ObjectId
+  document     Document  @relation(fields: [docId], references: [id])
+  page    Int
+  s3Key String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-type PropertiesLinks {
-  id           String  @map("_id") @db.ObjectId
-  encaminhado Boolean
-  link        String
-  motivo      String
-  timestamp   DateTime @db.Date @default(now())
-  updated_at  DateTime? @db.Date @default(now())
-}
-
-type PropertiesMetragens {
-  value Float
-}
-
-type PropertiesPropertyType {
-  value String
-}
-
-type PropertiesValores {
-  value Float
-}
-
-model envios {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  v           Int      @map("__v")
-  clientId    String?
-  imovelId    String?
-  message     String
-  phoneNumber String
-  timestamp   DateTime @db.Date @default(now())
-  user        String
-}
-
-model fontes {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  v    Int    @map("__v")
-  nome String
-}
-
-model imovels {
-  id            String             @id @default(auto()) @map("_id") @db.ObjectId
-  v             Int                @map("__v")
-  banheiros     Int
-  cidade        String
-  condominium   ImovelsCondominium
-  descricao     String
-  details       ImovelsDetails
-  garagem       Int
-  images        String[]
-  imovelCode    String
-  metragens     ImovelsMetragens[]
-  ownerEmail    String?
-  ownerName     String
-  ownerPhone    String
-  ownerWhatsapp String?
-  propertyType  String
-  quartos       Int
-  state         String
-  timestamp   DateTime @db.Date @default(now())
-  user          String
-  valor         String
-  valorComissao String?
-  valorCondo    String?
-}
-
-model locations {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  v       Int?     @map("__v")
-  cidades String[]
-  nome    String?
-  sigla   String
-}
-
-model properties {
-  id            String                   @id @default(auto()) @map("_id") @db.ObjectId
-  v             Int                      @map("__v")
-  banheiros     Int
-  cidades       PropertiesCidades[]
-  clientCode    String
-  clienteFuturo Boolean? @default(false)
-  condominium   PropertiesCondominium
-  descricao     String
-  details       PropertiesDetails
-  encaminhado   Boolean?
-  fonte         String?
-  garagem       Int
-  interessou    Boolean?
-  linkImovel    String?
-  links         PropertiesLinks[]
-  metragens     PropertiesMetragens[]
-  nome          String?
-  paymentMethod String
-  propertyType  PropertiesPropertyType[]
-  quartos       Int
-  state         String
-  timestamp   DateTime @db.Date @default(now())
-  user          String
-  valores       PropertiesValores[]
-}
-
-model tipos {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  v    Int    @map("__v")
-  nome String
-}
-
-model users {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  v        Int    @map("__v")
-  email    String @unique(map: "email_1")
-  nome     String
-  password String
-  role     String
-  deleted  Boolean? @default(false)
+  @@map("heatmaps")
 }

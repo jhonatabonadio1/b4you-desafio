@@ -7,16 +7,6 @@ interface ISignInRequest {
   password: string
 }
 
-// Função para excluir chaves sensíveis do usuário
-function exclude<User, Key extends keyof User>(
-  user: User,
-  keys: Key[],
-): Omit<User, Key> {
-  const userCopy = { ...user }
-  keys.forEach((key) => delete userCopy[key])
-  return userCopy
-}
-
 class SignInService {
   async execute({ email, password }: ISignInRequest) {
     if (!email) {
@@ -28,10 +18,9 @@ class SignInService {
     }
 
     // Busca o usuário no banco de dados
-    const user = await prismaClient.users.findFirst({
+    const user = await prismaClient.user.findFirst({
       where: {
         email,
-        deleted: false,
       },
     })
 
@@ -51,21 +40,17 @@ class SignInService {
       {
         userId: user.id,
         email: user.email,
-        role: user.role,
       },
       process.env.JWT_SECRET as string,
       {
         subject: user.id,
-        expiresIn: '1d',
+        expiresIn: '7d',
       },
     )
 
-    // Exclui chaves sensíveis antes de retornar os dados do usuário
-    const userWithoutSensitiveKeys = exclude(user, ['password'])
-
     return {
       token,
-      user: userWithoutSensitiveKeys,
+      user,
     }
   }
 }

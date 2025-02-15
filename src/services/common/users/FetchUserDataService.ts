@@ -7,14 +7,8 @@ class FetchUserDataService {
     }
 
     // Busca o usuário no banco de dados sem incluir o campo de senha
-    const user = await prismaClient.users.findFirst({
-      where: { id: userId, deleted: false },
-      select: {
-        id: true,
-        email: true,
-        nome: true,
-        role: true,
-      },
+    const user = await prismaClient.user.findFirst({
+      where: { id: userId },
     })
 
     if (!user) {

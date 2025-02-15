@@ -1,5 +1,5 @@
 import { prismaClient } from '../../../database/prismaClient'
-import { DownloadImagesService } from '../../../services/common/images/DownloadImagesService'
+import { DownloadImagesService } from '../files/DownloadImagesService'
 
 class DownloadImovelImagesService {
   async execute(imovelCode: string): Promise<Buffer> {
