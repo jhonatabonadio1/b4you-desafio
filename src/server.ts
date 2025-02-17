@@ -9,12 +9,12 @@ import cookieParser from 'cookie-parser'
 
 import rateLimit from 'express-rate-limit'
 import slowDown from 'express-slow-down'
-import { authRoutes } from './routes/routes'
 import { sanitizeResponse } from './middlewares/removePassword'
 import { defender } from './middlewares/xssDefender'
 
 import csrfMiddleware from './middlewares/csrf'
 import { secret, tokens } from './lib/csfrSecret'
+import { routes } from './routes/routes'
 
 dotenv.config()
 
@@ -37,7 +37,11 @@ const speedLimiter = slowDown({
 
 // 🚀 Middlewares essenciais
 const allowedOriginsProd = ['https://app.ymobis.com']
-const allowedOriginsDev = ['http://localhost:3000']
+const allowedOriginsDev = [
+  'http://localhost:3000',
+  'http://192.168.0.11:3000',
+  'http://192.168.1.139:3000',
+]
 
 app.use(
   cors({
@@ -102,7 +106,7 @@ app.use(csrfMiddleware)
 // 📌 Rota para pegar o token CSRF manualmente (opcional)
 
 // 🚀 Rotas protegidas (depois do CSRF!)
-app.use('/api', authRoutes)
+app.use('/api', routes)
 
 // 🚀 Middleware de erro global
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
