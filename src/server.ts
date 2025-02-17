@@ -21,19 +21,17 @@ dotenv.config()
 const PORT = process.env.PORT || 3333
 const app = express()
 
-// 🚀 Proteção contra força bruta
-const limiter = rateLimit({
+/** const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 100, // Máximo de 100 requisições por IP
   message: 'Muitas requisições. Tente novamente mais tarde.',
-})
+})**/
 
-// 🚀 Proteção contra ataques DDoS
-const speedLimiter = slowDown({
+/** const speedLimiter = slowDown({
   windowMs: 15 * 60 * 1000, // 15 minutos
   delayAfter: 50, // Começa a aplicar delay após 50 requisições
   delayMs: () => 500, // Adiciona 500ms de delay fixo por requisição após `delayAfter`
-})
+})**/
 
 // 🚀 Middlewares essenciais
 const allowedOriginsProd = ['https://app.ymobis.com']
@@ -81,9 +79,10 @@ app.use((req, res, next) => {
 // 🚀 Desativa ETag para evitar cache
 app.disable('etag')
 
-// 🚀 Proteção contra força bruta e DDoS
+/**
 app.use(limiter)
 app.use(speedLimiter)
+ */
 
 // 🚀 Middleware para sanitizar entrada de usuários (Proteção contra XSS)
 app.use(defender)
