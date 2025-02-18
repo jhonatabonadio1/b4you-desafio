@@ -45,8 +45,9 @@ class DeleteFileService {
     }
 
     await this.s3.send(new DeleteObjectCommand(deleteParams))
+    // Delete dependent records first
 
-    // 3. Remover registro do banco
+    // Agora, deletar o documento principal
     await prisma.document.delete({
       where: { id: docId },
     })

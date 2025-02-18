@@ -30,12 +30,12 @@ model User {
 
 model Subscription {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id],  onDelete: Cascade)
   userId String @unique @db.ObjectId
 
   stripeSubscriptionId String?
 
-  plan   Plan?   @relation(fields: [planId], references: [id])
+  plan   Plan?   @relation(fields: [planId], references: [id],  onDelete: Cascade)
   planId String? @db.ObjectId
 
   status String
@@ -106,7 +106,7 @@ model Payment {
 model Session {
   id     String       @id @default(auto()) @map("_id") @db.ObjectId
   docId String       @db.ObjectId
-  document   Document @relation(fields: [docId], references: [id])
+  document   Document @relation(fields: [docId], references: [id], onDelete: Cascade)
 
   fingerprint  String
 
@@ -119,8 +119,10 @@ model Session {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
 
   @@map("sessions")
+
   LoteHeatmaps LoteHeatmaps[]
   PageView PageView[]
 }
@@ -130,15 +132,15 @@ model LoteHeatmaps {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   sessionId   String       @db.ObjectId
-  session   Session   @relation(fields: [sessionId], references: [id])
+  session   Session   @relation(fields: [sessionId], references: [id],  onDelete: Cascade)
 
 
   docId    String   @db.ObjectId
-  document Document @relation(fields: [docId], references: [id])
+  document Document @relation(fields: [docId], references: [id],  onDelete: Cascade)
 
 
   fingerprint String?
-  Heatmaps    Heatmaps[]
+  Heatmaps    Heatmaps[] 
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -149,7 +151,7 @@ model LoteHeatmaps {
 model Heatmaps {
   id     String       @id @default(auto()) @map("_id") @db.ObjectId
   loteId String       @db.ObjectId
-  lote   LoteHeatmaps @relation(fields: [loteId], references: [id])
+  lote   LoteHeatmaps @relation(fields: [loteId], references: [id],  onDelete: Cascade)
 
   x     Float
   y     Float
@@ -170,7 +172,7 @@ model PageView {
   id     String       @id @default(auto()) @map("_id") @db.ObjectId
 
   sessionId String  @db.ObjectId
-  session   Session @relation(fields: [sessionId], references: [id])
+  session   Session @relation(fields: [sessionId], references: [id],  onDelete: Cascade)
 
   pageNumber Int
   interactionTime Float
