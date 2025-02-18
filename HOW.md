@@ -1,65 +1,79 @@
-# README – Modelagem de Dados
+# HEATMAPS - BACKEND RULES
+✅ Bloqueia registros duplicados para a mesma sessionId dentro de 1 minuto.
+✅ Alternância de registros (1 sim, 1 não) baseada no docId, mas controlada pela sessionId.
+✅ Cada sessão (sessionId) armazena seu próprio estado collectedHeatmap.
+✅ Se uma sessão já existir nos últimos 5 minutos, retorna a mesma.
+✅ Se passou mais de 5 minutos, cria e retorna uma nova sessão.
 
-Este documento descreve como estruturar o banco de dados usando **Prisma** e **MongoDB** para um SaaS que cobra mensalidades via **Stripe** e faz upload de PDFs para AWS S3. Também há um **guia de implementação** em etapas para que você construa, primeiro, a lógica central do app e, depois, integre a Stripe.  
+# HEATMAPS - FRONTEND RULES
 
----
+✅ 1. Criar uma sessão no backend ao entrar na tela e armazenar o sessionId no useState
 
-## Modelos Principais
+O sessionId é salvo no useState, garantindo que seja utilizado corretamente na requisição dos heatmaps.
+Se o usuário recarregar a página, uma nova sessão será criada.
+✅ 2. Capturar eventos de movimento do mouse e armazenar os heatmaps no localStorage
 
-### 1. User
-- **Descrição**: Representa um usuário do sistema.
-- **Campos**:
-  - `email`, `password`, `name` – Informações de login e perfil.
-  - `stripeCustomerId` – ID do cliente na Stripe (associado a este usuário).
-  - `subscription` – Relação 1-1 com a tabela **Subscription** (assinatura atual).
-  - `pdfs` – Relação 1-N com PDFs enviados.
-  - `payments` – Relação 1-N com pagamentos realizados (caso queira relacionar cada fatura ao usuário).
+Os heatmaps são salvos no localStorage para reduzir o uso de memória no useState.
+O estado do React (useState) não será mais utilizado para armazenar os heatmaps.
+A cada nova interação, os heatmaps são adicionados ao localStorage.
+✅ 3. Enviar os heatmaps automaticamente a cada 1 minuto
 
-### 2. Subscription
-- **Descrição**: Armazena a assinatura do usuário em um determinado plano.
-- **Campos**:
-  - `userId` – Referência ao usuário assinante.
-  - `stripeSubscriptionId` – ID da assinatura na Stripe (ex: `sub_xxx`).
-  - `planId` – Referência ao **Plan** selecionado.
-  - `status` – Ex.: `active`, `canceled`, `trial`, etc.
-  - `startDate` e `endDate` – Controle de vigência da assinatura.
+Os heatmaps são lidos do localStorage e enviados automaticamente para a API.
+Após o envio, os heatmaps são removidos do localStorage.
+✅ 4. Se o usuário ficar inativo por mais de 2 minutos, os heatmaps devem ser apagados
 
-### 3. Plan
-- **Descrição**: Define as características e limites de cada plano.
-- **Campos**:
-  - `name` – Nome do plano (Free, Start, Pro, Business).
-  - `monthlyPrice` / `annualPrice` – Valores locais (opcional, pois a Stripe também guarda preços).
-  - `monthlyPriceId` / `annualPriceId` – IDs dos preços na Stripe para cobrança.
-  - `pdfLimit` e `storageLimit` – Limites de PDFs e armazenamento (em MB ou GB).
+Caso o usuário não interaja por 2 minutos, os heatmaps são apagados do localStorage e o tracking reinicia.
+✅ 5. Sempre que entrar na tela, os heatmaps do localStorage devem ser apagados
 
-### 4. PDF
-- **Descrição**: Cada PDF que o usuário faz upload.
-- **Campos**:
-  - `userId` – Dono do PDF.
-  - `title`, `s3Key` – Metadados do arquivo (título e localização na AWS).
-  - `sizeInBytes` – Tamanho do arquivo (para controle de armazenamento).
-
-### 5. Payment (Opcional, para histórico de faturas/pagamentos)
-- **Descrição**: Se você desejar armazenar localmente o histórico de pagamentos (invoices/charges) vindos da Stripe, utilize este modelo.
-- **Campos**:
-  - `stripeInvoiceId` – ID da invoice/charge na Stripe (ex: `in_xxx` ou `ch_xxx`).
-  - `amount` – Valor da cobrança (normalmente em centavos).
-  - `currency` – Código da moeda (ex: `BRL`, `USD`).
-  - `status` – Ex.: `paid`, `open`, `void`, `uncollectible`.
-  - `userId` – Referência ao usuário que pagou.
-  - *Possível referência a `subscriptionId` também, se quiser vincular pagamento à assinatura.*
-
----
-
+Quando a tela for carregada, qualquer heatmap armazenado anteriormente será resetado.
 
 
 ## SUGESTÃO FUNCIONALIDADES EXTRAS: MAPA DE CALOR DO PDF, ANALYTICS DE CADA PÁGINA DO PDF. 
 
-# Criar o mapa de calor
-- Com as coordenadas agregadas, você usa ferramentas de visualização (HTML5 Canvas, D3.js, Python + matplotlib, etc.) para gerar um heatmap que mostre onde houve mais concentração de cliques ou de tempo de visualização.
+# Próximos passos (heatmaps, usar redis no futuro)
 
-# Criar analytics
-- Cada PDF terá seus analytics (por página e geral)
+- informar ao front quando deve coletar o heatmap daquela sessão. (somente usuários "Business")
+- Ignorar pontos próximos demais da mesma sessão (até 6px de diferença)
+- Heatmaps são excluidos caso algum documento seja excluido.
+- Opção de resetar Heatmaps (cliente)
+- Opção de exportar Heatmaps (imagem) (cliente)
+- Registrar Cliques e Scroll (analisar ainda)
 
-# Criar site a partir do PDF
-- Poderá criar um site identico com HTML, CSS e Javascript ao PDF.
+# Próxima funcionalidade (usar redis no futuro):
+- Visualizações por página
+- Visualizações gerais (sessões iniciadas) OK
+- Links identificados
+- Clique em links
+- Opção de marcar "Link de conversão" 
+- Mensurar conversão de "links de conversão" com "visualizações por página" e visualizações gerais
+- Acessos no período (geral)
+- Acessos no período (por página)
+- Exportar relatório (período) (pdf bonito e enviar por e-email (redis))
+
+
+
+# Próxima funcionalidade (cobrança):
+- Configurar cobrança
+- Configurar regras de cobrança
+- Configurar AdminBro (ou outro) (inserir planos, e etc)
+- Configurar usuário admin
+- Insersão de novos planos
+
+Obs: Os valores dos planos precisa vir do stripe
+
+# Proxima funcionalidade: 
+- Recuperar Senha
+- E-mail de confirmação
+- Blacklist (por IP e usuário)
+
+# Final
+
+- Subir servidor
+- Subir frontend
+- Subir ferramentas auxiliares
+
+# Testes
+
+- Antes de subir, testar todas as funcionalidades em diferentes dispositivos
+- Após subir, fazer igual antes de divulgar a plataforma.
+- Precisa definir canais de suporte ao cliente (ticket, livechat e etc.)

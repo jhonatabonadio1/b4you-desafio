@@ -27,6 +27,7 @@
     "@types/sharp": "^0.32.0",
     "@types/stripe": "^8.0.417",
     "@types/uuid": "^10.0.0",
+    "@types/ws": "^8.5.14",
     "@types/xss-filters": "^1.2.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.5"
@@ -37,8 +38,9 @@
     "@aws-sdk/s3-request-presigner": "^3.749.0",
     "@onesignal/node-onesignal": "^5.0.0-alpha-01",
     "@prisma/client": "5.13.0",
-    "axios": "^1.7.2",
+    "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "cpf-cnpj-validator": "^1.0.3",
@@ -67,6 +69,7 @@
     "sharp": "^0.33.5",
     "stripe": "^17.6.0",
     "uuid": "^11.0.5",
+    "ws": "^8.18.0",
     "xss-filters": "^1.2.7",
     "yup": "^1.4.0"
   }

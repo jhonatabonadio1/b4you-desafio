@@ -4,7 +4,7 @@ import { CaptureHeatmapsService } from '../../../services/common/heatmaps/Captur
 
 class CaptureHeatmapsController {
   async handle(request: Request, response: Response) {
-    const { docId, lote } = request.body
+    const { docId, lote, sessionId } = request.body
 
     const createHeatmapsService = new CaptureHeatmapsService()
 
@@ -12,6 +12,7 @@ class CaptureHeatmapsController {
       const heatmaps = await createHeatmapsService.execute({
         docId,
         lote,
+        sessionId,
       })
       return response.status(201).json(heatmaps)
     } catch (error: any) {
