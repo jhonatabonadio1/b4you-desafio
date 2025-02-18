@@ -1,0 +1,89 @@
+import { prismaClient } from '../../../database/prismaClient'
+
+interface DocumentTracking {
+  totalViews: number
+  totalInteractionTime: number
+  averageTimePerPage: number
+  mostInteractedPage: number | null
+}
+
+export class FetchDocumentTrackingService {
+  async execute(
+    docId: string,
+    userId: string,
+    dataInicio?: string,
+    dataFim?: string,
+  ): Promise<DocumentTracking> {
+    if (!docId) {
+      throw new Error('Documento inválido.')
+    }
+
+    const buscaDocumento = await prismaClient.document.findFirst({
+      where: { id: docId },
+    })
+
+    if (!buscaDocumento) {
+      throw new Error('Documento não encontrado.')
+    }
+
+    if (buscaDocumento?.userId !== userId) {
+      throw new Error('Usuário não autorizado')
+    }
+
+    const whereClause: any = { session: { docId } }
+
+    if (dataInicio || dataFim) {
+      whereClause.createdAt = {}
+      if (dataInicio) whereClause.createdAt.gte = dataInicio
+      if (dataFim) whereClause.createdAt.lte = dataFim
+    }
+
+    const pageViews = await prismaClient.pageView.findMany({
+      where: whereClause,
+      select: {
+        pageNumber: true,
+        interactionTime: true,
+      },
+    })
+
+    if (pageViews.length === 0) {
+      return {
+        totalViews: 0,
+        totalInteractionTime: 0,
+        averageTimePerPage: 0,
+        mostInteractedPage: null,
+      }
+    }
+
+    // Total de visualizações
+    const totalViews = pageViews.length
+
+    // Tempo total de interação
+    const totalInteractionTime = pageViews.reduce(
+      (acc, view) => acc + view.interactionTime,
+      0,
+    )
+
+    // Média de tempo por página
+    const averageTimePerPage = totalInteractionTime / totalViews
+
+    // Página com mais interação
+    const pageInteractionMap: Record<number, number> = {}
+    pageViews.forEach(({ pageNumber, interactionTime }) => {
+      pageInteractionMap[pageNumber] =
+        (pageInteractionMap[pageNumber] || 0) + interactionTime
+    })
+
+    const mostInteractedPage =
+      Number(
+        Object.entries(pageInteractionMap).sort((a, b) => b[1] - a[1])[0]?.[0],
+      ) || null
+
+    return {
+      totalViews,
+      totalInteractionTime,
+      averageTimePerPage,
+      mostInteractedPage,
+    }
+  }
+}

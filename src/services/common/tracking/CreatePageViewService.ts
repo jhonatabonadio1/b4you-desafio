@@ -6,6 +6,7 @@ interface ICreateSessionRequest {
   interactionTime: number
   fingerprint: string
   network: string
+  viaWebsocket?: boolean
 }
 
 class CreatePageViewService {
@@ -15,6 +16,7 @@ class CreatePageViewService {
     interactionTime,
     fingerprint,
     network,
+    viaWebsocket,
   }: ICreateSessionRequest) {
     if (!sessionId) {
       throw new Error('Sessão inválida')
@@ -52,7 +54,7 @@ class CreatePageViewService {
     }
 
     const createVisualizacao = await prismaClient.pageView.create({
-      data: { sessionId, pageNumber, interactionTime },
+      data: { sessionId, pageNumber, interactionTime, viaWebsocket },
     })
 
     return createVisualizacao

@@ -69,6 +69,7 @@ wss.on('connection', (ws, req) => {
         pageNumber: parseInt(pageNumber),
         interactionTime: timeSpent,
         network,
+        viaWebsocket: true,
       })
     } catch (err) {
       console.log(err)

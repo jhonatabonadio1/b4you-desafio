@@ -174,6 +174,7 @@ model PageView {
 
   pageNumber Int
   interactionTime Float
+  viaWebsocket Boolean? @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
