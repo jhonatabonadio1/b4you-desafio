@@ -27,30 +27,21 @@ Caso o usuário não interaja por 2 minutos, os heatmaps são apagados do localS
 
 Quando a tela for carregada, qualquer heatmap armazenado anteriormente será resetado.
 
-
-## SUGESTÃO FUNCIONALIDADES EXTRAS: MAPA DE CALOR DO PDF, ANALYTICS DE CADA PÁGINA DO PDF. 
-
 # Próximos passos (heatmaps, usar redis no futuro)
 
 - informar ao front quando deve coletar o heatmap daquela sessão. (somente usuários "Business")
 - Ignorar pontos próximos demais da mesma sessão (até 6px de diferença)
-- Heatmaps são excluidos caso algum documento seja excluido.
 - Opção de resetar Heatmaps (cliente)
 - Opção de exportar Heatmaps (imagem) (cliente)
 - Registrar Cliques e Scroll (analisar ainda)
 
 # Próxima funcionalidade (usar redis no futuro):
-- Visualizações por página
-- Visualizações gerais (sessões iniciadas) OK
+
 - Links identificados
 - Clique em links
 - Opção de marcar "Link de conversão" 
 - Mensurar conversão de "links de conversão" com "visualizações por página" e visualizações gerais
-- Acessos no período (geral)
-- Acessos no período (por página)
 - Exportar relatório (período) (pdf bonito e enviar por e-email (redis))
-
-
 
 # Próxima funcionalidade (cobrança):
 - Configurar cobrança
@@ -63,7 +54,7 @@ Obs: Os valores dos planos precisa vir do stripe
 
 # Proxima funcionalidade: 
 - Recuperar Senha
-- E-mail de confirmação
+- E-mail de confirmação (criação e recuperar)
 - Blacklist (por IP e usuário)
 
 # Final
