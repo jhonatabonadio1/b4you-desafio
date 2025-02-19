@@ -1,6 +1,5 @@
 import { hash } from 'bcryptjs'
 import { prismaClient } from '../../../database/prismaClient'
-import { stripe } from '../../../lib/stripe'
 
 interface ICreateUserRequest {
   email: string
@@ -37,11 +36,6 @@ class CreateUserService {
     // Hash da senha
     const hashedPassword = await hash(password, 12)
 
-    const customer = await stripe.customers.create({
-      email,
-      name: `${firstName} ${lastName}`,
-    })
-
     // Criação do usuário no banco de dados
     await prismaClient.user.create({
       data: {
@@ -50,7 +44,6 @@ class CreateUserService {
         lastName,
         empresa,
         password: hashedPassword,
-        stripeCustomerId: customer.id,
       },
     })
 
