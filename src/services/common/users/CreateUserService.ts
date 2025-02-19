@@ -29,6 +29,12 @@ class CreateUserService {
       },
     })
 
+    if (!/(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?=.{8,})/.test(password)) {
+      throw new Error(
+        'A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula e um caractere especial.',
+      )
+    }
+
     if (existingUser) {
       throw new Error('Usuário já existe.')
     }

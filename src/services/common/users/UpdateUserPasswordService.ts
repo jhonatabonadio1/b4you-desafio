@@ -26,6 +26,12 @@ class UpdateUserPasswordService {
       throw new Error('Request ID inválida.')
     }
 
+    if (!/(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?=.{8,})/.test(password)) {
+      throw new Error(
+        'A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula e um caractere especial.',
+      )
+    }
+
     const currentTime = new Date()
     if (findRequest.expiresAt && findRequest.expiresAt < currentTime) {
       await prismaClient.recoveryRequests.update({
@@ -33,12 +39,6 @@ class UpdateUserPasswordService {
         data: { valid: false },
       })
       throw new Error('O link de recuperação expirou.')
-    }
-
-    if (!/(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?=.{8,})/.test(password)) {
-      throw new Error(
-        'A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula e um caractere especial.',
-      )
     }
 
     const isSamePassword =
