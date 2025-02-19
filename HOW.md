@@ -27,6 +27,34 @@ Caso o usuário não interaja por 2 minutos, os heatmaps são apagados do localS
 
 Quando a tela for carregada, qualquer heatmap armazenado anteriormente será resetado.
 
+
+
+
+# Próxima funcionalidade (cobrança):
+- Validação de usuário antes de criar a conta
+- Configurar cobrança
+
+# Próxima funcionalidade (regras):
+- Regras de funcionalidades de acordo com o plano do usuário
+- Regras blacklist
+
+# Final
+- Subir servidor
+- Subir frontend
+- Subir ferramentas auxiliares
+
+# Testes
+- Antes de subir, testar todas as funcionalidades em diferentes dispositivos
+- Após subir, fazer igual antes de divulgar a plataforma.
+- Precisa definir canais de suporte ao cliente (ticket, livechat e etc.)
+
+# Próxima funcionalidade (usar redis no futuro):
+- Links identificados
+- Clique em links
+- Opção de marcar "Link de conversão" 
+- Mensurar conversão de "links de conversão" com "visualizações por página" e visualizações gerais
+- Exportar relatório (período) (pdf bonito e enviar por e-email (redis))
+
 # Próximos passos (heatmaps, usar redis no futuro)
 
 - informar ao front quando deve coletar o heatmap daquela sessão. (somente usuários "Business")
@@ -34,37 +62,3 @@ Quando a tela for carregada, qualquer heatmap armazenado anteriormente será res
 - Opção de resetar Heatmaps (cliente)
 - Opção de exportar Heatmaps (imagem) (cliente)
 - Registrar Cliques e Scroll (analisar ainda)
-
-# Próxima funcionalidade (usar redis no futuro):
-
-- Links identificados
-- Clique em links
-- Opção de marcar "Link de conversão" 
-- Mensurar conversão de "links de conversão" com "visualizações por página" e visualizações gerais
-- Exportar relatório (período) (pdf bonito e enviar por e-email (redis))
-
-# Próxima funcionalidade (cobrança):
-- Configurar cobrança
-- Configurar regras de cobrança
-- Configurar AdminBro (ou outro) (inserir planos, e etc)
-- Configurar usuário admin
-- Insersão de novos planos
-
-Obs: Os valores dos planos precisa vir do stripe
-
-# Proxima funcionalidade: 
-- Recuperar Senha
-- E-mail de confirmação (criação e recuperar)
-- Blacklist (por IP e usuário)
-
-# Final
-
-- Subir servidor
-- Subir frontend
-- Subir ferramentas auxiliares
-
-# Testes
-
-- Antes de subir, testar todas as funcionalidades em diferentes dispositivos
-- Após subir, fazer igual antes de divulgar a plataforma.
-- Precisa definir canais de suporte ao cliente (ticket, livechat e etc.)

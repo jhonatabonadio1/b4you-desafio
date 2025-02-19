@@ -1,5 +1,5 @@
 import { compare } from 'bcryptjs'
-import { sign } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import { prismaClient } from '../../../database/prismaClient'
 
 interface ISignInRequest {
@@ -9,6 +9,8 @@ interface ISignInRequest {
 
 class SignInService {
   async execute({ email, password }: ISignInRequest) {
+    const { sign } = jwt
+
     if (!email) {
       throw new Error('E-mail é obrigatório.')
     }

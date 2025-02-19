@@ -14,10 +14,11 @@ import { secret, tokens } from './lib/csfrSecret'
 import { routes } from './routes/routes'
 import bodyParser from 'body-parser'
 
-import WebSocket from 'ws'
+import { WebSocketServer } from 'ws'
 import { CreatePageViewService } from './services/common/tracking/CreatePageViewService'
+import { adminJs, adminRouter } from './lib/admin'
 
-const wss = new WebSocket.Server({ port: 8080 })
+const wss = new WebSocketServer({ port: 8080 })
 
 wss.on('connection', (ws, req) => {
   const startTime = Date.now()
@@ -81,6 +82,7 @@ dotenv.config()
 
 const PORT = process.env.PORT || 3333
 const app = express()
+app.use(adminJs.options.rootPath, adminRouter)
 
 app.use(bodyParser.raw())
 

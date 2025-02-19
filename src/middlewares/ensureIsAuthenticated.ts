@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { verify } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 
 interface IPayload {
   sub: string
@@ -10,6 +10,8 @@ export function ensureAuthenticated(
   response: Response,
   next: NextFunction,
 ) {
+  const { verify } = jwt
+
   // Receber o token
   const authToken = request.headers.authorization
 
