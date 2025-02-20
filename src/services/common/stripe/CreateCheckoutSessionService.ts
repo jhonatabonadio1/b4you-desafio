@@ -1,0 +1,80 @@
+/* eslint-disable camelcase */
+import { prismaClient } from '../../../database/prismaClient'
+import { stripe } from '../../../lib/stripe'
+
+interface ICreateCheckoutSessionRequest {
+  priceId: string
+  userId: string
+}
+
+class CreateCheckoutSessionService {
+  async execute({ priceId, userId }: ICreateCheckoutSessionRequest) {
+    // Verifica se todos os campos obrigatórios foram preenchidos
+    if (!priceId) {
+      throw new Error('ID do preço é obrigatório.')
+    }
+
+    const buscaUsuario = await prismaClient.user.findUnique({
+      where: {
+        id: userId,
+      },
+    })
+
+    if (!buscaUsuario) {
+      throw new Error('Usuário não encontrado.')
+    }
+
+    const success_url =
+      'http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}'
+    const cancel_url =
+      'http://localhost:3000/canceled?session_id={CHECKOUT_SESSION_ID}'
+
+    const mode = 'subscription'
+    const quantity = 1
+
+    // Verifica se já existe um usuário com o mesmo e-mail
+    const createSession = await prismaClient.checkoutSession.create({
+      data: {
+        user: {
+          connect: buscaUsuario,
+        },
+        priceId,
+        mode,
+        quantity,
+        success_url,
+        cancel_url,
+      },
+    })
+
+    const session = await stripe.checkout.sessions.create({
+      mode,
+      line_items: [
+        {
+          price: priceId,
+          quantity,
+        },
+      ],
+      success_url,
+      cancel_url,
+      customer: buscaUsuario.stripeCustomerId,
+    })
+
+    if (!session) {
+      throw new Error('Não foi possível criar o checkout.')
+    }
+
+    await prismaClient.checkoutSession.update({
+      where: {
+        id: createSession.id,
+      },
+      data: {
+        sessionUrl: session.url,
+        checkoutSessionId: session.id,
+      },
+    })
+
+    return session.url
+  }
+}
+
+export { CreateCheckoutSessionService }
