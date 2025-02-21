@@ -8,13 +8,13 @@ datasource db {
 }
 
 model User {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  email     String  @unique
-  password  String
-  firstName String
-  lastName  String
-  empresa   String?
-  confirmedAccount  Boolean @default(false)
+  id               String  @id @default(auto()) @map("_id") @db.ObjectId
+  email            String  @unique
+  password         String
+  firstName        String
+  lastName         String
+  empresa          String?
+  confirmedAccount Boolean @default(false)
 
   stripeCustomerId String
 
@@ -24,17 +24,17 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Payment Payment[]
+  Payment          Payment[]
+  RecoveryRequests RecoveryRequests[]
+  CheckoutSession  CheckoutSession[]
 
   @@map("users")
-  RecoveryRequests RecoveryRequests[]
-  CheckoutSession CheckoutSession[]
 }
 
-model RecoveryRequests{
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String  @unique @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id],  onDelete: Cascade)
+model RecoveryRequests {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @unique @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   expiresAt DateTime
   valid     Boolean
@@ -47,12 +47,12 @@ model RecoveryRequests{
 
 model Subscription {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id],  onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique @db.ObjectId
 
   stripeSubscriptionId String?
 
-  plan   Plan?   @relation(fields: [planId], references: [id],  onDelete: Cascade)
+  plan   Plan?   @relation(fields: [planId], references: [id], onDelete: Cascade)
   planId String? @db.ObjectId
 
   status String
@@ -68,18 +68,23 @@ model Plan {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   name String
+  description String?
+  order Int?
 
-  monthlyPrice Float?
-  annualPrice  Float?
+  monthlyPriceId String
+  annualPriceId  String
 
-  monthlyPriceId String?
-  annualPriceId  String?
+  limit        Int @default(0)
+  uploadFiles  Int @default(0)
+  maxSize      Int @default(0)
+  fileSessions Int @default(0)
 
-  pdfLimit     Int
-  storageLimit Int
+  active Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  featured Boolean @default(false)
 
   Subscription Subscription[]
 
@@ -99,9 +104,9 @@ model Document {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   LoteHeatmaps LoteHeatmaps[]
+  Session      Session[]
 
   @@map("documents")
-  Session Session[]
 }
 
 model Payment {
@@ -119,45 +124,40 @@ model Payment {
   @@map("payments")
 }
 
-
 model Session {
-  id     String       @id @default(auto()) @map("_id") @db.ObjectId
-  docId String       @db.ObjectId
-  document   Document @relation(fields: [docId], references: [id], onDelete: Cascade)
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  docId    String   @db.ObjectId
+  document Document @relation(fields: [docId], references: [id], onDelete: Cascade)
 
-  fingerprint  String
+  fingerprint String
 
-  country  String?
-  city String?
-  network String?
+  country    String?
+  city       String?
+  network    String?
   geoname_id String?
 
-  collectedHeatmap  Boolean @default(false)
+  collectedHeatmap Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
-
-  @@map("sessions")
 
   LoteHeatmaps LoteHeatmaps[]
-  PageView PageView[]
-}
+  PageView     PageView[]
 
+  @@map("sessions")
+}
 
 model LoteHeatmaps {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  sessionId   String       @db.ObjectId
-  session   Session   @relation(fields: [sessionId], references: [id],  onDelete: Cascade)
-
+  sessionId String  @db.ObjectId
+  session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 
   docId    String   @db.ObjectId
-  document Document @relation(fields: [docId], references: [id],  onDelete: Cascade)
-
+  document Document @relation(fields: [docId], references: [id], onDelete: Cascade)
 
   fingerprint String?
-  Heatmaps    Heatmaps[] 
+  Heatmaps    Heatmaps[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -168,7 +168,7 @@ model LoteHeatmaps {
 model Heatmaps {
   id     String       @id @default(auto()) @map("_id") @db.ObjectId
   loteId String       @db.ObjectId
-  lote   LoteHeatmaps @relation(fields: [loteId], references: [id],  onDelete: Cascade)
+  lote   LoteHeatmaps @relation(fields: [loteId], references: [id], onDelete: Cascade)
 
   x     Float
   y     Float
@@ -184,16 +184,15 @@ model Heatmaps {
   @@map("heatmaps")
 }
 
-
 model PageView {
-  id     String       @id @default(auto()) @map("_id") @db.ObjectId
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
   sessionId String  @db.ObjectId
-  session   Session @relation(fields: [sessionId], references: [id],  onDelete: Cascade)
+  session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 
-  pageNumber Int
+  pageNumber      Int
   interactionTime Float
-  viaWebsocket Boolean? @default(false)
+  viaWebsocket    Boolean? @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -201,13 +200,12 @@ model PageView {
   @@map("page_views")
 }
 
+model Blacklist {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  email   String
+  empresa String?
 
-model Blacklist{
-   id     String       @id @default(auto()) @map("_id") @db.ObjectId
-   email    String
-   empresa  String?
-
-   ip     String?
+  ip String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -216,29 +214,29 @@ model Blacklist{
 }
 
 model AdminUser {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  email    String    @unique
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  email    String @unique
   password String
-  
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("admin_users")
 }
 
-model CheckoutSession{
-  id     String       @id @default(auto()) @map("_id") @db.ObjectId
-  ip     String?
+model CheckoutSession {
+  id String  @id @default(auto()) @map("_id") @db.ObjectId
+  ip String?
 
-  userId String       @db.ObjectId
-  user   User @relation(fields: [userId], references: [id],  onDelete: NoAction)
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: NoAction)
 
-  success_url String
-  cancel_url  String
-  priceId String
-  mode  String
-  quantity  Int
-  sessionUrl  String?
+  success_url       String?
+  cancel_url        String?
+  priceId           String
+  mode              String
+  quantity          Int
+  sessionUrl        String?
   checkoutSessionId String?
 
   createdAt DateTime @default(now())

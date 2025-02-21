@@ -78,6 +78,14 @@ const adminJsOptions: AdminJSOptions = {
               }
               return request
             },
+            edit: {
+              before: async (request: ActionRequest) => {
+                if (request.payload) {
+                  delete request.payload.id // Remove o id antes de enviar para o Prisma
+                }
+                return request
+              },
+            },
           },
         },
       },
@@ -101,25 +109,95 @@ const adminJsOptions: AdminJSOptions = {
               }
               return request
             },
+            edit: {
+              before: async (request: ActionRequest) => {
+                if (request.payload) {
+                  delete request.payload.id // Remove o id antes de enviar para o Prisma
+                }
+                return request
+              },
+            },
           },
         },
       },
     },
     {
       resource: { model: getModelByName('Subscription'), client: prismaClient },
-      options: {},
+      options: {
+        actions: {
+          edit: {
+            before: async (request: ActionRequest) => {
+              if (request.payload) {
+                delete request.payload.id // Remove o id antes de enviar para o Prisma
+              }
+              return request
+            },
+          },
+        },
+      },
     },
     {
       resource: { model: getModelByName('Plan'), client: prismaClient },
-      options: {},
+      options: {
+        actions: {
+          edit: {
+            before: async (request: ActionRequest) => {
+              if (request.payload) {
+                delete request.payload.id // Remove o id antes de enviar para o Prisma
+              }
+              return request
+            },
+          },
+        },
+      },
     },
     {
       resource: { model: getModelByName('Document'), client: prismaClient },
-      options: {},
+      options: {
+        actions: {
+          edit: {
+            before: async (request: ActionRequest) => {
+              if (request.payload) {
+                delete request.payload.id // Remove o id antes de enviar para o Prisma
+              }
+              return request
+            },
+          },
+        },
+      },
     },
     {
       resource: { model: getModelByName('Blacklist'), client: prismaClient },
-      options: {},
+      options: {
+        actions: {
+          edit: {
+            before: async (request: ActionRequest) => {
+              if (request.payload) {
+                delete request.payload.id // Remove o id antes de enviar para o Prisma
+              }
+              return request
+            },
+          },
+        },
+      },
+    },
+    {
+      resource: {
+        model: getModelByName('CheckoutSession'),
+        client: prismaClient,
+      },
+      options: {
+        actions: {
+          edit: {
+            before: async (request: ActionRequest) => {
+              if (request.payload) {
+                delete request.payload.id // Remove o id antes de enviar para o Prisma
+              }
+              return request
+            },
+          },
+        },
+      },
     },
   ],
 }

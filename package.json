@@ -7,7 +7,8 @@
   "scripts": {
     "build": "prisma generate && tsc -b",
     "start": "node dist/src/server.js",
-    "dev": "tsx watch src/server.ts --env-file=.env"
+    "dev": "tsx watch src/server.ts --env-file=.env",
+    "debug": "tsx --inspect-brk src/server.ts"
   },
   "devDependencies": {
     "@aws-sdk/types": "^3.734.0",

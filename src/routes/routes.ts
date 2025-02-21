@@ -8,6 +8,7 @@ import { sessionsRoutes } from './sessionsRoutes'
 import { storageRoutes } from './storageRoutes'
 import { trackingRoutes } from './trackingRoutes'
 import { stripeRoutes } from './stripeRoutes'
+import { plansRoutes } from './plansRoutes'
 
 const routes = Router()
 
@@ -19,5 +20,6 @@ routes.use(sessionsRoutes)
 routes.use(storageRoutes)
 routes.use(trackingRoutes)
 routes.use(stripeRoutes)
+routes.use(plansRoutes)
 
 export { routes }

@@ -68,6 +68,8 @@ class CreateCheckoutSessionService {
         id: createSession.id,
       },
       data: {
+        success_url: session.success_url,
+        cancel_url: session.cancel_url,
         sessionUrl: session.url,
         checkoutSessionId: session.id,
       },

@@ -13,6 +13,8 @@ class VerifyCheckoutSessionExistsService {
       throw new Error('ID da sessão não informado.')
     }
 
+    console.log(sessionId)
+
     if (!userId) {
       throw new Error('Usuário inexistente')
     }
