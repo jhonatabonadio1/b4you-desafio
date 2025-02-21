@@ -5,7 +5,7 @@ import { CreateCheckoutSessionService } from '../../../services/common/stripe/Cr
 class CreateCheckoutSessionController {
   async handle(request: Request, response: Response) {
     const { priceId } = request.body
-    const { userId } = request
+    const { userId, ip } = request
 
     const createCheckoutSessionService = new CreateCheckoutSessionService()
 
@@ -13,6 +13,7 @@ class CreateCheckoutSessionController {
       const session = await createCheckoutSessionService.execute({
         priceId,
         userId,
+        ip,
       })
       return response.status(200).json(session)
     } catch (error: any) {

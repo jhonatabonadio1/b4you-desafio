@@ -5,10 +5,11 @@ import { stripe } from '../../../lib/stripe'
 interface ICreateCheckoutSessionRequest {
   priceId: string
   userId: string
+  ip?: string
 }
 
 class CreateCheckoutSessionService {
-  async execute({ priceId, userId }: ICreateCheckoutSessionRequest) {
+  async execute({ priceId, userId, ip }: ICreateCheckoutSessionRequest) {
     // Verifica se todos os campos obrigatórios foram preenchidos
     if (!priceId) {
       throw new Error('ID do preço é obrigatório.')
@@ -43,6 +44,7 @@ class CreateCheckoutSessionService {
         quantity,
         success_url,
         status: 'created',
+        ip,
         cancel_url,
       },
     })

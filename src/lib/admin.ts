@@ -9,6 +9,7 @@ import dotenv from 'dotenv'
 
 import { hash, compare } from 'bcryptjs'
 import { prismaClient } from '../database/prismaClient'
+import { stripe } from './stripe'
 
 dotenv.config()
 
@@ -109,14 +110,49 @@ const adminJsOptions: AdminJSOptions = {
               }
               return request
             },
-            edit: {
-              before: async (request: ActionRequest) => {
-                if (request.payload) {
-                  console.log(request.payload)
-                  delete request.payload.id // Remove o id antes de enviar para o Prisma
+          },
+          edit: {
+            before: async (request: ActionRequest) => {
+              if (request.payload) {
+                console.log(request.payload)
+                delete request.payload.id // Remove o ID antes de enviar para o Prisma
+              }
+              return request
+            },
+          },
+          delete: {
+            before: async (request: ActionRequest, context: any) => {
+              const userId = context?.record?.params.id
+
+              console.log(context)
+
+              if (!userId) {
+                throw new Error('Usuário não encontrado.')
+              }
+
+              // Buscar usuário no banco de dados
+              const user = await prismaClient.user.findUnique({
+                where: { id: userId },
+              })
+
+              if (!user) {
+                throw new Error('Usuário não encontrado no banco de dados.')
+              }
+
+              // Se o usuário tiver um stripeCustomerId, excluir do Stripe
+              if (user.stripeCustomerId) {
+                try {
+                  await stripe.customers.del(user.stripeCustomerId)
+                  console.log(
+                    `Cliente Stripe ${user.stripeCustomerId} removido.`,
+                  )
+                } catch (error) {
+                  console.error('Erro ao remover usuário do Stripe:', error)
+                  throw new Error('Erro ao excluir cliente do Stripe.')
                 }
-                return request
-              },
+              }
+
+              return request
             },
           },
         },

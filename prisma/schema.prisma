@@ -119,8 +119,8 @@ model Payment {
   amount          Int
   status          String  // paid, failed, pending
   currency        String
-  userId          String @db.ObjectId
-  user            User   @relation(fields: [userId], references: [id], onDelete: NoAction)
+  userId          String?  @db.ObjectId
+  user            User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   failureReason   String?  // Se falhou, armazenar motivo
   retryCount      Int @default(0) // Quantas vezes tentou processar
@@ -234,8 +234,8 @@ model CheckoutSession {
   id String  @id @default(auto()) @map("_id") @db.ObjectId
   ip String?
 
-  userId String @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id], onDelete: NoAction)
+  userId          String?  @db.ObjectId
+  user            User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   success_url       String?
   cancel_url        String?
