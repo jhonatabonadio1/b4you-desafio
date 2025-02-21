@@ -42,6 +42,7 @@ class CreateCheckoutSessionService {
         mode,
         quantity,
         success_url,
+        status: 'created',
         cancel_url,
       },
     })

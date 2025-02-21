@@ -7,6 +7,13 @@ config()
 
 const csrfMiddleware = (req: Request, res: Response, next: NextFunction) => {
   if (['POST', 'PUT', 'DELETE'].includes(req.method)) {
+    const excludedRoutes = ['/api/stripe/webhook']
+
+    // Verifica se a rota atual está na lista de exclusão
+    if (excludedRoutes.includes(req.path)) {
+      return next()
+    }
+
     try {
       const csrfToken = req.header('X-CSRF-Token') as string
 

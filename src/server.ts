@@ -17,6 +17,7 @@ import bodyParser from 'body-parser'
 import { WebSocketServer } from 'ws'
 import { CreatePageViewService } from './services/common/tracking/CreatePageViewService'
 import { adminJs, adminRouter } from './lib/admin'
+import { webhookRoutes } from './routes/webhookRoutes'
 
 const wss = new WebSocketServer({ port: 8080 })
 
@@ -82,8 +83,8 @@ dotenv.config()
 
 const PORT = process.env.PORT || 3333
 const app = express()
-app.use(adminJs.options.rootPath, adminRouter)
 
+app.use(adminJs.options.rootPath, adminRouter)
 app.use(bodyParser.raw())
 
 /** const limiter = rateLimit({
@@ -126,6 +127,9 @@ app.use(
 
 app.use(helmet())
 app.disable('x-powered-by')
+
+app.use('/api', webhookRoutes)
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 

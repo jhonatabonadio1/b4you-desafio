@@ -112,6 +112,7 @@ const adminJsOptions: AdminJSOptions = {
             edit: {
               before: async (request: ActionRequest) => {
                 if (request.payload) {
+                  console.log(request.payload)
                   delete request.payload.id // Remove o id antes de enviar para o Prisma
                 }
                 return request
@@ -184,6 +185,24 @@ const adminJsOptions: AdminJSOptions = {
     {
       resource: {
         model: getModelByName('CheckoutSession'),
+        client: prismaClient,
+      },
+      options: {
+        actions: {
+          edit: {
+            before: async (request: ActionRequest) => {
+              if (request.payload) {
+                delete request.payload.id // Remove o id antes de enviar para o Prisma
+              }
+              return request
+            },
+          },
+        },
+      },
+    },
+    {
+      resource: {
+        model: getModelByName('Payment'),
         client: prismaClient,
       },
       options: {

@@ -28,6 +28,7 @@ Caso o usuário não interaja por 2 minutos, os heatmaps são apagados do localS
 Quando a tela for carregada, qualquer heatmap armazenado anteriormente será resetado.
 
 
+🛑 ERRO: SÓ CAPTURA DE COMEÇAR PELA PÁGINA 1, DEVE CAPTURAR EM QUALQUER PÁGINA, E ENVIAR O LOTE TMB.
 
 
 # Próxima funcionalidade (cobrança):

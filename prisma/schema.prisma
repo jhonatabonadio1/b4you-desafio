@@ -52,13 +52,15 @@ model Subscription {
 
   stripeSubscriptionId String?
 
-  plan   Plan?   @relation(fields: [planId], references: [id], onDelete: Cascade)
-  planId String? @db.ObjectId
+  plan   Plan   @relation(fields: [planId], references: [id], onDelete: Cascade)
+  planId String @db.ObjectId
 
-  status String
+  status String  // Ativa, Cancelada, Expirada
 
   startDate DateTime  @default(now())
   endDate   DateTime?
+
+  active Boolean @default(false) // Apenas uma assinatura ativa por usuário
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -66,6 +68,7 @@ model Subscription {
 
 model Plan {
   id String @id @default(auto()) @map("_id") @db.ObjectId
+  stripeProductId String?
 
   name String
   description String?
@@ -98,7 +101,7 @@ model Document {
   iframe      String
   sizeInBytes Int
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @db.ObjectId
 
   createdAt    DateTime       @default(now())
@@ -111,17 +114,20 @@ model Document {
 
 model Payment {
   id              String @id @default(auto()) @map("_id") @db.ObjectId
-  stripeInvoiceId String
+  stripeInvoiceId String?
+  stripePaymentIntentId String?
   amount          Int
-  status          String
+  status          String  // paid, failed, pending
   currency        String
   userId          String @db.ObjectId
-  user            User   @relation(fields: [userId], references: [id])
+  user            User   @relation(fields: [userId], references: [id], onDelete: NoAction)
+
+  failureReason   String?  // Se falhou, armazenar motivo
+  retryCount      Int @default(0) // Quantas vezes tentou processar
+  lastAttemptAt   DateTime? // Última tentativa de pagamento
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@map("payments")
 }
 
 model Session {
@@ -239,8 +245,8 @@ model CheckoutSession {
   sessionUrl        String?
   checkoutSessionId String?
 
+  status String  // completed, expired, canceled
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@map("checkout_session")
 }
