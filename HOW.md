@@ -63,3 +63,14 @@ Quando a tela for carregada, qualquer heatmap armazenado anteriormente será res
 - Opção de resetar Heatmaps (cliente)
 - Opção de exportar Heatmaps (imagem) (cliente)
 - Registrar Cliques e Scroll (analisar ainda)
+
+
+Funcionalidades extras:
+
+- Personalizar mostrador de documento
+- Arquivo com link de expiração
+- Comentários no arquivo (sem blocks específicos do arquivo) (empresa pode responder.)
+- Arquvio protegido por senha
+- Curtidas no arquivo
+- Assinatura digital 
+- 

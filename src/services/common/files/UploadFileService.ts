@@ -4,6 +4,8 @@ import fs from 'fs/promises'
 import path from 'path'
 import dotenv from 'dotenv'
 import { PrismaClient } from '@prisma/client'
+import { defaultApplicationRules } from '../../../config/DefaultApplicationRules'
+import { prismaClient } from '../../../database/prismaClient'
 
 dotenv.config()
 
@@ -11,8 +13,6 @@ const prisma = new PrismaClient()
 
 class UploadFileService {
   private s3: S3Client
-  private maxFileSize = 100 * 1024 * 1024 // 10MB
-  private userStorageLimit = 50 * 1024 * 1024 // 50MB
 
   constructor() {
     this.s3 = new S3Client({
@@ -24,9 +24,6 @@ class UploadFileService {
     })
   }
 
-  /**
-   * Verifica se o usuário não ultrapassou o limite de armazenamento
-   */
   private async checkUserStorage(
     userId: string,
     fileSize: number,
@@ -36,22 +33,75 @@ class UploadFileService {
       include: { pdfs: true },
     })
 
+    let userStorageLimit = defaultApplicationRules.storage.limit
+
+    const buscaInscricaoUsuário = await prismaClient.subscription.findFirst({
+      where: {
+        active: true,
+        user: {
+          id: userId,
+        },
+        status: '',
+        endDate: { lte: new Date() },
+      },
+      select: {
+        plan: true,
+      },
+    })
+
+    if (buscaInscricaoUsuário) {
+      userStorageLimit = buscaInscricaoUsuário.plan.limit
+    }
+
     if (!user) {
       throw new Error('Usuário não encontrado')
     }
 
     const totalStorageUsed = user.pdfs.reduce(
-      (sum, doc) => sum + doc.sizeInBytes,
+      (sum, doc) => sum + doc.sizeInBytes / 100,
       0,
     )
 
-    return totalStorageUsed + fileSize <= this.userStorageLimit
+    return totalStorageUsed + fileSize <= userStorageLimit
   }
 
-  /**
-   * Faz upload seguro do arquivo PDF para o AWS S3 e registra no banco
-   */
   async execute(filePath: string, originalName: string, userId: string) {
+    let maxFileSize = defaultApplicationRules.documents.maxSize
+    let maxFilesCount = defaultApplicationRules.documents.uploadFiles
+
+    const buscaInscricaoUsuário = await prismaClient.subscription.findFirst({
+      where: {
+        active: true,
+        user: {
+          id: userId,
+        },
+        status: '',
+        endDate: { lte: new Date() },
+      },
+      select: {
+        plan: true,
+      },
+    })
+
+    if (buscaInscricaoUsuário) {
+      maxFileSize = buscaInscricaoUsuário.plan.maxSize
+      maxFilesCount = buscaInscricaoUsuário.plan.uploadFiles
+    }
+
+    const findDocumentsUploaded = await prisma.document.count({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+    })
+
+    if (findDocumentsUploaded >= maxFilesCount) {
+      throw new Error(
+        'Limite de documentos atingido. Faça o upgrade para continuar.',
+      )
+    }
+
     if (!originalName) {
       throw new Error('O nome do arquivo não pode ser nulo')
     }
@@ -63,13 +113,17 @@ class UploadFileService {
     }
 
     const fileStats = await fs.stat(filePath)
-    if (fileStats.size > this.maxFileSize) {
-      throw new Error('O arquivo excede o limite de 10MB')
+    if (fileStats.size / 100 > maxFileSize) {
+      throw new Error(
+        'O arquivo excede o limite de ' + maxFileSize / 1024 + 'MB',
+      )
     }
 
-    const isAllowed = await this.checkUserStorage(userId, fileStats.size)
+    const isAllowed = await this.checkUserStorage(userId, fileStats.size / 100)
     if (!isAllowed) {
-      throw new Error('Limite total de armazenamento de 50MB atingido')
+      throw new Error(
+        'Limite total de armazenamento atingido. Faça upgrade so seu plano para continuar.',
+      )
     }
 
     const fileName = `${uuidv4()}_${originalName}`

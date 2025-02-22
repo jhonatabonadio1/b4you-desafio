@@ -6,6 +6,7 @@ import { UploadFileController } from '../controllers/common/files/UploadFileCont
 import { FetchFilesController } from '../controllers/common/files/FetchFilesController'
 import multer from 'multer'
 import { ensureAuthenticated } from '../middlewares/ensureIsAuthenticated'
+import { userInBlacklist } from '../middlewares/userInBlacklist'
 
 const docRoutes = Router()
 
@@ -17,18 +18,22 @@ const deleteFileController = new DeleteFileController()
 
 const upload = multer({ dest: 'uploads/' })
 
-docRoutes.get('/file/:docId', getFileController.handle)
+docRoutes.get('/file/:docId', userInBlacklist, getFileController.handle)
 
 docRoutes.post(
   '/file',
   ensureAuthenticated,
+  userInBlacklist,
   upload.single('file'),
   uploadFileController.handle,
 )
+
 docRoutes.get('/files', ensureAuthenticated, fetchFilesController.handle)
+
 docRoutes.delete(
   '/files/:docId',
   ensureAuthenticated,
+  userInBlacklist,
   deleteFileController.handle,
 )
 export { docRoutes }

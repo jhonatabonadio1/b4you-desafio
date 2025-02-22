@@ -7,7 +7,7 @@ export const defaultApplicationRules = {
     uploadFiles: 1,
     maxSize: 10 * 1024, // 10 MB
   },
-  heatmaps: {
-    sessions: 5,
+  sessions: {
+    maxSessionsPerFile: 5,
   },
 }

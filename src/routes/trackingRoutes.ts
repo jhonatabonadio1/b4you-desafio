@@ -4,6 +4,7 @@ import { CreatePageViewController } from '../controllers/common/tracking/CreateP
 import { FetchDocumentTrackingController } from '../controllers/common/tracking/FetchDocumentTrackingController'
 import { ensureAuthenticated } from '../middlewares/ensureIsAuthenticated'
 import { FetchPageAnalyticsController } from '../controllers/common/tracking/FetchPagesAnalyticsController'
+import { userInBlacklist } from '../middlewares/userInBlacklist'
 
 const trackingRoutes = Router()
 
@@ -13,18 +14,21 @@ const fetchPageAnalyticsController = new FetchPageAnalyticsController()
 
 trackingRoutes.post(
   '/tracking/:sessionId/pageview',
+  userInBlacklist,
   createPageViewController.handle,
 )
 
 trackingRoutes.get(
   '/tracking/:docId',
   ensureAuthenticated,
+  userInBlacklist,
   fetchDocumentTrackingController.handle,
 )
 
 trackingRoutes.get(
   '/tracking/:docId/pages',
   ensureAuthenticated,
+  userInBlacklist,
   fetchPageAnalyticsController.handle,
 )
 

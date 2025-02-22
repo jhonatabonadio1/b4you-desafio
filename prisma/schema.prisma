@@ -29,6 +29,7 @@ model User {
   CheckoutSession  CheckoutSession[]
 
   @@map("users")
+  Blacklist Blacklist[]
 }
 
 model RecoveryRequests {
@@ -210,6 +211,9 @@ model Blacklist {
   id      String  @id @default(auto()) @map("_id") @db.ObjectId
   email   String
   empresa String?
+
+  userId String?  @db.ObjectId
+  user   User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   ip String?
 

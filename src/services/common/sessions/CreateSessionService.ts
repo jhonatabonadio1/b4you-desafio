@@ -1,3 +1,4 @@
+import { defaultApplicationRules } from '../../../config/DefaultApplicationRules'
 import { prismaClient } from '../../../database/prismaClient'
 
 interface ICreateSessionRequest {
@@ -8,12 +9,56 @@ interface ICreateSessionRequest {
 
 class CreateSessionService {
   async execute({ docId, network, fingerprint }: ICreateSessionRequest) {
-    // Verifica se todos os campos obrigatórios foram preenchidos
     if (!fingerprint || !docId) {
       throw new Error('Preencha os campos obrigatórios.')
     }
 
-    // Obtém a última sessão registrada para esse fingerprint e network
+    const buscaDocumento = await prismaClient.document.findFirst({
+      where: {
+        id: docId,
+      },
+      select: {
+        user: true,
+      },
+    })
+
+    if (!buscaDocumento) {
+      throw new Error('Documento não encontrado')
+    }
+
+    let maxSessionPerFile = defaultApplicationRules.sessions.maxSessionsPerFile
+
+    const buscaInscricaoDonoDocumento =
+      await prismaClient.subscription.findFirst({
+        where: {
+          active: true,
+          user: {
+            id: buscaDocumento.user.id,
+          },
+          status: '',
+          endDate: { lte: new Date() },
+        },
+        select: {
+          plan: true,
+        },
+      })
+
+    if (buscaInscricaoDonoDocumento) {
+      maxSessionPerFile = buscaInscricaoDonoDocumento.plan.fileSessions
+    }
+
+    const contagemSessoes = await prismaClient.session.count({
+      where: {
+        docId,
+      },
+    })
+
+    if (contagemSessoes >= maxSessionPerFile) {
+      throw new Error(
+        'Limite de sessões por arquivo atingido. Faça upgrade do plano.',
+      )
+    }
+
     const lastSession = await prismaClient.session.findFirst({
       where: { fingerprint, network },
       orderBy: { createdAt: 'desc' }, // Ordena pela mais recente
