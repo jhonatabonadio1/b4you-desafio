@@ -32,11 +32,11 @@ class CreateSessionService {
       await prismaClient.subscription.findFirst({
         where: {
           active: true,
-          user: {
-            id: buscaDocumento.user.id,
+          userId: buscaDocumento.user.id,
+          status: 'active',
+          endDate: {
+            gte: new Date(),
           },
-          status: '',
-          endDate: { lte: new Date() },
         },
         select: {
           plan: true,

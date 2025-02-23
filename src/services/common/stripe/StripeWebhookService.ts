@@ -149,6 +149,7 @@ class StripeWebhookService {
             userId: user.id,
             status: subscription.status,
             active: true,
+            interval: subscription.plan.interval,
             startDate: new Date(subscription.start_date * 1000),
             endDate: subscription.current_period_end
               ? new Date(subscription.current_period_end * 1000)

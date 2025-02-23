@@ -61,8 +61,8 @@ class CreateUserService {
     await prismaClient.user.create({
       data: {
         email,
-        firstName,
-        lastName,
+        firstName: capitalize(firstName),
+        lastName: capitalize(lastName),
         empresa,
         password: hashedPassword,
         stripeCustomerId: criaUsuarioStripe.id,

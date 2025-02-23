@@ -4,7 +4,7 @@ interface DocumentTracking {
   totalViews: number
   totalInteractionTime: number
   averageTimePerPage: number
-  mostInteractedPage: number | null
+  sessions: number | null
 }
 
 export class FetchDocumentTrackingService {
@@ -51,7 +51,7 @@ export class FetchDocumentTrackingService {
         totalViews: 0,
         totalInteractionTime: 0,
         averageTimePerPage: 0,
-        mostInteractedPage: null,
+        sessions: 0,
       }
     }
 
@@ -74,16 +74,21 @@ export class FetchDocumentTrackingService {
         (pageInteractionMap[pageNumber] || 0) + interactionTime
     })
 
-    const mostInteractedPage =
-      Number(
-        Object.entries(pageInteractionMap).sort((a, b) => b[1] - a[1])[0]?.[0],
-      ) || null
+    const sessionsCount = await prismaClient.session.count({
+      where: {
+        docId,
+        createdAt: {
+          gte: dataInicio,
+          lte: dataFim,
+        },
+      },
+    })
 
     return {
       totalViews,
       totalInteractionTime,
       averageTimePerPage,
-      mostInteractedPage,
+      sessions: sessionsCount,
     }
   }
 }

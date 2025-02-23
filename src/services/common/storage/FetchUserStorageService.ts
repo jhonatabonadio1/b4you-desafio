@@ -2,8 +2,6 @@ import { defaultApplicationRules } from '../../../config/DefaultApplicationRules
 import { prismaClient } from '../../../database/prismaClient'
 
 class FetchUserStorageService {
-  private userStorageLimit = 50 * 1024 * 1024
-
   async execute(userId: string) {
     if (!userId) {
       throw new Error('O ID do usuário é obrigatório.')
@@ -14,11 +12,11 @@ class FetchUserStorageService {
     const buscaInscricaoUsuário = await prismaClient.subscription.findFirst({
       where: {
         active: true,
-        user: {
-          id: userId,
+        userId,
+        status: 'active',
+        endDate: {
+          gte: new Date(),
         },
-        status: '',
-        endDate: { lte: new Date() },
       },
       select: {
         plan: true,

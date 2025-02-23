@@ -30,7 +30,7 @@ class FetchPlansService {
       uploadFiles: defaultApplicationRules.documents.uploadFiles,
       maxSize: defaultApplicationRules.documents.maxSize,
       limit: defaultApplicationRules.storage.limit,
-      fileSessions: defaultApplicationRules.heatmaps.sessions,
+      fileSessions: defaultApplicationRules.sessions.maxSessionsPerFile,
       name: 'Free',
       monthlyPrice: 0,
       annualPrice: 0,

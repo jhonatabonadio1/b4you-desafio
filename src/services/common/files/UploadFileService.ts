@@ -38,11 +38,11 @@ class UploadFileService {
     const buscaInscricaoUsuário = await prismaClient.subscription.findFirst({
       where: {
         active: true,
-        user: {
-          id: userId,
+        userId,
+        status: 'active',
+        endDate: {
+          gte: new Date(),
         },
-        status: '',
-        endDate: { lte: new Date() },
       },
       select: {
         plan: true,
@@ -72,11 +72,11 @@ class UploadFileService {
     const buscaInscricaoUsuário = await prismaClient.subscription.findFirst({
       where: {
         active: true,
-        user: {
-          id: userId,
+        userId,
+        status: 'active',
+        endDate: {
+          gte: new Date(),
         },
-        status: '',
-        endDate: { lte: new Date() },
       },
       select: {
         plan: true,

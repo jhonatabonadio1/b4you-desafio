@@ -57,6 +57,8 @@ model Subscription {
   planId String @db.ObjectId
 
   status String  // Ativa, Cancelada, Expirada
+  
+  interval  String
 
   startDate DateTime  @default(now())
   endDate   DateTime?
