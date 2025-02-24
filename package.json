@@ -6,7 +6,9 @@
   "license": "MIT",
   "scripts": {
     "build": "prisma generate && tsc -b",
+    "worker:dev": "tsx watch src/workers/uploadWorker.ts --env-file=.env",
     "start": "node dist/src/server.js",
+   "worker:prod": "node dist/src/workers/uploadWorker.js",
     "dev": "tsx watch src/server.ts --env-file=.env",
     "debug": "tsx --inspect-brk src/server.ts"
   },
@@ -39,13 +41,17 @@
     "@aws-sdk/client-s3": "^3.749.0",
     "@aws-sdk/cloudfront-signer": "^3.734.0",
     "@aws-sdk/s3-request-presigner": "^3.749.0",
+    "@bull-board/api": "^6.7.9",
+    "@bull-board/express": "^6.7.9",
     "@onesignal/node-onesignal": "^5.0.0-alpha-01",
     "@prisma/client": "5.13.0",
     "@socket.io/redis-adapter": "^8.3.0",
+    "add": "^2.0.6",
     "adminjs": "^7.8.15",
     "axios": "^1.7.9",
     "bcryptjs": "^3.0.2",
     "body-parser": "^1.20.3",
+    "bullmq": "^5.41.5",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "cpf-cnpj-validator": "^1.0.3",
@@ -64,6 +70,7 @@
     "express-session": "^1.18.1",
     "express-slow-down": "^2.0.3",
     "helmet": "^7.1.0",
+    "ioredis": "^5.5.0",
     "jsonwebtoken": "^9.0.2",
     "moment-timezone": "^0.5.45",
     "mongodb": "^6.11.0",
@@ -83,6 +90,7 @@
     "uuid": "^11.0.5",
     "ws": "^8.18.0",
     "xss-filters": "^1.2.7",
+    "yarn": "^1.22.22",
     "yup": "^1.4.0"
   }
 }

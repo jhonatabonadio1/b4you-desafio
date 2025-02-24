@@ -4,6 +4,9 @@ import { Server, Socket } from 'socket.io'
 import { createClient } from 'redis'
 import { createAdapter } from '@socket.io/redis-adapter'
 import { registerSocketHandlers } from './socketHandlers'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 // Carregue .env se necessário
 // import dotenv from 'dotenv'
@@ -14,7 +17,7 @@ export async function createSocketServer(httpServer: HttpServer) {
   const io = new Server(httpServer)
 
   // Conecta ao Redis
-  const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379'
+  const REDIS_URL = process.env.REDIS_URL
   const pubClient = createClient({ url: REDIS_URL })
   const subClient = pubClient.duplicate()
 

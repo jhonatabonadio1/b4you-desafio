@@ -65,7 +65,13 @@ class UploadFileService {
     return totalStorageUsed + fileSize <= userStorageLimit
   }
 
-  async execute(filePath: string, originalName: string, userId: string) {
+  async execute(
+    filePath: string,
+
+    originalName: string,
+    userId: string,
+    fileId: string,
+  ) {
     let maxFileSize = defaultApplicationRules.documents.maxSize
     let maxFilesCount = defaultApplicationRules.documents.uploadFiles
 
@@ -140,6 +146,7 @@ class UploadFileService {
 
     const document = await prisma.document.create({
       data: {
+        id: fileId,
         title: originalName,
         s3Key: fileName,
         iframe: '',

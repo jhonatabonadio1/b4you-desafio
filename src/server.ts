@@ -5,7 +5,7 @@ import express, { Request, Response, NextFunction } from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import helmet from 'helmet'
-import http, { IncomingMessage } from 'http'
+import http from 'http'
 
 import { sanitizeResponse } from './middlewares/removePassword'
 import { defender } from './middlewares/xssDefender'
@@ -19,26 +19,33 @@ import { adminJs, adminRouter } from './lib/admin'
 import { webhookRoutes } from './routes/webhookRoutes'
 import { createSocketServer } from './socket'
 
+import { createBullBoard } from '@bull-board/api'
+import { ExpressAdapter } from '@bull-board/express'
+
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter'
+
+import { uploadQueue } from './lib/uploadQueue'
+
 dotenv.config()
 
 const PORT = process.env.PORT || 3333
+
+const queue = new BullMQAdapter(uploadQueue)
+
+const serverAdapter = new ExpressAdapter()
+serverAdapter.setBasePath('/queues')
+
+createBullBoard({
+  queues: [queue],
+  serverAdapter,
+})
+
 const app = express()
+
+app.use('/queues', serverAdapter.getRouter())
 
 app.use(adminJs.options.rootPath, adminRouter)
 app.use(bodyParser.raw())
-
-interface PageView {
-  pageNumber: number
-  interactionTime: number
-}
-
-interface PageViewData {
-  fingerprint: string
-  sessionId: string
-  pageViews: PageView[]
-  network: string | undefined
-  viaWebsocket: boolean
-}
 
 const server = http.createServer(app)
 await createSocketServer(server)

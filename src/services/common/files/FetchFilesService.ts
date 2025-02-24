@@ -23,7 +23,16 @@ class FetchFilesService {
         },
       })
 
-      return files
+      const filesCompleted = []
+
+      for (const file of files) {
+        filesCompleted.push({
+          ...file,
+          status: 'completed',
+        })
+      }
+
+      return filesCompleted
     } catch (error) {
       throw new Error('Falha ao listar documentos.')
     }
