@@ -35,7 +35,7 @@ class FetchUserStorageService {
 
     // 🔹 Calcula o total utilizado
     const totalUsed = userFiles.reduce(
-      (sum, file) => sum + file.sizeInBytes / 100,
+      (sum, file) => sum + file.sizeInBytes / 100 / 100,
       0,
     )
 
