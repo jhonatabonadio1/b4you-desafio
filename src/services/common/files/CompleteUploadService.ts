@@ -50,7 +50,7 @@ class CompleteUploadService {
     }
 
     const totalStorageUsed = user.pdfs.reduce(
-      (sum, doc) => sum + doc.sizeInBytes / 100,
+      (sum, doc) => sum + doc.sizeInBytes / 100 / 100,
       0,
     )
 
@@ -100,13 +100,16 @@ class CompleteUploadService {
       throw new Error('Apenas arquivos PDF são permitidos')
     }
 
-    if (sizeInBytes / 100 > maxFileSize) {
+    if (sizeInBytes / 100 / 100 > maxFileSize) {
       throw new Error(
         'O arquivo excede o limite de ' + maxFileSize / 1024 + 'MB',
       )
     }
 
-    const isAllowed = await this.checkUserStorage(userId, sizeInBytes / 100)
+    const isAllowed = await this.checkUserStorage(
+      userId,
+      sizeInBytes / 100 / 100,
+    )
     if (!isAllowed) {
       throw new Error(
         'Limite total de armazenamento atingido. Faça upgrade so seu plano para continuar.',
