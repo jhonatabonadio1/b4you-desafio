@@ -1,7 +1,10 @@
-import { FetchDocumentTrackingService } from '../../../services/common/tracking/FetchDocumentTrackingService';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FetchDocumentTrackingController = void 0;
+const FetchDocumentTrackingService_1 = require("../../../services/common/tracking/FetchDocumentTrackingService");
 class FetchDocumentTrackingController {
     async handle(request, response) {
-        const fetchDocumentTrackingService = new FetchDocumentTrackingService();
+        const fetchDocumentTrackingService = new FetchDocumentTrackingService_1.FetchDocumentTrackingService();
         const { docId } = request.params;
         const { userId } = request;
         const { dataInicio, dataFim } = request.query;
@@ -14,5 +17,5 @@ class FetchDocumentTrackingController {
         }
     }
 }
-export { FetchDocumentTrackingController };
+exports.FetchDocumentTrackingController = FetchDocumentTrackingController;
 //# sourceMappingURL=FetchDocumentTrackingController.js.map

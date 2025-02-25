@@ -1,14 +1,17 @@
-import { prismaClient } from '../database/prismaClient';
-export async function userInBlacklist(request, response, next) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.userInBlacklist = userInBlacklist;
+const prismaClient_1 = require("../database/prismaClient");
+async function userInBlacklist(request, response, next) {
     const { userId, ip } = request;
     try {
-        const buscaUsuario = await prismaClient.user.findFirst({
+        const buscaUsuario = await prismaClient_1.prismaClient.user.findFirst({
             where: {
                 id: userId,
             },
         });
         console.log(ip);
-        const blacklistCheck = await prismaClient.blacklist.count({
+        const blacklistCheck = await prismaClient_1.prismaClient.blacklist.count({
             where: {
                 OR: [
                     {

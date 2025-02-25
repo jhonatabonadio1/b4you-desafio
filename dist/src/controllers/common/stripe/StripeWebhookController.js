@@ -1,7 +1,13 @@
-import { StripeWebhookService } from '../../../services/common/stripe/StripeWebhookService';
-import { stripe } from '../../../lib/stripe';
-import dotenv from 'dotenv';
-dotenv.config();
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.StripeWebhookController = void 0;
+const StripeWebhookService_1 = require("../../../services/common/stripe/StripeWebhookService");
+const stripe_1 = require("../../../lib/stripe");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 class StripeWebhookController {
     async handle(request, response) {
         const sig = request.headers['stripe-signature'];
@@ -11,7 +17,7 @@ class StripeWebhookController {
             event = request.body;
             // Se necessário, validar o evento (requer Stripe Secret)
             if (sig) {
-                event = stripe.webhooks.constructEvent(request.body, sig, webhookSecret);
+                event = stripe_1.stripe.webhooks.constructEvent(request.body, sig, webhookSecret);
             }
         }
         catch (error) {
@@ -19,7 +25,7 @@ class StripeWebhookController {
                 .status(400)
                 .json({ error: `Webhook Error: ${error.message}` });
         }
-        const stripeWebhookService = new StripeWebhookService();
+        const stripeWebhookService = new StripeWebhookService_1.StripeWebhookService();
         try {
             const result = await stripeWebhookService.execute({ event });
             return response.status(200).json(result);
@@ -29,5 +35,5 @@ class StripeWebhookController {
         }
     }
 }
-export { StripeWebhookController };
+exports.StripeWebhookController = StripeWebhookController;
 //# sourceMappingURL=StripeWebhookController.js.map

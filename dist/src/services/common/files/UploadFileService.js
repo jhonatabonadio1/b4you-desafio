@@ -1,16 +1,22 @@
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-import { v4 as uuidv4 } from 'uuid';
-import fs from 'fs/promises';
-import path from 'path';
-import dotenv from 'dotenv';
-import { PrismaClient } from '@prisma/client';
-import { defaultApplicationRules } from '../../../config/DefaultApplicationRules';
-import { prismaClient } from '../../../database/prismaClient';
-dotenv.config();
-const prisma = new PrismaClient();
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UploadFileService = void 0;
+const client_s3_1 = require("@aws-sdk/client-s3");
+const uuid_1 = require("uuid");
+const promises_1 = __importDefault(require("fs/promises"));
+const path_1 = __importDefault(require("path"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const client_1 = require("@prisma/client");
+const DefaultApplicationRules_1 = require("../../../config/DefaultApplicationRules");
+const prismaClient_1 = require("../../../database/prismaClient");
+dotenv_1.default.config();
+const prisma = new client_1.PrismaClient();
 class UploadFileService {
     constructor() {
-        this.s3 = new S3Client({
+        this.s3 = new client_s3_1.S3Client({
             region: process.env.AWS_REGION,
             credentials: {
                 accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -23,8 +29,8 @@ class UploadFileService {
             where: { id: userId },
             include: { pdfs: true },
         });
-        let userStorageLimit = defaultApplicationRules.storage.limit;
-        const buscaInscricaoUsuário = await prismaClient.subscription.findFirst({
+        let userStorageLimit = DefaultApplicationRules_1.defaultApplicationRules.storage.limit;
+        const buscaInscricaoUsuário = await prismaClient_1.prismaClient.subscription.findFirst({
             where: {
                 active: true,
                 userId,
@@ -47,9 +53,9 @@ class UploadFileService {
         return totalStorageUsed + fileSize <= userStorageLimit;
     }
     async execute(filePath, originalName, userId, fileId) {
-        let maxFileSize = defaultApplicationRules.documents.maxSize;
-        let maxFilesCount = defaultApplicationRules.documents.uploadFiles;
-        const buscaInscricaoUsuário = await prismaClient.subscription.findFirst({
+        let maxFileSize = DefaultApplicationRules_1.defaultApplicationRules.documents.maxSize;
+        let maxFilesCount = DefaultApplicationRules_1.defaultApplicationRules.documents.uploadFiles;
+        const buscaInscricaoUsuário = await prismaClient_1.prismaClient.subscription.findFirst({
             where: {
                 active: true,
                 userId,
@@ -79,11 +85,11 @@ class UploadFileService {
         if (!originalName) {
             throw new Error('O nome do arquivo não pode ser nulo');
         }
-        const ext = path.extname(originalName).toLowerCase();
+        const ext = path_1.default.extname(originalName).toLowerCase();
         if (ext !== '.pdf') {
             throw new Error('Apenas arquivos PDF são permitidos');
         }
-        const fileStats = await fs.stat(filePath);
+        const fileStats = await promises_1.default.stat(filePath);
         if (fileStats.size / 100 > maxFileSize) {
             throw new Error('O arquivo excede o limite de ' + maxFileSize / 1024 + 'MB');
         }
@@ -91,15 +97,15 @@ class UploadFileService {
         if (!isAllowed) {
             throw new Error('Limite total de armazenamento atingido. Faça upgrade so seu plano para continuar.');
         }
-        const fileName = `${uuidv4()}_${originalName}`;
-        const fileBuffer = await fs.readFile(filePath);
+        const fileName = `${(0, uuid_1.v4)()}_${originalName}`;
+        const fileBuffer = await promises_1.default.readFile(filePath);
         const uploadParams = {
             Bucket: process.env.AWS_BUCKET_NAME,
             Key: `secure_uploads/${fileName}`,
             Body: fileBuffer,
             ContentType: 'application/pdf',
         };
-        await this.s3.send(new PutObjectCommand(uploadParams));
+        await this.s3.send(new client_s3_1.PutObjectCommand(uploadParams));
         const document = await prisma.document.create({
             data: {
                 id: fileId,
@@ -110,9 +116,9 @@ class UploadFileService {
                 userId,
             },
         });
-        await fs.unlink(filePath); // Remove o arquivo local
+        await promises_1.default.unlink(filePath); // Remove o arquivo local
         return document;
     }
 }
-export { UploadFileService };
+exports.UploadFileService = UploadFileService;
 //# sourceMappingURL=UploadFileService.js.map

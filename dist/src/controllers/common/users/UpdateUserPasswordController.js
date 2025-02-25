@@ -1,8 +1,11 @@
-import { UpdateUserPasswordService } from '../../../services/common/users/UpdateUserPasswordService';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UpdateUserPasswordController = void 0;
+const UpdateUserPasswordService_1 = require("../../../services/common/users/UpdateUserPasswordService");
 class UpdateUserPasswordController {
     async handle(request, response) {
         const { password, requestId } = request.body;
-        const updateUserPasswordService = new UpdateUserPasswordService();
+        const updateUserPasswordService = new UpdateUserPasswordService_1.UpdateUserPasswordService();
         try {
             const result = await updateUserPasswordService.execute({
                 requestId: requestId,
@@ -15,5 +18,5 @@ class UpdateUserPasswordController {
         }
     }
 }
-export { UpdateUserPasswordController };
+exports.UpdateUserPasswordController = UpdateUserPasswordController;
 //# sourceMappingURL=UpdateUserPasswordController.js.map

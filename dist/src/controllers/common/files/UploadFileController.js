@@ -1,7 +1,13 @@
-import fs from 'fs/promises';
-import { uploadQueue } from '../../../lib/uploadQueue';
-import { ObjectId } from 'mongodb';
-export class UploadFileController {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UploadFileController = void 0;
+const promises_1 = __importDefault(require("fs/promises"));
+const uploadQueue_1 = require("../../../lib/uploadQueue");
+const mongodb_1 = require("mongodb");
+class UploadFileController {
     // Método para iniciar o upload
     async handle(req, res) {
         try {
@@ -12,11 +18,11 @@ export class UploadFileController {
             if (!userId) {
                 // Se não tiver userId, você decide o que fazer
                 // Mas vamos apagar o arquivo local
-                await fs.unlink(file.path);
+                await promises_1.default.unlink(file.path);
                 return res.status(400).json({ error: 'Usuário não especificado' });
             }
-            const geraIdDoDocumento = new ObjectId().toHexString();
-            const job = await uploadQueue.add('upload', {
+            const geraIdDoDocumento = new mongodb_1.ObjectId().toHexString();
+            const job = await uploadQueue_1.uploadQueue.add('upload', {
                 filePath: file.path,
                 originalName: file.originalname,
                 fileId: geraIdDoDocumento,
@@ -36,4 +42,5 @@ export class UploadFileController {
         }
     }
 }
+exports.UploadFileController = UploadFileController;
 //# sourceMappingURL=UploadFileController.js.map

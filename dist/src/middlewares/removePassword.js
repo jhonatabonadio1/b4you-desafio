@@ -1,3 +1,6 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.sanitizeResponse = void 0;
 // Função para remover 'password' de qualquer objeto ou array
 const sanitizeObject = (obj) => {
     if (!obj || typeof obj !== 'object')
@@ -16,7 +19,7 @@ const sanitizeObject = (obj) => {
     }, {});
 };
 // Middleware para filtrar password antes de enviar resposta JSON
-export const sanitizeResponse = (req, res, next) => {
+const sanitizeResponse = (req, res, next) => {
     const originalJson = res.json;
     res.json = function (data) {
         const sanitizedData = sanitizeObject(data);
@@ -24,4 +27,5 @@ export const sanitizeResponse = (req, res, next) => {
     };
     next();
 };
+exports.sanitizeResponse = sanitizeResponse;
 //# sourceMappingURL=removePassword.js.map

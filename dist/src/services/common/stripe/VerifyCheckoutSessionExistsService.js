@@ -1,5 +1,8 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.VerifyCheckoutSessionExistsService = void 0;
 /* eslint-disable camelcase */
-import { prismaClient } from '../../../database/prismaClient';
+const prismaClient_1 = require("../../../database/prismaClient");
 class VerifyCheckoutSessionExistsService {
     async execute({ sessionId, userId }) {
         // Verifica se todos os campos obrigatórios foram preenchidos
@@ -10,7 +13,7 @@ class VerifyCheckoutSessionExistsService {
         if (!userId) {
             throw new Error('Usuário inexistente');
         }
-        const buscaSessao = await prismaClient.checkoutSession.findFirst({
+        const buscaSessao = await prismaClient_1.prismaClient.checkoutSession.findFirst({
             where: {
                 checkoutSessionId: sessionId,
                 userId,
@@ -22,5 +25,5 @@ class VerifyCheckoutSessionExistsService {
         return buscaSessao;
     }
 }
-export { VerifyCheckoutSessionExistsService };
+exports.VerifyCheckoutSessionExistsService = VerifyCheckoutSessionExistsService;
 //# sourceMappingURL=VerifyCheckoutSessionExistsService.js.map

@@ -1,9 +1,12 @@
-import { CreateUserService } from '../../../services/common/users/CreateUserService';
-import { prismaClient } from '../../../database/prismaClient';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CreateUserController = void 0;
+const CreateUserService_1 = require("../../../services/common/users/CreateUserService");
+const prismaClient_1 = require("../../../database/prismaClient");
 class CreateUserController {
     async handle(request, response) {
         const { email, password, firstName, lastName, empresa } = request.body;
-        const verificaEmailBlacklist = await prismaClient.blacklist.findFirst({
+        const verificaEmailBlacklist = await prismaClient_1.prismaClient.blacklist.findFirst({
             where: { OR: [{ email }, { empresa }] },
         });
         if (verificaEmailBlacklist) {
@@ -11,7 +14,7 @@ class CreateUserController {
                 .status(401)
                 .json({ error: 'Usuário bloqueado no sistema.' });
         }
-        const createUserService = new CreateUserService();
+        const createUserService = new CreateUserService_1.CreateUserService();
         try {
             const user = await createUserService.execute({
                 email,
@@ -27,5 +30,5 @@ class CreateUserController {
         }
     }
 }
-export { CreateUserController };
+exports.CreateUserController = CreateUserController;
 //# sourceMappingURL=CreateUserController.js.map

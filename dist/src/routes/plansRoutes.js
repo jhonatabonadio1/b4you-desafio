@@ -1,11 +1,14 @@
-import { Router } from 'express';
-import { FetchPlansController } from '../controllers/common/plans/FetchPlansController';
-import { ensureAuthenticated } from '../middlewares/ensureIsAuthenticated';
-import { FetchPlansAuthController } from '../controllers/common/plans/FetchPlansAuthController';
-const plansRoutes = Router();
-const fetchPlansController = new FetchPlansController();
-const fetchPlansAuthController = new FetchPlansAuthController();
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.plansRoutes = void 0;
+const express_1 = require("express");
+const FetchPlansController_1 = require("../controllers/common/plans/FetchPlansController");
+const ensureIsAuthenticated_1 = require("../middlewares/ensureIsAuthenticated");
+const FetchPlansAuthController_1 = require("../controllers/common/plans/FetchPlansAuthController");
+const plansRoutes = (0, express_1.Router)();
+exports.plansRoutes = plansRoutes;
+const fetchPlansController = new FetchPlansController_1.FetchPlansController();
+const fetchPlansAuthController = new FetchPlansAuthController_1.FetchPlansAuthController();
 plansRoutes.get('/plans', fetchPlansController.handle);
-plansRoutes.get('/plans/auth', ensureAuthenticated, fetchPlansAuthController.handle);
-export { plansRoutes };
+plansRoutes.get('/plans/auth', ensureIsAuthenticated_1.ensureAuthenticated, fetchPlansAuthController.handle);
 //# sourceMappingURL=plansRoutes.js.map

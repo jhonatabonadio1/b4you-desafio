@@ -1,12 +1,15 @@
-import { defaultApplicationRules } from '../../../config/DefaultApplicationRules';
-import { prismaClient } from '../../../database/prismaClient';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FetchUserStorageService = void 0;
+const DefaultApplicationRules_1 = require("../../../config/DefaultApplicationRules");
+const prismaClient_1 = require("../../../database/prismaClient");
 class FetchUserStorageService {
     async execute(userId) {
         if (!userId) {
             throw new Error('O ID do usuário é obrigatório.');
         }
-        let limiteStorage = defaultApplicationRules.storage.limit;
-        const buscaInscricaoUsuário = await prismaClient.subscription.findFirst({
+        let limiteStorage = DefaultApplicationRules_1.defaultApplicationRules.storage.limit;
+        const buscaInscricaoUsuário = await prismaClient_1.prismaClient.subscription.findFirst({
             where: {
                 active: true,
                 userId,
@@ -23,7 +26,7 @@ class FetchUserStorageService {
             limiteStorage = buscaInscricaoUsuário.plan.limit;
         }
         // 🔹 Busca os arquivos do usuário e soma os tamanhos
-        const userFiles = await prismaClient.document.findMany({
+        const userFiles = await prismaClient_1.prismaClient.document.findMany({
             where: { userId },
             select: { sizeInBytes: true },
         });
@@ -38,5 +41,5 @@ class FetchUserStorageService {
         };
     }
 }
-export { FetchUserStorageService };
+exports.FetchUserStorageService = FetchUserStorageService;
 //# sourceMappingURL=FetchUserStorageService.js.map

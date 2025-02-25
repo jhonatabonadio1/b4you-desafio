@@ -1,9 +1,12 @@
-import { FetchHeatmapsService } from '../../../services/common/heatmaps/FetchHeatmapsService';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FetchHeatmapsController = void 0;
+const FetchHeatmapsService_1 = require("../../../services/common/heatmaps/FetchHeatmapsService");
 class FetchHeatmapsController {
     async handle(request, response) {
         const { docId, page } = request.params;
         const { userId } = request;
-        const fetchHeatmapsService = new FetchHeatmapsService();
+        const fetchHeatmapsService = new FetchHeatmapsService_1.FetchHeatmapsService();
         try {
             const heatmaps = await fetchHeatmapsService.execute({
                 docId,
@@ -17,5 +20,5 @@ class FetchHeatmapsController {
         }
     }
 }
-export { FetchHeatmapsController };
+exports.FetchHeatmapsController = FetchHeatmapsController;
 //# sourceMappingURL=FetchHeatmapsController.js.map

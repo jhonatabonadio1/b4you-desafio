@@ -1,11 +1,14 @@
-import { defaultApplicationRules } from '../../../config/DefaultApplicationRules';
-import { prismaClient } from '../../../database/prismaClient';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CreateSessionService = void 0;
+const DefaultApplicationRules_1 = require("../../../config/DefaultApplicationRules");
+const prismaClient_1 = require("../../../database/prismaClient");
 class CreateSessionService {
     async execute({ docId, network, fingerprint }) {
         if (!fingerprint || !docId) {
             throw new Error('Preencha os campos obrigatórios.');
         }
-        const buscaDocumento = await prismaClient.document.findFirst({
+        const buscaDocumento = await prismaClient_1.prismaClient.document.findFirst({
             where: {
                 id: docId,
             },
@@ -16,8 +19,8 @@ class CreateSessionService {
         if (!buscaDocumento) {
             throw new Error('Documento não encontrado');
         }
-        let maxSessionPerFile = defaultApplicationRules.sessions.maxSessionsPerFile;
-        const buscaInscricaoDonoDocumento = await prismaClient.subscription.findFirst({
+        let maxSessionPerFile = DefaultApplicationRules_1.defaultApplicationRules.sessions.maxSessionsPerFile;
+        const buscaInscricaoDonoDocumento = await prismaClient_1.prismaClient.subscription.findFirst({
             where: {
                 active: true,
                 userId: buscaDocumento.user.id,
@@ -33,7 +36,7 @@ class CreateSessionService {
         if (buscaInscricaoDonoDocumento) {
             maxSessionPerFile = buscaInscricaoDonoDocumento.plan.fileSessions;
         }
-        const contagemSessoes = await prismaClient.session.count({
+        const contagemSessoes = await prismaClient_1.prismaClient.session.count({
             where: {
                 docId,
             },
@@ -41,7 +44,7 @@ class CreateSessionService {
         if (contagemSessoes >= maxSessionPerFile) {
             throw new Error('Limite de sessões por arquivo atingido. Faça upgrade do plano.');
         }
-        const lastSession = await prismaClient.session.findFirst({
+        const lastSession = await prismaClient_1.prismaClient.session.findFirst({
             where: { fingerprint, network },
             orderBy: { createdAt: 'desc' }, // Ordena pela mais recente
         });
@@ -58,7 +61,7 @@ class CreateSessionService {
             }
         }
         // Cria a nova sessão, pois já passou o tempo mínimo
-        const session = await prismaClient.session.create({
+        const session = await prismaClient_1.prismaClient.session.create({
             data: { docId, fingerprint, network },
         });
         return {
@@ -66,5 +69,5 @@ class CreateSessionService {
         };
     }
 }
-export { CreateSessionService };
+exports.CreateSessionService = CreateSessionService;
 //# sourceMappingURL=CreateSessionService.js.map

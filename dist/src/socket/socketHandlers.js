@@ -1,9 +1,12 @@
-import { CreatePageViewService } from '../services/common/tracking/CreatePageViewService';
-import { isOwnerOfDocument } from './authSocket';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.registerSocketHandlers = registerSocketHandlers;
+const CreatePageViewService_1 = require("../services/common/tracking/CreatePageViewService");
+const authSocket_1 = require("./authSocket");
 /**
  * Ao registrar handlers, instanciamos um "contexto" para cada socket.
  */
-export function registerSocketHandlers(io, socket) {
+function registerSocketHandlers(io, socket) {
     // "Armazenamos" infos sobre a sessão do usuário nesse objeto
     const ctx = {
         lastPage: null,
@@ -30,7 +33,7 @@ export function registerSocketHandlers(io, socket) {
     socket.on('joinDocumentOwnerRoom', (data) => {
         const { documentId, token } = data;
         // Checa se realmente é dono
-        const isOwner = isOwnerOfDocument(token, documentId);
+        const isOwner = (0, authSocket_1.isOwnerOfDocument)(token, documentId);
         if (!isOwner) {
             // se não for dono, não entra
             return;
@@ -57,7 +60,7 @@ export function registerSocketHandlers(io, socket) {
         // Salvar no banco
         if (ctx.documentId && ctx.sessionId) {
             broadcastActiveUsersToOwner(io, ctx.documentId);
-            const createPageViewService = new CreatePageViewService();
+            const createPageViewService = new CreatePageViewService_1.CreatePageViewService();
             try {
                 console.log(ctx.sessionId);
                 await createPageViewService.execute({

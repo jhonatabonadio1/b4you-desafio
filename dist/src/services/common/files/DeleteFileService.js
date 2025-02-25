@@ -1,11 +1,17 @@
-import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3';
-import { PrismaClient } from '@prisma/client';
-import dotenv from 'dotenv';
-dotenv.config();
-const prisma = new PrismaClient();
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DeleteFileService = void 0;
+const client_s3_1 = require("@aws-sdk/client-s3");
+const client_1 = require("@prisma/client");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const prisma = new client_1.PrismaClient();
 class DeleteFileService {
     constructor() {
-        this.s3 = new S3Client({
+        this.s3 = new client_s3_1.S3Client({
             region: process.env.AWS_REGION,
             credentials: {
                 accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -34,7 +40,7 @@ class DeleteFileService {
             Bucket: process.env.AWS_BUCKET_NAME,
             Key: `secure_uploads/${document.s3Key}`,
         };
-        await this.s3.send(new DeleteObjectCommand(deleteParams));
+        await this.s3.send(new client_s3_1.DeleteObjectCommand(deleteParams));
         // Delete dependent records first
         // Agora, deletar o documento principal
         await prisma.document.delete({
@@ -42,5 +48,5 @@ class DeleteFileService {
         });
     }
 }
-export { DeleteFileService };
+exports.DeleteFileService = DeleteFileService;
 //# sourceMappingURL=DeleteFileService.js.map

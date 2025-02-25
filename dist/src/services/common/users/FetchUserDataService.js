@@ -1,11 +1,14 @@
-import { prismaClient } from '../../../database/prismaClient';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FetchUserDataService = void 0;
+const prismaClient_1 = require("../../../database/prismaClient");
 class FetchUserDataService {
     async execute(userId) {
         if (!userId) {
             throw new Error('O ID do usuário é obrigatório.');
         }
         // Busca o usuário no banco de dados sem incluir o campo de senha
-        const user = await prismaClient.user.findFirst({
+        const user = await prismaClient_1.prismaClient.user.findFirst({
             where: { id: userId },
         });
         if (!user) {
@@ -14,5 +17,5 @@ class FetchUserDataService {
         return user;
     }
 }
-export { FetchUserDataService };
+exports.FetchUserDataService = FetchUserDataService;
 //# sourceMappingURL=FetchUserDataService.js.map

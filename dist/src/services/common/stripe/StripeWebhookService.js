@@ -1,5 +1,8 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.StripeWebhookService = void 0;
 /* eslint-disable camelcase */
-import { prismaClient } from '../../../database/prismaClient';
+const prismaClient_1 = require("../../../database/prismaClient");
 class StripeWebhookService {
     async execute({ event }) {
         switch (event.type) {
@@ -10,13 +13,13 @@ class StripeWebhookService {
                 if (!stripeCustomerId) {
                     throw new Error('Stripe Customer ID não encontrado');
                 }
-                const user = await prismaClient.user.findFirst({
+                const user = await prismaClient_1.prismaClient.user.findFirst({
                     where: { stripeCustomerId },
                 });
                 if (!user) {
                     throw new Error('Usuário não encontrado');
                 }
-                await prismaClient.checkoutSession.updateMany({
+                await prismaClient_1.prismaClient.checkoutSession.updateMany({
                     where: { checkoutSessionId: sessionId, userId: user.id },
                     data: { status: 'completed' },
                 });
@@ -25,7 +28,7 @@ class StripeWebhookService {
             // ✅ Checkout Expirado
             case 'checkout.session.expired': {
                 const session = event.data.object;
-                await prismaClient.checkoutSession.updateMany({
+                await prismaClient_1.prismaClient.checkoutSession.updateMany({
                     where: { checkoutSessionId: session.id },
                     data: { status: 'expired' },
                 });
@@ -34,13 +37,13 @@ class StripeWebhookService {
             // ✅ Pagamento Confirmado
             case 'invoice.paid': {
                 const invoice = event.data.object;
-                const user = await prismaClient.user.findFirst({
+                const user = await prismaClient_1.prismaClient.user.findFirst({
                     where: { stripeCustomerId: invoice.customer },
                 });
                 if (!user) {
                     throw new Error('Usuário não encontrado');
                 }
-                await prismaClient.payment.create({
+                await prismaClient_1.prismaClient.payment.create({
                     data: {
                         stripeInvoiceId: invoice.id,
                         stripePaymentIntentId: invoice.payment_intent,
@@ -55,13 +58,13 @@ class StripeWebhookService {
             // ✅ Pagamento Falhou
             case 'invoice.payment_failed': {
                 const invoice = event.data.object;
-                const user = await prismaClient.user.findFirst({
+                const user = await prismaClient_1.prismaClient.user.findFirst({
                     where: { stripeCustomerId: invoice.customer },
                 });
                 if (!user) {
                     throw new Error('Usuário não encontrado');
                 }
-                await prismaClient.payment.create({
+                await prismaClient_1.prismaClient.payment.create({
                     data: {
                         stripeInvoiceId: invoice.id,
                         stripePaymentIntentId: invoice.payment_intent,
@@ -78,7 +81,7 @@ class StripeWebhookService {
             // ✅ Nova Assinatura Criada
             case 'customer.subscription.created': {
                 const subscription = event.data.object;
-                const user = await prismaClient.user.findFirst({
+                const user = await prismaClient_1.prismaClient.user.findFirst({
                     where: { stripeCustomerId: subscription.customer },
                 });
                 if (!user) {
@@ -86,7 +89,7 @@ class StripeWebhookService {
                 }
                 const priceId = subscription.plan.id;
                 const prodId = subscription.plan.product;
-                const buscaPlano = await prismaClient.plan.findFirst({
+                const buscaPlano = await prismaClient_1.prismaClient.plan.findFirst({
                     where: {
                         AND: [
                             {
@@ -109,12 +112,12 @@ class StripeWebhookService {
                     throw new Error('Plano não encontrado');
                 }
                 // Desativa assinaturas anteriores
-                await prismaClient.subscription.updateMany({
+                await prismaClient_1.prismaClient.subscription.updateMany({
                     where: { userId: user.id },
                     data: { active: false },
                 });
                 // Cria nova assinatura ativa
-                await prismaClient.subscription.create({
+                await prismaClient_1.prismaClient.subscription.create({
                     data: {
                         planId: buscaPlano.id,
                         stripeSubscriptionId: subscription.id,
@@ -133,7 +136,7 @@ class StripeWebhookService {
             // ✅ Atualização da Assinatura
             case 'customer.subscription.updated': {
                 const subscription = event.data.object;
-                const user = await prismaClient.user.findFirst({
+                const user = await prismaClient_1.prismaClient.user.findFirst({
                     where: { stripeCustomerId: subscription.customer },
                 });
                 if (!user) {
@@ -141,7 +144,7 @@ class StripeWebhookService {
                 }
                 const priceId = subscription.plan.id;
                 const prodId = subscription.plan.product;
-                const buscaPlano = await prismaClient.plan.findFirst({
+                const buscaPlano = await prismaClient_1.prismaClient.plan.findFirst({
                     where: {
                         AND: [
                             {
@@ -163,7 +166,7 @@ class StripeWebhookService {
                 if (!buscaPlano) {
                     throw new Error('Plano não encontrado');
                 }
-                await prismaClient.subscription.updateMany({
+                await prismaClient_1.prismaClient.subscription.updateMany({
                     where: { stripeSubscriptionId: subscription.id },
                     data: {
                         status: subscription.status,
@@ -179,7 +182,7 @@ class StripeWebhookService {
             // ✅ Assinatura Cancelada
             case 'customer.subscription.deleted': {
                 const subscription = event.data.object;
-                await prismaClient.subscription.updateMany({
+                await prismaClient_1.prismaClient.subscription.updateMany({
                     where: { stripeSubscriptionId: subscription.id },
                     data: { status: 'canceled', active: false },
                 });
@@ -191,5 +194,5 @@ class StripeWebhookService {
         return { received: true };
     }
 }
-export { StripeWebhookService };
+exports.StripeWebhookService = StripeWebhookService;
 //# sourceMappingURL=StripeWebhookService.js.map

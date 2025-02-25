@@ -1,13 +1,14 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { Router } from 'express'
 
 import { DeleteFileController } from '../controllers/common/files/DeleteFileController'
 import { GetFileController } from '../controllers/common/files/GetFileController'
 import { UploadFileController } from '../controllers/common/files/UploadFileController'
 import { FetchFilesController } from '../controllers/common/files/FetchFilesController'
-import multer from 'multer'
 import { ensureAuthenticated } from '../middlewares/ensureIsAuthenticated'
 import { userInBlacklist } from '../middlewares/userInBlacklist'
 import { CheckUploadStatusBatchController } from '../controllers/common/files/CheckUploadStatusBatchController'
+const multer = require('multer')
 
 const docRoutes = Router()
 

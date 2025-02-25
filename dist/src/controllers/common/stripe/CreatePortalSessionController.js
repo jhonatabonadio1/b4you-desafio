@@ -1,8 +1,11 @@
-import { CreatePortalSessionService } from '../../../services/common/stripe/CreatePortalSessionService';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CreatePortalSessionController = void 0;
+const CreatePortalSessionService_1 = require("../../../services/common/stripe/CreatePortalSessionService");
 class CreatePortalSessionController {
     async handle(request, response) {
         const { userId } = request;
-        const createPortalSessionService = new CreatePortalSessionService();
+        const createPortalSessionService = new CreatePortalSessionService_1.CreatePortalSessionService();
         try {
             const session = await createPortalSessionService.execute({
                 userId,
@@ -14,5 +17,5 @@ class CreatePortalSessionController {
         }
     }
 }
-export { CreatePortalSessionController };
+exports.CreatePortalSessionController = CreatePortalSessionController;
 //# sourceMappingURL=CreatePortalSessionController.js.map

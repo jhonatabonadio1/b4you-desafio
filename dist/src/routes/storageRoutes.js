@@ -1,9 +1,12 @@
-import { Router } from 'express';
-import { ensureAuthenticated } from '../middlewares/ensureIsAuthenticated';
-import { FetchUserStorageController } from '../controllers/common/storage/FetchUserStorageController';
-import { userInBlacklist } from '../middlewares/userInBlacklist';
-const storageRoutes = Router();
-const fetchUserStorageController = new FetchUserStorageController();
-storageRoutes.get('/storage', ensureAuthenticated, userInBlacklist, fetchUserStorageController.handle);
-export { storageRoutes };
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.storageRoutes = void 0;
+const express_1 = require("express");
+const ensureIsAuthenticated_1 = require("../middlewares/ensureIsAuthenticated");
+const FetchUserStorageController_1 = require("../controllers/common/storage/FetchUserStorageController");
+const userInBlacklist_1 = require("../middlewares/userInBlacklist");
+const storageRoutes = (0, express_1.Router)();
+exports.storageRoutes = storageRoutes;
+const fetchUserStorageController = new FetchUserStorageController_1.FetchUserStorageController();
+storageRoutes.get('/storage', ensureIsAuthenticated_1.ensureAuthenticated, userInBlacklist_1.userInBlacklist, fetchUserStorageController.handle);
 //# sourceMappingURL=storageRoutes.js.map

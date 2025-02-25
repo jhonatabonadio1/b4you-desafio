@@ -1,10 +1,13 @@
-import { prismaClient } from '../../../database/prismaClient';
-export class FetchDocumentTrackingService {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FetchDocumentTrackingService = void 0;
+const prismaClient_1 = require("../../../database/prismaClient");
+class FetchDocumentTrackingService {
     async execute(docId, userId, dataInicio, dataFim) {
         if (!docId) {
             throw new Error('Documento inválido.');
         }
-        const buscaDocumento = await prismaClient.document.findFirst({
+        const buscaDocumento = await prismaClient_1.prismaClient.document.findFirst({
             where: { id: docId },
         });
         if (!buscaDocumento) {
@@ -21,7 +24,7 @@ export class FetchDocumentTrackingService {
             if (dataFim)
                 whereClause.createdAt.lte = dataFim;
         }
-        const pageViews = await prismaClient.pageView.findMany({
+        const pageViews = await prismaClient_1.prismaClient.pageView.findMany({
             where: whereClause,
             select: {
                 pageNumber: true,
@@ -48,7 +51,7 @@ export class FetchDocumentTrackingService {
             pageInteractionMap[pageNumber] =
                 (pageInteractionMap[pageNumber] || 0) + interactionTime;
         });
-        const sessionsCount = await prismaClient.session.count({
+        const sessionsCount = await prismaClient_1.prismaClient.session.count({
             where: {
                 docId,
                 createdAt: {
@@ -65,4 +68,5 @@ export class FetchDocumentTrackingService {
         };
     }
 }
+exports.FetchDocumentTrackingService = FetchDocumentTrackingService;
 //# sourceMappingURL=FetchDocumentTrackingService.js.map

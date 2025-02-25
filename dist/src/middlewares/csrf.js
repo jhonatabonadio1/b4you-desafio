@@ -1,6 +1,8 @@
-import { config } from 'dotenv';
-import { secret, tokens } from '../lib/csfrSecret';
-config();
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const dotenv_1 = require("dotenv");
+const csfrSecret_1 = require("../lib/csfrSecret");
+(0, dotenv_1.config)();
 const csrfMiddleware = (req, res, next) => {
     if (['POST', 'PUT', 'DELETE'].includes(req.method)) {
         const excludedRoutes = ['/api/stripe/webhook'];
@@ -10,7 +12,7 @@ const csrfMiddleware = (req, res, next) => {
         }
         try {
             const csrfToken = req.header('X-CSRF-Token');
-            if (!tokens.verify(secret, csrfToken)) {
+            if (!csfrSecret_1.tokens.verify(csfrSecret_1.secret, csrfToken)) {
                 return res.status(403).json({ error: 'Invalid CSRF token' });
             }
         }
@@ -20,5 +22,5 @@ const csrfMiddleware = (req, res, next) => {
     }
     next();
 };
-export default csrfMiddleware;
+exports.default = csrfMiddleware;
 //# sourceMappingURL=csrf.js.map

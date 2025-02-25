@@ -1,10 +1,13 @@
-import { prismaClient } from '../../../database/prismaClient';
-export class FetchPagesAnalyticsService {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FetchPagesAnalyticsService = void 0;
+const prismaClient_1 = require("../../../database/prismaClient");
+class FetchPagesAnalyticsService {
     async execute(docId, userId, dataInicio, dataFim) {
         if (!docId) {
             throw new Error('Documento inválido');
         }
-        const buscaDocumento = await prismaClient.document.findFirst({
+        const buscaDocumento = await prismaClient_1.prismaClient.document.findFirst({
             where: { id: docId },
         });
         if (!buscaDocumento) {
@@ -21,7 +24,7 @@ export class FetchPagesAnalyticsService {
             if (dataFim)
                 whereClause.createdAt.lte = dataFim;
         }
-        const data = await prismaClient.pageView.findMany({
+        const data = await prismaClient_1.prismaClient.pageView.findMany({
             where: whereClause,
             select: {
                 pageNumber: true,
@@ -59,4 +62,5 @@ export class FetchPagesAnalyticsService {
         return result;
     }
 }
+exports.FetchPagesAnalyticsService = FetchPagesAnalyticsService;
 //# sourceMappingURL=FetchPagesAnalyticsService.js.map

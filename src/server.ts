@@ -15,7 +15,6 @@ import { secret, tokens } from './lib/csfrSecret'
 import { routes } from './routes/routes'
 import bodyParser from 'body-parser'
 
-import { adminJs, adminRouter } from './lib/admin'
 import { webhookRoutes } from './routes/webhookRoutes'
 import { createSocketServer } from './socket'
 
@@ -44,11 +43,10 @@ const app = express()
 
 app.use('/queues', serverAdapter.getRouter())
 
-app.use(adminJs.options.rootPath, adminRouter)
 app.use(bodyParser.raw())
 
 const server = http.createServer(app)
-await createSocketServer(server)
+createSocketServer(server)
 
 const allowedOriginsProd = ['https://incorporae.com.br']
 const allowedOriginsDev = [

@@ -1,7 +1,10 @@
-import { FetchPlansService } from '../../../services/common/plans/FetchPlansService';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FetchPlansController = void 0;
+const FetchPlansService_1 = require("../../../services/common/plans/FetchPlansService");
 class FetchPlansController {
     async handle(request, response) {
-        const fetchPlans = new FetchPlansService();
+        const fetchPlans = new FetchPlansService_1.FetchPlansService();
         try {
             const plans = await fetchPlans.execute();
             return response.status(200).json(plans);
@@ -11,5 +14,5 @@ class FetchPlansController {
         }
     }
 }
-export { FetchPlansController };
+exports.FetchPlansController = FetchPlansController;
 //# sourceMappingURL=FetchPlansController.js.map

@@ -1,9 +1,12 @@
-import { CreateCheckoutSessionService } from '../../../services/common/stripe/CreateCheckoutSessionService';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CreateCheckoutSessionController = void 0;
+const CreateCheckoutSessionService_1 = require("../../../services/common/stripe/CreateCheckoutSessionService");
 class CreateCheckoutSessionController {
     async handle(request, response) {
         const { priceId } = request.body;
         const { userId, ip } = request;
-        const createCheckoutSessionService = new CreateCheckoutSessionService();
+        const createCheckoutSessionService = new CreateCheckoutSessionService_1.CreateCheckoutSessionService();
         try {
             const session = await createCheckoutSessionService.execute({
                 priceId,
@@ -17,5 +20,5 @@ class CreateCheckoutSessionController {
         }
     }
 }
-export { CreateCheckoutSessionController };
+exports.CreateCheckoutSessionController = CreateCheckoutSessionController;
 //# sourceMappingURL=CreateCheckoutSessionController.js.map

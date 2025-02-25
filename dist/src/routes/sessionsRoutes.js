@@ -1,8 +1,11 @@
-import { Router } from 'express';
-import { CreateSessionController } from '../controllers/common/sessions/CreateSessionController';
-import { userInBlacklist } from '../middlewares/userInBlacklist';
-const sessionsRoutes = Router();
-const createSessionContorller = new CreateSessionController();
-sessionsRoutes.post('/sessions', userInBlacklist, createSessionContorller.handle);
-export { sessionsRoutes };
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.sessionsRoutes = void 0;
+const express_1 = require("express");
+const CreateSessionController_1 = require("../controllers/common/sessions/CreateSessionController");
+const userInBlacklist_1 = require("../middlewares/userInBlacklist");
+const sessionsRoutes = (0, express_1.Router)();
+exports.sessionsRoutes = sessionsRoutes;
+const createSessionContorller = new CreateSessionController_1.CreateSessionController();
+sessionsRoutes.post('/sessions', userInBlacklist_1.userInBlacklist, createSessionContorller.handle);
 //# sourceMappingURL=sessionsRoutes.js.map

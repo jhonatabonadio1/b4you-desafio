@@ -1,9 +1,12 @@
-import { prismaClient } from '../../../database/prismaClient';
-import { stripe } from '../../../lib/stripe';
-import { defaultApplicationRules } from '../../../config/DefaultApplicationRules';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FetchPlansService = void 0;
+const prismaClient_1 = require("../../../database/prismaClient");
+const stripe_1 = require("../../../lib/stripe");
+const DefaultApplicationRules_1 = require("../../../config/DefaultApplicationRules");
 class FetchPlansService {
     async execute() {
-        const buscaPlanos = await prismaClient.plan.findMany({
+        const buscaPlanos = await prismaClient_1.prismaClient.plan.findMany({
             where: { active: true },
         });
         if (!buscaPlanos) {
@@ -16,18 +19,18 @@ class FetchPlansService {
             description: 'Plano gratuito para quem precisa apenas de uma solução básica.',
             annualPriceId: '',
             monthlyPriceId: '',
-            uploadFiles: defaultApplicationRules.documents.uploadFiles,
-            maxSize: defaultApplicationRules.documents.maxSize,
-            limit: defaultApplicationRules.storage.limit,
-            fileSessions: defaultApplicationRules.sessions.maxSessionsPerFile,
+            uploadFiles: DefaultApplicationRules_1.defaultApplicationRules.documents.uploadFiles,
+            maxSize: DefaultApplicationRules_1.defaultApplicationRules.documents.maxSize,
+            limit: DefaultApplicationRules_1.defaultApplicationRules.storage.limit,
+            fileSessions: DefaultApplicationRules_1.defaultApplicationRules.sessions.maxSessionsPerFile,
             name: 'Free',
             monthlyPrice: 0,
             annualPrice: 0,
         };
         const plans = [defaultPlan];
         for (const plano of buscaPlanos) {
-            const monthlyPrice = await stripe.prices.retrieve(plano.monthlyPriceId);
-            const annualPrice = await stripe.prices.retrieve(plano.annualPriceId);
+            const monthlyPrice = await stripe_1.stripe.prices.retrieve(plano.monthlyPriceId);
+            const annualPrice = await stripe_1.stripe.prices.retrieve(plano.annualPriceId);
             plans.push({
                 ...plano,
                 monthlyPrice: monthlyPrice.unit_amount ?? 0,
@@ -37,5 +40,5 @@ class FetchPlansService {
         return plans;
     }
 }
-export { FetchPlansService };
+exports.FetchPlansService = FetchPlansService;
 //# sourceMappingURL=FetchPlansService.js.map

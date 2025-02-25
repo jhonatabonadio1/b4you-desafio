@@ -1,4 +1,7 @@
-import { prismaClient } from '../../../database/prismaClient';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FetchHeatmapsService = void 0;
+const prismaClient_1 = require("../../../database/prismaClient");
 class FetchHeatmapsService {
     async execute({ docId, page, userId }) {
         if (!docId) {
@@ -7,7 +10,7 @@ class FetchHeatmapsService {
         if (!page) {
             throw new Error('Página do PDF é obrigatória');
         }
-        const buscaDocumento = await prismaClient.document.findFirst({
+        const buscaDocumento = await prismaClient_1.prismaClient.document.findFirst({
             where: { id: docId },
         });
         if (!buscaDocumento) {
@@ -16,7 +19,7 @@ class FetchHeatmapsService {
         if (buscaDocumento?.userId !== userId) {
             throw new Error('Usuário não autorizado');
         }
-        const buscaLotes = await prismaClient.loteHeatmaps.findMany({
+        const buscaLotes = await prismaClient_1.prismaClient.loteHeatmaps.findMany({
             where: {
                 docId,
             },
@@ -35,5 +38,5 @@ class FetchHeatmapsService {
         return buscaLotes;
     }
 }
-export { FetchHeatmapsService };
+exports.FetchHeatmapsService = FetchHeatmapsService;
 //# sourceMappingURL=FetchHeatmapsService.js.map

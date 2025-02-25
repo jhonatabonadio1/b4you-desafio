@@ -1,10 +1,13 @@
-import { SendRecoveryLinkService } from '../../../services/common/auth/SendRecoveryLinkService';
-import { prismaClient } from '../../../database/prismaClient';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SendRecoveryLinkController = void 0;
+const SendRecoveryLinkService_1 = require("../../../services/common/auth/SendRecoveryLinkService");
+const prismaClient_1 = require("../../../database/prismaClient");
 class SendRecoveryLinkController {
     async handle(request, response) {
         const { email } = request.body;
-        const sendRecoveryLnk = new SendRecoveryLinkService();
-        const verificaEmailBlacklist = await prismaClient.blacklist.findFirst({
+        const sendRecoveryLnk = new SendRecoveryLinkService_1.SendRecoveryLinkService();
+        const verificaEmailBlacklist = await prismaClient_1.prismaClient.blacklist.findFirst({
             where: { email },
         });
         if (verificaEmailBlacklist) {
@@ -23,5 +26,5 @@ class SendRecoveryLinkController {
         }
     }
 }
-export { SendRecoveryLinkController };
+exports.SendRecoveryLinkController = SendRecoveryLinkController;
 //# sourceMappingURL=SendRecoveryLinkController.js.map

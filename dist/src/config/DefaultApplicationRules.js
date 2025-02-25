@@ -1,5 +1,8 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.defaultApplicationRules = void 0;
 /* eslint-disable no-irregular-whitespace */
-export const defaultApplicationRules = {
+exports.defaultApplicationRules = {
     storage: {
         limit: 5 * 1024, // 50 MB
     },

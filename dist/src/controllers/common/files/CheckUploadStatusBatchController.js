@@ -1,11 +1,14 @@
-import { uploadQueue } from '../../../lib/uploadQueue';
-export class CheckUploadStatusBatchController {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CheckUploadStatusBatchController = void 0;
+const uploadQueue_1 = require("../../../lib/uploadQueue");
+class CheckUploadStatusBatchController {
     async handle(req, res) {
         try {
             const { jobIds } = req.body;
             const results = [];
             for (const id of jobIds) {
-                const job = await uploadQueue.getJob(id);
+                const job = await uploadQueue_1.uploadQueue.getJob(id);
                 if (!job) {
                     results.push({
                         id,
@@ -37,4 +40,5 @@ export class CheckUploadStatusBatchController {
         }
     }
 }
+exports.CheckUploadStatusBatchController = CheckUploadStatusBatchController;
 //# sourceMappingURL=CheckUploadStatusBatchController.js.map

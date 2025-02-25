@@ -1,4 +1,7 @@
-import { DeleteFileService } from '../../../services/common/files/DeleteFileService';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DeleteFileController = void 0;
+const DeleteFileService_1 = require("../../../services/common/files/DeleteFileService");
 class DeleteFileController {
     async handle(req, res) {
         try {
@@ -9,7 +12,7 @@ class DeleteFileController {
                     .status(400)
                     .json({ error: 'ID do documento não foi fornecido.' });
             }
-            const deleteFileService = new DeleteFileService();
+            const deleteFileService = new DeleteFileService_1.DeleteFileService();
             await deleteFileService.execute(docId, userId);
             return res
                 .status(200)
@@ -20,5 +23,5 @@ class DeleteFileController {
         }
     }
 }
-export { DeleteFileController };
+exports.DeleteFileController = DeleteFileController;
 //# sourceMappingURL=DeleteFileController.js.map

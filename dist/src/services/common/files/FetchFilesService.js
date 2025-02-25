@@ -1,5 +1,8 @@
-import { prismaClient } from '../../../database/prismaClient';
-import { Prisma } from '@prisma/client'; // Importa tipos do Prisma
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FetchFilesService = void 0;
+const prismaClient_1 = require("../../../database/prismaClient");
+const client_1 = require("@prisma/client"); // Importa tipos do Prisma
 class FetchFilesService {
     async execute(userId, search) {
         try {
@@ -8,12 +11,12 @@ class FetchFilesService {
                 ? {
                     title: {
                         contains: search, // Busca case-insensitive
-                        mode: Prisma.QueryMode.insensitive, // Utiliza o tipo QueryMode do Prisma
+                        mode: client_1.Prisma.QueryMode.insensitive, // Utiliza o tipo QueryMode do Prisma
                     },
                 }
                 : {};
             // Busca usuários no banco de dados com ordenação por nome
-            const files = await prismaClient.document.findMany({
+            const files = await prismaClient_1.prismaClient.document.findMany({
                 where: { ...query, userId },
                 orderBy: {
                     updatedAt: 'desc', // Ordena pelo nome em ordem crescente
@@ -33,5 +36,5 @@ class FetchFilesService {
         }
     }
 }
-export { FetchFilesService };
+exports.FetchFilesService = FetchFilesService;
 //# sourceMappingURL=FetchFilesService.js.map

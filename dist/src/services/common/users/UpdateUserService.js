@@ -1,5 +1,8 @@
-import { hash } from 'bcryptjs';
-import { prismaClient } from '../../../database/prismaClient';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UpdateUserService = void 0;
+const bcryptjs_1 = require("bcryptjs");
+const prismaClient_1 = require("../../../database/prismaClient");
 class UpdateUserService {
     async execute({ userId, email, password, firstName, lastName, empresa, }) {
         // Verifica se o ID do usuário foi fornecido
@@ -7,7 +10,7 @@ class UpdateUserService {
             throw new Error('ID do usuário é obrigatório.');
         }
         // Verifica se o usuário existe
-        const existingUser = await prismaClient.user.findUnique({
+        const existingUser = await prismaClient_1.prismaClient.user.findUnique({
             where: { id: userId },
         });
         if (!existingUser) {
@@ -25,15 +28,15 @@ class UpdateUserService {
             data.empresa = empresa;
         // Hash da nova senha, se fornecida
         if (password) {
-            data.password = await hash(password, 12);
+            data.password = await (0, bcryptjs_1.hash)(password, 12);
         }
         // Atualiza o usuário no banco de dados
-        const user = await prismaClient.user.update({
+        const user = await prismaClient_1.prismaClient.user.update({
             where: { id: userId },
             data,
         });
         return user;
     }
 }
-export { UpdateUserService };
+exports.UpdateUserService = UpdateUserService;
 //# sourceMappingURL=UpdateUserService.js.map

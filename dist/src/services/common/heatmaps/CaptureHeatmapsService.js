@@ -1,4 +1,7 @@
-import { prismaClient } from '../../../database/prismaClient';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CaptureHeatmapsService = void 0;
+const prismaClient_1 = require("../../../database/prismaClient");
 class CaptureHeatmapsService {
     async execute({ docId, sessionId, lote }) {
         // Verifica se todos os campos obrigatórios foram preenchidos
@@ -13,14 +16,14 @@ class CaptureHeatmapsService {
         }
         const ONE_MINUTE = 1 * 60 * 1000; // 1 minuto em milissegundos
         // Busca a última sessão vinculada ao mesmo `docId`
-        const lastDocSession = await prismaClient.session.findFirst({
+        const lastDocSession = await prismaClient_1.prismaClient.session.findFirst({
             where: { docId },
             orderBy: { createdAt: 'desc' },
         });
         // Verifica se a última sessão associada ao `docId` tem `collectedHeatmap = true`
         if (lastDocSession && lastDocSession.collectedHeatmap) {
             // Alterna o estado da última sessão para `false` e bloqueia este envio
-            await prismaClient.session.update({
+            await prismaClient_1.prismaClient.session.update({
                 where: { id: lastDocSession.id },
                 data: { collectedHeatmap: false },
             });
@@ -29,7 +32,7 @@ class CaptureHeatmapsService {
             };
         }
         // Verifica se a última coleta para a `sessionId` ocorreu há menos de 1 minuto
-        const lastSessionHeatmap = await prismaClient.loteHeatmaps.findFirst({
+        const lastSessionHeatmap = await prismaClient_1.prismaClient.loteHeatmaps.findFirst({
             where: { sessionId },
             orderBy: { createdAt: 'desc' },
         });
@@ -41,7 +44,7 @@ class CaptureHeatmapsService {
             }
         }
         // Criar novo lote de heatmaps e definir `collectedHeatmap = true` para esta sessão
-        const createLoteHeatmaps = await prismaClient.loteHeatmaps.create({
+        const createLoteHeatmaps = await prismaClient_1.prismaClient.loteHeatmaps.create({
             data: {
                 docId,
                 sessionId,
@@ -52,7 +55,7 @@ class CaptureHeatmapsService {
         }
         // Filtrar lote para garantir que cada item tenha página válida
         const loteVerificado = lote.filter((item) => item.page != null);
-        const uploadCarga = await prismaClient.heatmaps.createMany({
+        const uploadCarga = await prismaClient_1.prismaClient.heatmaps.createMany({
             data: loteVerificado.map((item) => ({
                 loteId: createLoteHeatmaps.id,
                 ...item,
@@ -62,12 +65,12 @@ class CaptureHeatmapsService {
             throw new Error('Não foi possível carregar o lote.');
         }
         // Atualiza a sessão atual para `collectedHeatmap = true`
-        await prismaClient.session.update({
+        await prismaClient_1.prismaClient.session.update({
             where: { id: sessionId },
             data: { collectedHeatmap: true },
         });
         return { message: 'Lote carregado com sucesso.' };
     }
 }
-export { CaptureHeatmapsService };
+exports.CaptureHeatmapsService = CaptureHeatmapsService;
 //# sourceMappingURL=CaptureHeatmapsService.js.map

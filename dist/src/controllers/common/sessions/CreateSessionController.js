@@ -1,8 +1,11 @@
-import { CreateSessionService } from '../../../services/common/sessions/CreateSessionService';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CreateSessionController = void 0;
+const CreateSessionService_1 = require("../../../services/common/sessions/CreateSessionService");
 class CreateSessionController {
     async handle(request, response) {
         const { docId } = request.body;
-        const createSessionService = new CreateSessionService();
+        const createSessionService = new CreateSessionService_1.CreateSessionService();
         const { ip } = request;
         const userAgent = request.headers['user-agent'] || 'Unknown-Device';
         try {
@@ -18,5 +21,5 @@ class CreateSessionController {
         }
     }
 }
-export { CreateSessionController };
+exports.CreateSessionController = CreateSessionController;
 //# sourceMappingURL=CreateSessionController.js.map

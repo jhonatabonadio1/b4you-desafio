@@ -1,8 +1,11 @@
-import { CaptureHeatmapsService } from '../../../services/common/heatmaps/CaptureHeatmapsService';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CaptureHeatmapsController = void 0;
+const CaptureHeatmapsService_1 = require("../../../services/common/heatmaps/CaptureHeatmapsService");
 class CaptureHeatmapsController {
     async handle(request, response) {
         const { docId, lote, sessionId } = request.body;
-        const createHeatmapsService = new CaptureHeatmapsService();
+        const createHeatmapsService = new CaptureHeatmapsService_1.CaptureHeatmapsService();
         try {
             const heatmaps = await createHeatmapsService.execute({
                 docId,
@@ -16,5 +19,5 @@ class CaptureHeatmapsController {
         }
     }
 }
-export { CaptureHeatmapsController };
+exports.CaptureHeatmapsController = CaptureHeatmapsController;
 //# sourceMappingURL=CaptureHeatmapsController.js.map

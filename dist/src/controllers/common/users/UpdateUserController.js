@@ -1,9 +1,12 @@
-import { UpdateUserService } from '../../../services/common/users/UpdateUserService';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UpdateUserController = void 0;
+const UpdateUserService_1 = require("../../../services/common/users/UpdateUserService");
 class UpdateUserController {
     async handle(request, response) {
         const { userId } = request;
         const { email, password, firstName, lastName, empresa } = request.body;
-        const updateUserService = new UpdateUserService();
+        const updateUserService = new UpdateUserService_1.UpdateUserService();
         try {
             const result = await updateUserService.execute({
                 userId,
@@ -20,5 +23,5 @@ class UpdateUserController {
         }
     }
 }
-export { UpdateUserController };
+exports.UpdateUserController = UpdateUserController;
 //# sourceMappingURL=UpdateUserController.js.map

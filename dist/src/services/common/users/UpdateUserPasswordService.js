@@ -1,11 +1,14 @@
-import { hash } from 'bcryptjs';
-import { prismaClient } from '../../../database/prismaClient';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UpdateUserPasswordService = void 0;
+const bcryptjs_1 = require("bcryptjs");
+const prismaClient_1 = require("../../../database/prismaClient");
 class UpdateUserPasswordService {
     async execute({ requestId, password }) {
         if (!requestId) {
             throw new Error('Request ID inválida.');
         }
-        const findRequest = await prismaClient.recoveryRequests.findFirst({
+        const findRequest = await prismaClient_1.prismaClient.recoveryRequests.findFirst({
             where: {
                 id: requestId,
                 valid: true,
@@ -22,29 +25,29 @@ class UpdateUserPasswordService {
         }
         const currentTime = new Date();
         if (findRequest.expiresAt && findRequest.expiresAt < currentTime) {
-            await prismaClient.recoveryRequests.update({
+            await prismaClient_1.prismaClient.recoveryRequests.update({
                 where: { id: requestId },
                 data: { valid: false },
             });
             throw new Error('O link de recuperação expirou.');
         }
-        const isSamePassword = (await hash(password, 12)) === findRequest.user.password;
+        const isSamePassword = (await (0, bcryptjs_1.hash)(password, 12)) === findRequest.user.password;
         if (isSamePassword) {
             throw new Error('A nova senha não pode ser igual à senha antiga.');
         }
-        const hashPassword = await hash(password, 12);
-        const user = await prismaClient.user.update({
+        const hashPassword = await (0, bcryptjs_1.hash)(password, 12);
+        const user = await prismaClient_1.prismaClient.user.update({
             where: { id: findRequest.userId },
             data: {
                 password: hashPassword,
             },
         });
-        await prismaClient.recoveryRequests.update({
+        await prismaClient_1.prismaClient.recoveryRequests.update({
             where: { id: findRequest.id },
             data: { valid: false },
         });
         return user;
     }
 }
-export { UpdateUserPasswordService };
+exports.UpdateUserPasswordService = UpdateUserPasswordService;
 //# sourceMappingURL=UpdateUserPasswordService.js.map
