@@ -114,18 +114,9 @@ class StripeWebhookService {
         const buscaPlano = await prismaClient.plan.findFirst({
           where: {
             AND: [
+              { stripeProductId: prodId },
               {
-                stripeProductId: prodId,
-              },
-              {
-                OR: [
-                  {
-                    annualPriceId: priceId,
-                  },
-                  {
-                    monthlyPriceId: priceId,
-                  },
-                ],
+                OR: [{ annualPriceId: priceId }, { monthlyPriceId: priceId }],
               },
             ],
           },
@@ -135,27 +126,34 @@ class StripeWebhookService {
           throw new Error('Plano não encontrado')
         }
 
-        // Desativa assinaturas anteriores
-        await prismaClient.subscription.updateMany({
-          where: { userId: user.id },
-          data: { active: false },
+        // Verifica se a assinatura já existe
+        const existingSubscription = await prismaClient.subscription.findFirst({
+          where: { stripeSubscriptionId: subscription.id },
         })
 
-        // Cria nova assinatura ativa
-        await prismaClient.subscription.create({
-          data: {
-            planId: buscaPlano.id,
-            stripeSubscriptionId: subscription.id,
-            userId: user.id,
-            status: subscription.status,
-            active: true,
-            interval: subscription.plan.interval,
-            startDate: new Date(subscription.start_date * 1000),
-            endDate: subscription.current_period_end
-              ? new Date(subscription.current_period_end * 1000)
-              : null,
-          },
-        })
+        if (!existingSubscription) {
+          // Desativa assinaturas anteriores
+          await prismaClient.subscription.updateMany({
+            where: { userId: user.id },
+            data: { active: false },
+          })
+
+          // Cria nova assinatura apenas se ainda não existir
+          await prismaClient.subscription.create({
+            data: {
+              planId: buscaPlano.id,
+              stripeSubscriptionId: subscription.id,
+              userId: user.id,
+              status: subscription.status,
+              active: subscription.status === 'active', // 🔹 Só ativa se for "active"
+              interval: subscription.plan.interval,
+              startDate: new Date(subscription.start_date * 1000),
+              endDate: subscription.current_period_end
+                ? new Date(subscription.current_period_end * 1000)
+                : null,
+            },
+          })
+        }
 
         break
       }
@@ -199,10 +197,23 @@ class StripeWebhookService {
           throw new Error('Plano não encontrado')
         }
 
-        await prismaClient.subscription.updateMany({
-          where: { stripeSubscriptionId: subscription.id },
-          data: {
+        await prismaClient.subscription.upsert({
+          where: { userId: user.id, stripeSubscriptionId: subscription.id },
+          create: {
+            planId: buscaPlano.id,
+            stripeSubscriptionId: subscription.id,
+            userId: user.id,
             status: subscription.status,
+            active: subscription.status === 'active', // 🔹 Apenas ativa se for "active"
+            interval: subscription.plan.interval,
+            startDate: new Date(subscription.start_date * 1000),
+            endDate: subscription.current_period_end
+              ? new Date(subscription.current_period_end * 1000)
+              : null,
+          },
+          update: {
+            status: subscription.status,
+            active: subscription.status === 'active', // 🔹 Apenas ativa se for "active"
             planId: buscaPlano.id,
             startDate: new Date(subscription.start_date * 1000),
             endDate: subscription.current_period_end
