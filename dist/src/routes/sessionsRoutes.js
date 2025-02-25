@@ -8,4 +8,3 @@ const sessionsRoutes = (0, express_1.Router)();
 exports.sessionsRoutes = sessionsRoutes;
 const createSessionContorller = new CreateSessionController_1.CreateSessionController();
 sessionsRoutes.post('/sessions', userInBlacklist_1.userInBlacklist, createSessionContorller.handle);
-//# sourceMappingURL=sessionsRoutes.js.map

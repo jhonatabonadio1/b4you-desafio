@@ -25,4 +25,3 @@ function ensureAuthenticated(request, response, next) {
         return response.status(401).end();
     }
 }
-//# sourceMappingURL=ensureIsAuthenticated.js.map

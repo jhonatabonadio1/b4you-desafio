@@ -41,4 +41,3 @@ const webhookRoutes = (0, express_1.Router)();
 exports.webhookRoutes = webhookRoutes;
 const stripeWebhookController = new StripeWebhookController_1.StripeWebhookController();
 webhookRoutes.post('/stripe/webhook', express_1.default.raw({ type: 'application/json' }), userInBlacklist_1.userInBlacklist, stripeWebhookController.handle);
-//# sourceMappingURL=webhookRoutes.js.map

@@ -39,4 +39,3 @@ async function createSocketServer(httpServer) {
     });
     return io;
 }
-//# sourceMappingURL=index.js.map

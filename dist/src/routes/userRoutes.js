@@ -15,4 +15,3 @@ const updateUserPasswordController = new UpdateUserPasswordController_1.UpdateUs
 userRoutes.get('/me', ensureIsAuthenticated_1.ensureAuthenticated, fetchUserDataController.handle);
 userRoutes.put('/users', ensureIsAuthenticated_1.ensureAuthenticated, userInBlacklist_1.userInBlacklist, updateUserController.handle);
 userRoutes.put('/users/update-password', userInBlacklist_1.userInBlacklist, updateUserPasswordController.handle);
-//# sourceMappingURL=userRoutes.js.map

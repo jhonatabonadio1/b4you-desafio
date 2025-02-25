@@ -24,4 +24,3 @@ class UpdateUserController {
     }
 }
 exports.UpdateUserController = UpdateUserController;
-//# sourceMappingURL=UpdateUserController.js.map

@@ -28,4 +28,3 @@ const defender = (req, res, next) => {
     next();
 };
 exports.defender = defender;
-//# sourceMappingURL=xssDefender.js.map

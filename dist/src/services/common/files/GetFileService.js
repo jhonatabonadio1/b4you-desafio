@@ -29,4 +29,3 @@ class GetFileService {
     }
 }
 exports.GetFileService = GetFileService;
-//# sourceMappingURL=GetFileService.js.map

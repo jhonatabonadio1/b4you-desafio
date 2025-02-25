@@ -15,4 +15,3 @@ const verifyCheckoutSessionExistsController = new VerifyCheckoutSessionExistsCon
 stripeRoutes.post('/stripe/create-checkout', ensureIsAuthenticated_1.ensureAuthenticated, userInBlacklist_1.userInBlacklist, createCheckoutSessionController.handle);
 stripeRoutes.get('/stripe/session/:sessionId', ensureIsAuthenticated_1.ensureAuthenticated, userInBlacklist_1.userInBlacklist, verifyCheckoutSessionExistsController.handle);
 stripeRoutes.get('/stripe/portal', ensureIsAuthenticated_1.ensureAuthenticated, userInBlacklist_1.userInBlacklist, createPortalSessionController.handle);
-//# sourceMappingURL=stripeRoutes.js.map

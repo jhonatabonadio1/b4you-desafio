@@ -18,11 +18,7 @@ exports.uploadWorker = new bullmq_1.Worker('pdf-upload-queue', async (job) => {
         console.error(`❌ Erro no job de upload (${job.id}):`, error);
         throw error;
     }
-}, {
-    ...redis_1.redisConnection,
-    concurrency: 10,
-});
+}, Object.assign(Object.assign({}, redis_1.redisConnection), { concurrency: 10 }));
 exports.uploadWorker.on('completed', (job, result) => {
     console.log(`Job ${job.id} finalizado! Document ID:`, result.id);
 });
-//# sourceMappingURL=uploadWorker.js.map

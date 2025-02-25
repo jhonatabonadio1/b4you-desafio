@@ -27,4 +27,3 @@ class SendRecoveryLinkController {
     }
 }
 exports.SendRecoveryLinkController = SendRecoveryLinkController;
-//# sourceMappingURL=SendRecoveryLinkController.js.map

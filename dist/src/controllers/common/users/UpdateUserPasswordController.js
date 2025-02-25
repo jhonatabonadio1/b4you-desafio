@@ -19,4 +19,3 @@ class UpdateUserPasswordController {
     }
 }
 exports.UpdateUserPasswordController = UpdateUserPasswordController;
-//# sourceMappingURL=UpdateUserPasswordController.js.map

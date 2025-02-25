@@ -31,4 +31,3 @@ class CreateUserController {
     }
 }
 exports.CreateUserController = CreateUserController;
-//# sourceMappingURL=CreateUserController.js.map

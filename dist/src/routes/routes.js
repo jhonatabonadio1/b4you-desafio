@@ -22,4 +22,3 @@ routes.use(storageRoutes_1.storageRoutes);
 routes.use(trackingRoutes_1.trackingRoutes);
 routes.use(stripeRoutes_1.stripeRoutes);
 routes.use(plansRoutes_1.plansRoutes);
-//# sourceMappingURL=routes.js.map

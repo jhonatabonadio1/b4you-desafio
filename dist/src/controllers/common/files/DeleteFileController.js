@@ -24,4 +24,3 @@ class DeleteFileController {
     }
 }
 exports.DeleteFileController = DeleteFileController;
-//# sourceMappingURL=DeleteFileController.js.map

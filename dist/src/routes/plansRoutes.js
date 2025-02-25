@@ -11,4 +11,3 @@ const fetchPlansController = new FetchPlansController_1.FetchPlansController();
 const fetchPlansAuthController = new FetchPlansAuthController_1.FetchPlansAuthController();
 plansRoutes.get('/plans', fetchPlansController.handle);
 plansRoutes.get('/plans/auth', ensureIsAuthenticated_1.ensureAuthenticated, fetchPlansAuthController.handle);
-//# sourceMappingURL=plansRoutes.js.map

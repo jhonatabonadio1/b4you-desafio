@@ -50,4 +50,3 @@ class UpdateUserPasswordService {
     }
 }
 exports.UpdateUserPasswordService = UpdateUserPasswordService;
-//# sourceMappingURL=UpdateUserPasswordService.js.map

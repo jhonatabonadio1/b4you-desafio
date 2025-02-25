@@ -17,4 +17,3 @@ class FetchFilesController {
     }
 }
 exports.FetchFilesController = FetchFilesController;
-//# sourceMappingURL=FetchFilesController.js.map

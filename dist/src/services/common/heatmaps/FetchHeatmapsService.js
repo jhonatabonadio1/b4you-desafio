@@ -16,7 +16,7 @@ class FetchHeatmapsService {
         if (!buscaDocumento) {
             throw new Error('Documento não encontrado.');
         }
-        if (buscaDocumento?.userId !== userId) {
+        if ((buscaDocumento === null || buscaDocumento === void 0 ? void 0 : buscaDocumento.userId) !== userId) {
             throw new Error('Usuário não autorizado');
         }
         const buscaLotes = await prismaClient_1.prismaClient.loteHeatmaps.findMany({
@@ -39,4 +39,3 @@ class FetchHeatmapsService {
     }
 }
 exports.FetchHeatmapsService = FetchHeatmapsService;
-//# sourceMappingURL=FetchHeatmapsService.js.map

@@ -9,4 +9,3 @@ const storageRoutes = (0, express_1.Router)();
 exports.storageRoutes = storageRoutes;
 const fetchUserStorageController = new FetchUserStorageController_1.FetchUserStorageController();
 storageRoutes.get('/storage', ensureIsAuthenticated_1.ensureAuthenticated, userInBlacklist_1.userInBlacklist, fetchUserStorageController.handle);
-//# sourceMappingURL=storageRoutes.js.map

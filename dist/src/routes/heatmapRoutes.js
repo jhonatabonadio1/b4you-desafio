@@ -12,4 +12,3 @@ const captureHeatmapsController = new CaptureHeatmapsController_1.CaptureHeatmap
 const fetchHeatmapsController = new FetchHeatmapsController_1.FetchHeatmapsController();
 heatmapRoutes.post('/heatmaps/lote', userInBlacklist_1.userInBlacklist, captureHeatmapsController.handle);
 heatmapRoutes.get('/heatmaps/:docId/:page', ensureIsAuthenticated_1.ensureAuthenticated, userInBlacklist_1.userInBlacklist, fetchHeatmapsController.handle);
-//# sourceMappingURL=heatmapRoutes.js.map

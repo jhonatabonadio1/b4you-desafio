@@ -6,6 +6,7 @@ const stripe_1 = require("../../../lib/stripe");
 const DefaultApplicationRules_1 = require("../../../config/DefaultApplicationRules");
 class FetchPlansService {
     async execute() {
+        var _a, _b;
         const buscaPlanos = await prismaClient_1.prismaClient.plan.findMany({
             where: { active: true },
         });
@@ -31,14 +32,9 @@ class FetchPlansService {
         for (const plano of buscaPlanos) {
             const monthlyPrice = await stripe_1.stripe.prices.retrieve(plano.monthlyPriceId);
             const annualPrice = await stripe_1.stripe.prices.retrieve(plano.annualPriceId);
-            plans.push({
-                ...plano,
-                monthlyPrice: monthlyPrice.unit_amount ?? 0,
-                annualPrice: annualPrice.unit_amount ?? 0,
-            });
+            plans.push(Object.assign(Object.assign({}, plano), { monthlyPrice: (_a = monthlyPrice.unit_amount) !== null && _a !== void 0 ? _a : 0, annualPrice: (_b = annualPrice.unit_amount) !== null && _b !== void 0 ? _b : 0 }));
         }
         return plans;
     }
 }
 exports.FetchPlansService = FetchPlansService;
-//# sourceMappingURL=FetchPlansService.js.map

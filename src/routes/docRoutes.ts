@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { Router } from 'express'
 
@@ -8,7 +9,7 @@ import { FetchFilesController } from '../controllers/common/files/FetchFilesCont
 import { ensureAuthenticated } from '../middlewares/ensureIsAuthenticated'
 import { userInBlacklist } from '../middlewares/userInBlacklist'
 import { CheckUploadStatusBatchController } from '../controllers/common/files/CheckUploadStatusBatchController'
-const multer = require('multer')
+import { upload } from '../middlewares/upload'
 
 const docRoutes = Router()
 
@@ -19,14 +20,13 @@ const fetchFilesController = new FetchFilesController()
 const deleteFileController = new DeleteFileController()
 const checkUploadStatusBatchController = new CheckUploadStatusBatchController()
 
-const upload = multer({ dest: 'uploads/' })
-
 docRoutes.get('/file/:docId', userInBlacklist, getFileController.handle)
 
 docRoutes.post(
   '/file',
   ensureAuthenticated,
   userInBlacklist,
+  // @ts-ignore
   upload.single('file'),
   uploadFileController.handle,
 )

@@ -16,11 +16,10 @@ const csrfMiddleware = (req, res, next) => {
                 return res.status(403).json({ error: 'Invalid CSRF token' });
             }
         }
-        catch {
+        catch (_a) {
             return res.status(403).json({ error: 'Invalid CSRF token' });
         }
     }
     next();
 };
 exports.default = csrfMiddleware;
-//# sourceMappingURL=csrf.js.map

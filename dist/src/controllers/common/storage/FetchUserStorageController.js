@@ -16,4 +16,3 @@ class FetchUserStorageController {
     }
 }
 exports.FetchUserStorageController = FetchUserStorageController;
-//# sourceMappingURL=FetchUserStorageController.js.map

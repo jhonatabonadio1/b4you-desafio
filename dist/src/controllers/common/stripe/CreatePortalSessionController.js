@@ -18,4 +18,3 @@ class CreatePortalSessionController {
     }
 }
 exports.CreatePortalSessionController = CreatePortalSessionController;
-//# sourceMappingURL=CreatePortalSessionController.js.map

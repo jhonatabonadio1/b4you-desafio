@@ -41,4 +41,3 @@ class CheckUploadStatusBatchController {
     }
 }
 exports.CheckUploadStatusBatchController = CheckUploadStatusBatchController;
-//# sourceMappingURL=CheckUploadStatusBatchController.js.map

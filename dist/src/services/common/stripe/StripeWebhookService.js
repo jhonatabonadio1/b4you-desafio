@@ -5,6 +5,7 @@ exports.StripeWebhookService = void 0;
 const prismaClient_1 = require("../../../database/prismaClient");
 class StripeWebhookService {
     async execute({ event }) {
+        var _a;
         switch (event.type) {
             // ✅ Checkout Finalizado
             case 'checkout.session.completed': {
@@ -71,7 +72,7 @@ class StripeWebhookService {
                         amount: invoice.amount_due / 100,
                         status: 'failed',
                         currency: invoice.currency,
-                        failureReason: invoice.failure_reason ?? 'Desconhecido',
+                        failureReason: (_a = invoice.failure_reason) !== null && _a !== void 0 ? _a : 'Desconhecido',
                         userId: user.id,
                         lastAttemptAt: new Date(),
                     },
@@ -195,4 +196,3 @@ class StripeWebhookService {
     }
 }
 exports.StripeWebhookService = StripeWebhookService;
-//# sourceMappingURL=StripeWebhookService.js.map

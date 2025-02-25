@@ -18,7 +18,7 @@ function registerSocketHandlers(io, socket) {
         const { documentId, sessionId, fingerprint } = data;
         ctx.documentId = documentId;
         ctx.sessionId = sessionId;
-        ctx.fingerprint = fingerprint ?? '';
+        ctx.fingerprint = fingerprint !== null && fingerprint !== void 0 ? fingerprint : '';
         ctx.network = socket.handshake.address; // ex.: IP
         // Entra na sala do doc
         socket.join(`document:${documentId}`);
@@ -99,4 +99,3 @@ function trackPageTime(ctx, newPageNumber) {
     ctx.lastPage = newPageNumber;
     ctx.lastPageTime = now;
 }
-//# sourceMappingURL=socketHandlers.js.map

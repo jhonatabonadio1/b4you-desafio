@@ -20,4 +20,3 @@ class CaptureHeatmapsController {
     }
 }
 exports.CaptureHeatmapsController = CaptureHeatmapsController;
-//# sourceMappingURL=CaptureHeatmapsController.js.map

@@ -7,4 +7,3 @@ exports.secret = exports.tokens = void 0;
 const csrf_1 = __importDefault(require("csrf"));
 exports.tokens = new csrf_1.default();
 exports.secret = exports.tokens.secretSync();
-//# sourceMappingURL=csfrSecret.js.map

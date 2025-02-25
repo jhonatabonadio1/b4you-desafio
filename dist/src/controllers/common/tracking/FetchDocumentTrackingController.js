@@ -18,4 +18,3 @@ class FetchDocumentTrackingController {
     }
 }
 exports.FetchDocumentTrackingController = FetchDocumentTrackingController;
-//# sourceMappingURL=FetchDocumentTrackingController.js.map

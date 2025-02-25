@@ -17,17 +17,14 @@ class FetchFilesService {
                 : {};
             // Busca usuários no banco de dados com ordenação por nome
             const files = await prismaClient_1.prismaClient.document.findMany({
-                where: { ...query, userId },
+                where: Object.assign(Object.assign({}, query), { userId }),
                 orderBy: {
                     updatedAt: 'desc', // Ordena pelo nome em ordem crescente
                 },
             });
             const filesCompleted = [];
             for (const file of files) {
-                filesCompleted.push({
-                    ...file,
-                    status: 'completed',
-                });
+                filesCompleted.push(Object.assign(Object.assign({}, file), { status: 'completed' }));
             }
             return filesCompleted;
         }
@@ -37,4 +34,3 @@ class FetchFilesService {
     }
 }
 exports.FetchFilesService = FetchFilesService;
-//# sourceMappingURL=FetchFilesService.js.map

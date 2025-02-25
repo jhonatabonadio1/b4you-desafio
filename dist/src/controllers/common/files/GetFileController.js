@@ -20,4 +20,3 @@ class GetFileController {
     }
 }
 exports.GetFileController = GetFileController;
-//# sourceMappingURL=GetFileController.js.map

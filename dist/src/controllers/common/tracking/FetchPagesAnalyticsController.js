@@ -18,4 +18,3 @@ class FetchPageAnalyticsController {
     }
 }
 exports.FetchPageAnalyticsController = FetchPageAnalyticsController;
-//# sourceMappingURL=FetchPagesAnalyticsController.js.map

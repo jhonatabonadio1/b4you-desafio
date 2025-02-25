@@ -29,4 +29,3 @@ async function isOwnerOfDocument(token, documentId) {
         return false;
     }
 }
-//# sourceMappingURL=authSocket.js.map

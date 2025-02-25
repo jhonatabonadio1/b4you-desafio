@@ -12,4 +12,3 @@ const fetchDocumentTrackingController = new FetchDocumentTrackingController_1.Fe
 const fetchPageAnalyticsController = new FetchPagesAnalyticsController_1.FetchPageAnalyticsController();
 trackingRoutes.get('/tracking/:docId', ensureIsAuthenticated_1.ensureAuthenticated, userInBlacklist_1.userInBlacklist, fetchDocumentTrackingController.handle);
 trackingRoutes.get('/tracking/:docId/pages', ensureIsAuthenticated_1.ensureAuthenticated, userInBlacklist_1.userInBlacklist, fetchPageAnalyticsController.handle);
-//# sourceMappingURL=trackingRoutes.js.map

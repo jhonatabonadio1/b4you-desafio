@@ -14,4 +14,3 @@ const sendRecoveryLinkController = new SendRecoveryLinkController_1.SendRecovery
 authRoutes.post('/auth/login', userInBlacklist_1.userInBlacklist, signInController.handle);
 authRoutes.post('/auth/register', userInBlacklist_1.userInBlacklist, createUserController.handle);
 authRoutes.post('/auth/recovery', userInBlacklist_1.userInBlacklist, sendRecoveryLinkController.handle);
-//# sourceMappingURL=authRoutes.js.map

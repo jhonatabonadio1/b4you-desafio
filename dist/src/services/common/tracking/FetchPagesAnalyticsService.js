@@ -13,7 +13,7 @@ class FetchPagesAnalyticsService {
         if (!buscaDocumento) {
             throw new Error('Documento não encontrado.');
         }
-        if (buscaDocumento?.userId !== userId) {
+        if ((buscaDocumento === null || buscaDocumento === void 0 ? void 0 : buscaDocumento.userId) !== userId) {
             throw new Error('Usuário não autorizado');
         }
         const whereClause = { session: { docId } };
@@ -63,4 +63,3 @@ class FetchPagesAnalyticsService {
     }
 }
 exports.FetchPagesAnalyticsService = FetchPagesAnalyticsService;
-//# sourceMappingURL=FetchPagesAnalyticsService.js.map

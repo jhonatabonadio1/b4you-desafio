@@ -28,4 +28,3 @@ const sanitizeResponse = (req, res, next) => {
     next();
 };
 exports.sanitizeResponse = sanitizeResponse;
-//# sourceMappingURL=removePassword.js.map

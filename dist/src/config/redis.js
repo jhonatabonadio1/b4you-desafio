@@ -15,4 +15,3 @@ exports.redisConnection = {
         maxRetriesPerRequest: null,
     }),
 };
-//# sourceMappingURL=redis.js.map

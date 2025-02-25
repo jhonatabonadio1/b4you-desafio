@@ -21,4 +21,3 @@ class FetchHeatmapsController {
     }
 }
 exports.FetchHeatmapsController = FetchHeatmapsController;
-//# sourceMappingURL=FetchHeatmapsController.js.map

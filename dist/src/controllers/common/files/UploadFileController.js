@@ -43,4 +43,3 @@ class UploadFileController {
     }
 }
 exports.UploadFileController = UploadFileController;
-//# sourceMappingURL=UploadFileController.js.map

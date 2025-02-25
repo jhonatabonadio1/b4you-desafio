@@ -15,4 +15,3 @@ class FetchPlansController {
     }
 }
 exports.FetchPlansController = FetchPlansController;
-//# sourceMappingURL=FetchPlansController.js.map

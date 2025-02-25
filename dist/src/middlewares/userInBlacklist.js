@@ -21,10 +21,10 @@ async function userInBlacklist(request, response, next) {
                         userId,
                     },
                     {
-                        email: buscaUsuario?.email,
+                        email: buscaUsuario === null || buscaUsuario === void 0 ? void 0 : buscaUsuario.email,
                     },
                     {
-                        empresa: buscaUsuario?.empresa,
+                        empresa: buscaUsuario === null || buscaUsuario === void 0 ? void 0 : buscaUsuario.empresa,
                     },
                 ],
             },
@@ -41,4 +41,3 @@ async function userInBlacklist(request, response, next) {
         return response.status(401).end();
     }
 }
-//# sourceMappingURL=userInBlacklist.js.map

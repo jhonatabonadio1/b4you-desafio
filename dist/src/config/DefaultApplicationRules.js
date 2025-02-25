@@ -14,4 +14,3 @@ exports.defaultApplicationRules = {
         maxSessionsPerFile: 5,
     },
 };
-//# sourceMappingURL=DefaultApplicationRules.js.map

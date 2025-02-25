@@ -56,10 +56,7 @@ class CaptureHeatmapsService {
         // Filtrar lote para garantir que cada item tenha página válida
         const loteVerificado = lote.filter((item) => item.page != null);
         const uploadCarga = await prismaClient_1.prismaClient.heatmaps.createMany({
-            data: loteVerificado.map((item) => ({
-                loteId: createLoteHeatmaps.id,
-                ...item,
-            })),
+            data: loteVerificado.map((item) => (Object.assign({ loteId: createLoteHeatmaps.id }, item))),
         });
         if (!uploadCarga) {
             throw new Error('Não foi possível carregar o lote.');
@@ -73,4 +70,3 @@ class CaptureHeatmapsService {
     }
 }
 exports.CaptureHeatmapsService = CaptureHeatmapsService;
-//# sourceMappingURL=CaptureHeatmapsService.js.map
