@@ -5,14 +5,14 @@ import { UploadFileService } from '../services/common/files/UploadFileService'
 export const uploadWorker = new Worker(
   'pdf-upload-queue',
   async (job) => {
-    const { filePath, originalName, userId, fileId } = job.data
+    const { fileBuffer, originalName, userId, fileId } = job.data
     console.log(`🟢 Processando job de upload: ${job.id}`)
 
     try {
       const uploadService = new UploadFileService()
 
       const document = await uploadService.execute(
-        filePath,
+        fileBuffer,
         originalName,
         userId,
         fileId,
