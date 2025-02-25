@@ -37,24 +37,8 @@ app.use('/queues', serverAdapter.getRouter());
 app.use(body_parser_1.default.raw());
 const server = http_1.default.createServer(app);
 (0, socket_1.createSocketServer)(server);
-const allowedOriginsProd = ['https://incorporae.com.br'];
-const allowedOriginsDev = [
-    'http://localhost:3000',
-    'http://192.168.0.11:3000',
-    'http://192.168.1.139:3000',
-];
 app.use((0, cors_1.default)({
-    origin: (origin, callback) => {
-        if (!origin ||
-            (process.env.ENV === 'DEV'
-                ? allowedOriginsDev.includes(origin)
-                : allowedOriginsProd.includes(origin))) {
-            callback(null, true);
-        }
-        else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: '*',
     credentials: true,
 }));
 app.use((0, helmet_1.default)());
