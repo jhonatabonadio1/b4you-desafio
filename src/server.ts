@@ -41,6 +41,24 @@ createBullBoard({
 
 const app = express()
 
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [
+  'http://localhost:3000',
+]
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
+    optionsSuccessStatus: 200,
+    credentials: true,
+  }),
+)
+
 app.use('/queues', serverAdapter.getRouter())
 
 app.use(bodyParser.raw())
@@ -52,12 +70,6 @@ const createSocket = async () => {
 }
 
 createSocket()
-
-const corsOptions = {
-  origin: process.env.ALLOWED_ORIGIN,
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
-app.use(cors(corsOptions))
 
 app.use(helmet())
 app.disable('x-powered-by')

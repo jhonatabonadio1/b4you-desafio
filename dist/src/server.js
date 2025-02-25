@@ -33,6 +33,21 @@ serverAdapter.setBasePath('/queues');
     serverAdapter,
 });
 const app = (0, express_1.default)();
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [
+    'http://localhost:3000',
+];
+app.use((0, cors_1.default)({
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        }
+        else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    optionsSuccessStatus: 200,
+    credentials: true,
+}));
 app.use('/queues', serverAdapter.getRouter());
 app.use(body_parser_1.default.raw());
 const server = http_1.default.createServer(app);
@@ -40,11 +55,6 @@ const createSocket = async () => {
     await (0, socket_1.createSocketServer)(server);
 };
 createSocket();
-const corsOptions = {
-    origin: process.env.ALLOWED_ORIGIN,
-    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
-app.use((0, cors_1.default)(corsOptions));
 app.use((0, helmet_1.default)());
 app.disable('x-powered-by');
 app.use('/api', webhookRoutes_1.webhookRoutes);
