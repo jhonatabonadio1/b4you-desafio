@@ -26,9 +26,9 @@ class CreateCheckoutSessionService {
     }
 
     const success_url =
-      'http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}'
+      'https://incorporae.com.br/success?session_id={CHECKOUT_SESSION_ID}'
     const cancel_url =
-      'http://localhost:3000/canceled?session_id={CHECKOUT_SESSION_ID}'
+      'https://incorporae.com.br/canceled?session_id={CHECKOUT_SESSION_ID}'
 
     const mode = 'subscription'
     const quantity = 1

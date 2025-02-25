@@ -55,7 +55,7 @@ class SendRecoveryLinkService {
       })
 
       // Personaliza o template com o link de recuperação
-      const resetLink = `http://localhost:3000/recovery-password?requestId=${request.id}`
+      const resetLink = `https://incorporae.com.br/recovery-password?requestId=${request.id}`
       const personalizedTemplate = recoveryPasswordTemplate(resetLink)
 
       // Envia o e-mail via Resend

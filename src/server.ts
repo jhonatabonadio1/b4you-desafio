@@ -50,7 +50,7 @@ app.use(bodyParser.raw())
 const server = http.createServer(app)
 await createSocketServer(server)
 
-const allowedOriginsProd = ['https://app.ymobis.com']
+const allowedOriginsProd = ['https://incorporae.com.br']
 const allowedOriginsDev = [
   'http://localhost:3000',
   'http://192.168.0.11:3000',

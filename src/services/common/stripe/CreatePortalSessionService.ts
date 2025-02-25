@@ -19,7 +19,7 @@ class CreatePortalSessionService {
     }
     const session = await stripe.billingPortal.sessions.create({
       customer: buscaUsuario.stripeCustomerId, // ID salvo no seu banco
-      return_url: 'http://localhost:3000/documents',
+      return_url: 'https://incorporae.com.br/documents',
       locale: 'pt-BR',
     })
 

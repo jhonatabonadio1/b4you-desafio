@@ -1,2 +1,2 @@
 web: yarn start
-worker: yarn queue:prod
+worker: yarn worker:prod
