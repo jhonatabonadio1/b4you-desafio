@@ -20,7 +20,7 @@ class GetFileService {
             throw new Error('Documento não encontrado ou sem permissão.');
         }
         // 🔹 URL via CloudFront (sem assinatura)
-        const fileKey = `secure_uploads/${document.s3Key}`;
+        const fileKey = `${document.s3Key}`;
         const fileUrl = `${process.env.CLOUDFRONT_URL}/${fileKey}`;
         return {
             title: document.title,

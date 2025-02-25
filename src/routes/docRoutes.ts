@@ -4,28 +4,35 @@ import { Router } from 'express'
 
 import { DeleteFileController } from '../controllers/common/files/DeleteFileController'
 import { GetFileController } from '../controllers/common/files/GetFileController'
-import { UploadFileController } from '../controllers/common/files/UploadFileController'
+import { GeneratePreSignedUrlController } from '../controllers/common/files/GeneratePreSignedUrlController'
 import { FetchFilesController } from '../controllers/common/files/FetchFilesController'
 import { ensureAuthenticated } from '../middlewares/ensureIsAuthenticated'
 import { userInBlacklist } from '../middlewares/userInBlacklist'
-import { CheckUploadStatusBatchController } from '../controllers/common/files/CheckUploadStatusBatchController'
+import { CompleteUploadController } from '../controllers/common/files/CompleteUploadController'
 
 const docRoutes = Router()
 
 const getFileController = new GetFileController()
 
-const uploadFileController = new UploadFileController()
+const generatePreSignedUrlController = new GeneratePreSignedUrlController()
 const fetchFilesController = new FetchFilesController()
 const deleteFileController = new DeleteFileController()
-const checkUploadStatusBatchController = new CheckUploadStatusBatchController()
+const completeUploadController = new CompleteUploadController()
 
 docRoutes.get('/file/:docId', userInBlacklist, getFileController.handle)
 
 docRoutes.post(
-  '/file',
+  '/file/presign',
   ensureAuthenticated,
   userInBlacklist,
-  uploadFileController.handle,
+  generatePreSignedUrlController.handle,
+)
+
+docRoutes.post(
+  '/file/complete',
+  ensureAuthenticated,
+  userInBlacklist,
+  completeUploadController.handle,
 )
 
 docRoutes.get('/files', ensureAuthenticated, fetchFilesController.handle)
@@ -37,9 +44,4 @@ docRoutes.delete(
   deleteFileController.handle,
 )
 
-docRoutes.post(
-  '/files/status',
-  ensureAuthenticated,
-  checkUploadStatusBatchController.handle,
-)
 export { docRoutes }

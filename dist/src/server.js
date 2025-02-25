@@ -20,19 +20,8 @@ const routes_1 = require("./routes/routes");
 const body_parser_1 = __importDefault(require("body-parser"));
 const webhookRoutes_1 = require("./routes/webhookRoutes");
 const socket_1 = require("./socket");
-const api_1 = require("@bull-board/api");
-const express_2 = require("@bull-board/express");
-const bullMQAdapter_1 = require("@bull-board/api/bullMQAdapter");
-const uploadQueue_1 = require("./lib/uploadQueue");
 dotenv_1.default.config();
 const PORT = process.env.PORT || 3333;
-const queue = new bullMQAdapter_1.BullMQAdapter(uploadQueue_1.uploadQueue);
-const serverAdapter = new express_2.ExpressAdapter();
-serverAdapter.setBasePath('/queues');
-(0, api_1.createBullBoard)({
-    queues: [queue],
-    serverAdapter,
-});
 const app = (0, express_1.default)();
 const allowedOrigins = ((_a = process.env.ALLOWED_ORIGINS) === null || _a === void 0 ? void 0 : _a.split(',')) || [
     'http://localhost:3000',
@@ -49,7 +38,6 @@ app.use((0, cors_1.default)({
     optionsSuccessStatus: 200,
     credentials: true,
 }));
-app.use('/queues', serverAdapter.getRouter());
 app.use(body_parser_1.default.raw());
 const server = http_1.default.createServer(app);
 const createSocket = async () => {

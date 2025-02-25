@@ -19,7 +19,7 @@ class GetFileService {
     }
 
     // 🔹 URL via CloudFront (sem assinatura)
-    const fileKey = `secure_uploads/${document.s3Key}`
+    const fileKey = `${document.s3Key}`
     const fileUrl = `${process.env.CLOUDFRONT_URL}/${fileKey}`
 
     return {

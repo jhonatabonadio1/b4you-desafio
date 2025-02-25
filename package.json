@@ -5,9 +5,7 @@
   "license": "MIT",
   "scripts": {
     "build": "prisma generate && tsc -b",
-    "worker:dev": "tsx watch src/workers/uploadWorker.ts --env-file=.env",
     "start": "node dist/src/server.js",
-    "worker:prod": "node dist/src/workers/uploadWorker.js",
     "dev": "tsx watch src/server.ts --env-file=.env",
     "debug": "tsx --inspect-brk src/server.ts"
   },

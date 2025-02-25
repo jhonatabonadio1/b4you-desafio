@@ -23,21 +23,9 @@ import { ExpressAdapter } from '@bull-board/express'
 
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter'
 
-import { uploadQueue } from './lib/uploadQueue'
-
 dotenv.config()
 
 const PORT = process.env.PORT || 3333
-
-const queue = new BullMQAdapter(uploadQueue)
-
-const serverAdapter = new ExpressAdapter()
-serverAdapter.setBasePath('/queues')
-
-createBullBoard({
-  queues: [queue],
-  serverAdapter,
-})
 
 const app = express()
 
@@ -58,8 +46,6 @@ app.use(
     credentials: true,
   }),
 )
-
-app.use('/queues', serverAdapter.getRouter())
 
 app.use(bodyParser.raw())
 

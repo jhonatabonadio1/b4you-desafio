@@ -1,5 +1,3 @@
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
-import { v4 as uuidv4 } from 'uuid'
 import path from 'path'
 import dotenv from 'dotenv'
 import { PrismaClient } from '@prisma/client'
@@ -10,19 +8,14 @@ dotenv.config()
 
 const prisma = new PrismaClient()
 
-class UploadFileService {
-  private s3: S3Client
+interface Props {
+  originalName: string
+  sizeInBytes: number
+  userId: string
+  key: string
+}
 
-  constructor() {
-    this.s3 = new S3Client({
-      region: process.env.AWS_REGION,
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-      },
-    })
-  }
-
+class CompleteUploadService {
   private async checkUserStorage(
     userId: string,
     fileSize: number,
@@ -64,12 +57,7 @@ class UploadFileService {
     return totalStorageUsed + fileSize <= userStorageLimit
   }
 
-  async execute(
-    fileBuffer: Buffer,
-    originalName: string,
-    userId: string,
-    fileId: string,
-  ) {
+  async execute({ originalName, sizeInBytes, userId, key }: Props) {
     let maxFileSize = defaultApplicationRules.documents.maxSize
     let maxFilesCount = defaultApplicationRules.documents.uploadFiles
 
@@ -106,51 +94,31 @@ class UploadFileService {
       )
     }
 
-    if (!originalName) {
-      throw new Error('O nome do arquivo não pode ser nulo')
-    }
-
-    const ext = path.extname(originalName).toLowerCase()
+    const ext = path.extname(String(originalName)).toLowerCase()
 
     if (ext !== '.pdf') {
       throw new Error('Apenas arquivos PDF são permitidos')
     }
 
-    if (fileBuffer.length / 100 > maxFileSize) {
+    if (sizeInBytes / 100 > maxFileSize) {
       throw new Error(
         'O arquivo excede o limite de ' + maxFileSize / 1024 + 'MB',
       )
     }
 
-    const isAllowed = await this.checkUserStorage(
-      userId,
-      fileBuffer.length / 100,
-    )
+    const isAllowed = await this.checkUserStorage(userId, sizeInBytes / 100)
     if (!isAllowed) {
       throw new Error(
         'Limite total de armazenamento atingido. Faça upgrade so seu plano para continuar.',
       )
     }
-
-    const fileName = `${uuidv4()}_${originalName}`
-
-    const uploadParams = {
-      Bucket: process.env.AWS_BUCKET_NAME!,
-      Key: `secure_uploads/${fileName}`,
-      Body: fileBuffer,
-      ContentType: 'application/pdf',
-    }
-
-    await this.s3.send(new PutObjectCommand(uploadParams))
-
     const document = await prisma.document.create({
       data: {
-        id: fileId,
         title: originalName,
-        s3Key: fileName,
+        s3Key: key, // ou só a parte final
+        sizeInBytes: Number(sizeInBytes),
+        userId: String(userId),
         iframe: '',
-        sizeInBytes: fileBuffer.length,
-        userId,
       },
     })
 
@@ -158,4 +126,4 @@ class UploadFileService {
   }
 }
 
-export { UploadFileService }
+export { CompleteUploadService }
