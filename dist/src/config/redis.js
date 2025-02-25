@@ -2,9 +2,10 @@ import IORedis from 'ioredis';
 import dotenv from 'dotenv';
 dotenv.config();
 export const redisConnection = {
-    connection: new IORedis({
-        host: process.env.REDIS_HOST,
-        port: Number(process.env.REDIS_PORT),
+    connection: new IORedis(process.env.REDIS_URL, {
+        tls: {
+            rejectUnauthorized: false, // Necessário para conexões seguras no Heroku
+        },
         maxRetriesPerRequest: null,
     }),
 };

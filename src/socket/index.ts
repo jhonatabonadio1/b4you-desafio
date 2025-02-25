@@ -18,7 +18,13 @@ export async function createSocketServer(httpServer: HttpServer) {
 
   // Conecta ao Redis
   const REDIS_URL = process.env.REDIS_URL
-  const pubClient = createClient({ url: REDIS_URL })
+  const pubClient = createClient({
+    url: REDIS_URL,
+    socket: {
+      tls: true,
+      rejectUnauthorized: false, // 🔥 Adiciona suporte para certificado autoassinado
+    },
+  })
   const subClient = pubClient.duplicate()
 
   await pubClient.connect()
