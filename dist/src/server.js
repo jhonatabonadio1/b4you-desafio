@@ -36,11 +36,15 @@ const app = (0, express_1.default)();
 app.use('/queues', serverAdapter.getRouter());
 app.use(body_parser_1.default.raw());
 const server = http_1.default.createServer(app);
-(0, socket_1.createSocketServer)(server);
-app.use((0, cors_1.default)({
-    origin: '*',
-    credentials: true,
-}));
+const createSocket = async () => {
+    await (0, socket_1.createSocketServer)(server);
+};
+createSocket();
+const corsOptions = {
+    origin: process.env.ALLOWED_ORIGIN,
+    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use((0, cors_1.default)(corsOptions));
 app.use((0, helmet_1.default)());
 app.disable('x-powered-by');
 app.use('/api', webhookRoutes_1.webhookRoutes);

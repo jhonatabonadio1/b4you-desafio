@@ -47,13 +47,17 @@ app.use(bodyParser.raw())
 
 const server = http.createServer(app)
 
-createSocketServer(server)
-app.use(
-  cors({
-    origin: '*',
-    credentials: true,
-  }),
-)
+const createSocket = async () => {
+  await createSocketServer(server)
+}
+
+createSocket()
+
+const corsOptions = {
+  origin: process.env.ALLOWED_ORIGIN,
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+app.use(cors(corsOptions))
 
 app.use(helmet())
 app.disable('x-powered-by')
