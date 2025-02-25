@@ -14,16 +14,13 @@ export class UploadFileController {
       }
 
       if (!userId) {
-        // Se não tiver userId, você decide o que fazer
-        // Mas vamos apagar o arquivo local
-        await fs.unlink(file.path)
         return res.status(400).json({ error: 'Usuário não especificado' })
       }
 
       const geraIdDoDocumento = new ObjectId().toHexString()
 
       const job = await uploadQueue.add('upload', {
-        fileBuffer: file.buffer.toString('base64'),
+        fileBuffer: file.buffer,
         originalName: file.originalname,
         fileId: geraIdDoDocumento,
         userId,

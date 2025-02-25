@@ -1,10 +1,6 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UploadFileController = void 0;
-const promises_1 = __importDefault(require("fs/promises"));
 const uploadQueue_1 = require("../../../lib/uploadQueue");
 const mongodb_1 = require("mongodb");
 class UploadFileController {
@@ -16,14 +12,11 @@ class UploadFileController {
                 return res.status(400).json({ error: 'Nenhum arquivo enviado.' });
             }
             if (!userId) {
-                // Se não tiver userId, você decide o que fazer
-                // Mas vamos apagar o arquivo local
-                await promises_1.default.unlink(file.path);
                 return res.status(400).json({ error: 'Usuário não especificado' });
             }
             const geraIdDoDocumento = new mongodb_1.ObjectId().toHexString();
             const job = await uploadQueue_1.uploadQueue.add('upload', {
-                fileBuffer: file.buffer.toString('base64'),
+                fileBuffer: file.buffer,
                 originalName: file.originalname,
                 fileId: geraIdDoDocumento,
                 userId,
