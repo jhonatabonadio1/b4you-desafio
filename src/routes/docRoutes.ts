@@ -9,7 +9,6 @@ import { FetchFilesController } from '../controllers/common/files/FetchFilesCont
 import { ensureAuthenticated } from '../middlewares/ensureIsAuthenticated'
 import { userInBlacklist } from '../middlewares/userInBlacklist'
 import { CheckUploadStatusBatchController } from '../controllers/common/files/CheckUploadStatusBatchController'
-import { upload } from '../middlewares/upload'
 
 const docRoutes = Router()
 
@@ -26,8 +25,6 @@ docRoutes.post(
   '/file',
   ensureAuthenticated,
   userInBlacklist,
-  // @ts-ignore
-  upload.single('file'),
   uploadFileController.handle,
 )
 

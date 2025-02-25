@@ -23,7 +23,7 @@ export class UploadFileController {
       const geraIdDoDocumento = new ObjectId().toHexString()
 
       const job = await uploadQueue.add('upload', {
-        filePath: file.path,
+        fileBuffer: file.buffer.toString('base64'),
         originalName: file.originalname,
         fileId: geraIdDoDocumento,
         userId,

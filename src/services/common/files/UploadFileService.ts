@@ -1,6 +1,5 @@
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import { v4 as uuidv4 } from 'uuid'
-import fs from 'fs/promises'
 import path from 'path'
 import dotenv from 'dotenv'
 import { PrismaClient } from '@prisma/client'
@@ -66,8 +65,7 @@ class UploadFileService {
   }
 
   async execute(
-    filePath: string,
-
+    fileBuffer: Buffer,
     originalName: string,
     userId: string,
     fileId: string,
@@ -118,14 +116,16 @@ class UploadFileService {
       throw new Error('Apenas arquivos PDF são permitidos')
     }
 
-    const fileStats = await fs.stat(filePath)
-    if (fileStats.size / 100 > maxFileSize) {
+    if (fileBuffer.length / 100 > maxFileSize) {
       throw new Error(
         'O arquivo excede o limite de ' + maxFileSize / 1024 + 'MB',
       )
     }
 
-    const isAllowed = await this.checkUserStorage(userId, fileStats.size / 100)
+    const isAllowed = await this.checkUserStorage(
+      userId,
+      fileBuffer.length / 100,
+    )
     if (!isAllowed) {
       throw new Error(
         'Limite total de armazenamento atingido. Faça upgrade so seu plano para continuar.',
@@ -133,7 +133,6 @@ class UploadFileService {
     }
 
     const fileName = `${uuidv4()}_${originalName}`
-    const fileBuffer = await fs.readFile(filePath)
 
     const uploadParams = {
       Bucket: process.env.AWS_BUCKET_NAME!,
@@ -150,12 +149,10 @@ class UploadFileService {
         title: originalName,
         s3Key: fileName,
         iframe: '',
-        sizeInBytes: fileStats.size,
+        sizeInBytes: fileBuffer.length,
         userId,
       },
     })
-
-    await fs.unlink(filePath) // Remove o arquivo local
 
     return document
   }

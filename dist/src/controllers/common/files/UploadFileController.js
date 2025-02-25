@@ -23,7 +23,7 @@ class UploadFileController {
             }
             const geraIdDoDocumento = new mongodb_1.ObjectId().toHexString();
             const job = await uploadQueue_1.uploadQueue.add('upload', {
-                filePath: file.path,
+                fileBuffer: file.buffer.toString('base64'),
                 originalName: file.originalname,
                 fileId: geraIdDoDocumento,
                 userId,

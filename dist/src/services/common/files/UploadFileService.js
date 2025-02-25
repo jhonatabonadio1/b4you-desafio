@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UploadFileService = void 0;
 const client_s3_1 = require("@aws-sdk/client-s3");
 const uuid_1 = require("uuid");
-const promises_1 = __importDefault(require("fs/promises"));
 const path_1 = __importDefault(require("path"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const client_1 = require("@prisma/client");
@@ -52,7 +51,7 @@ class UploadFileService {
         const totalStorageUsed = user.pdfs.reduce((sum, doc) => sum + doc.sizeInBytes / 100, 0);
         return totalStorageUsed + fileSize <= userStorageLimit;
     }
-    async execute(filePath, originalName, userId, fileId) {
+    async execute(fileBuffer, originalName, userId, fileId) {
         let maxFileSize = DefaultApplicationRules_1.defaultApplicationRules.documents.maxSize;
         let maxFilesCount = DefaultApplicationRules_1.defaultApplicationRules.documents.uploadFiles;
         const buscaInscricaoUsuário = await prismaClient_1.prismaClient.subscription.findFirst({
@@ -89,16 +88,14 @@ class UploadFileService {
         if (ext !== '.pdf') {
             throw new Error('Apenas arquivos PDF são permitidos');
         }
-        const fileStats = await promises_1.default.stat(filePath);
-        if (fileStats.size / 100 > maxFileSize) {
+        if (fileBuffer.length / 100 > maxFileSize) {
             throw new Error('O arquivo excede o limite de ' + maxFileSize / 1024 + 'MB');
         }
-        const isAllowed = await this.checkUserStorage(userId, fileStats.size / 100);
+        const isAllowed = await this.checkUserStorage(userId, fileBuffer.length / 100);
         if (!isAllowed) {
             throw new Error('Limite total de armazenamento atingido. Faça upgrade so seu plano para continuar.');
         }
         const fileName = `${(0, uuid_1.v4)()}_${originalName}`;
-        const fileBuffer = await promises_1.default.readFile(filePath);
         const uploadParams = {
             Bucket: process.env.AWS_BUCKET_NAME,
             Key: `secure_uploads/${fileName}`,
@@ -112,11 +109,10 @@ class UploadFileService {
                 title: originalName,
                 s3Key: fileName,
                 iframe: '',
-                sizeInBytes: fileStats.size,
+                sizeInBytes: fileBuffer.length,
                 userId,
             },
         });
-        await promises_1.default.unlink(filePath); // Remove o arquivo local
         return document;
     }
 }
