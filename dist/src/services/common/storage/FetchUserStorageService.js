@@ -31,7 +31,7 @@ class FetchUserStorageService {
             select: { sizeInBytes: true },
         });
         // 🔹 Calcula o total utilizado
-        const totalUsed = userFiles.reduce((sum, file) => sum + file.sizeInBytes / 100, 0);
+        const totalUsed = userFiles.reduce((sum, file) => sum + file.sizeInBytes / 100 / 100, 0);
         // 🔹 Calcula o espaço disponível
         const availableStorage = limiteStorage - totalUsed;
         return {
