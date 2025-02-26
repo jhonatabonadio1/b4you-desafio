@@ -4,13 +4,13 @@ exports.defaultApplicationRules = void 0;
 /* eslint-disable no-irregular-whitespace */
 exports.defaultApplicationRules = {
     storage: {
-        limit: 5 * 1024, // 50 MB
+        limit: 50 * 1024, // 50 MB
     },
     documents: {
-        uploadFiles: 1,
+        uploadFiles: 5,
         maxSize: 10 * 1024, // 10 MB
     },
     sessions: {
-        maxSessionsPerFile: 5,
+        maxSessionsPerFile: 50,
     },
 };
