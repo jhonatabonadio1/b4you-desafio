@@ -159,7 +159,7 @@ text-decoration: none
 <!--[if !mso]>-->
 <td class=t3 style="width:85px;">
 <!--<![endif]-->
-<table class=t2 role=presentation cellpadding=0 cellspacing=0 width=100% style="width:100%;"><tr><td class=t1><div style="font-size:0px;"><img class=t0 style="display:block;border:0;height:auto;width:100%;Margin:0;max-width:100%;" width=85 height=85 alt="" src="https://7055f30c-674f-4088-8322-dccd15b4a90a.b-cdn.net/e/950ce96c-2188-4c56-9dab-7917242c9a43/487b4ae1-8d23-4857-a444-e2a30012263e.png"/></div></td></tr></table>
+<table class=t2 role=presentation cellpadding=0 cellspacing=0 width=100% style="width:100%;"><tr><td class=t1><div style="font-size:0px;"><img class=t0 style="display:block;border:0;height:auto;width:100%;Margin:0;max-width:100%;" width=85 height=97 alt="" src="https://initechcdn.s3.sa-east-1.amazonaws.com/icon.png"/></div></td></tr></table>
 </td></tr></table>
 </td></tr></table></td></tr></table>
 </td>
