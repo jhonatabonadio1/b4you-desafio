@@ -51,9 +51,9 @@ class SendRecoveryLinkService {
             // Envia o e-mail via Resend
             const resend = new resend_1.Resend(process.env.RESEND_API_KEY);
             await resend.emails.send({
-                from: 'Incorporaê! <recovery@incorporae.com.br>',
+                from: 'Incorporaê <recovery@incorporae.com.br>',
                 to: email,
-                subject: 'Recupere sua senha - Incorporaê!',
+                subject: 'Recupere sua senha - Incorporaê',
                 html: personalizedTemplate,
             });
             return { message: 'E-mail de recuperação enviado com sucesso.' };
