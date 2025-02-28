@@ -3,11 +3,14 @@ import dotenv from 'dotenv'
 import { PrismaClient } from '@prisma/client'
 import { defaultApplicationRules } from '../../../config/DefaultApplicationRules'
 import { prismaClient } from '../../../database/prismaClient'
-import { CloudFront } from 'aws-sdk'
+import {
+  CloudFrontClient,
+  CreateInvalidationCommand,
+} from '@aws-sdk/client-cloudfront'
 
-const cloudfront = new CloudFront()
 dotenv.config()
 
+const cloudfront = new CloudFrontClient({ region: process.env.AWS_REGION })
 const prisma = new PrismaClient()
 
 interface Props {
@@ -114,36 +117,37 @@ class CompleteUploadService {
     )
     if (!isAllowed) {
       throw new Error(
-        'Limite total de armazenamento atingido. Faça upgrade so seu plano para continuar.',
+        'Limite total de armazenamento atingido. Faça upgrade do seu plano para continuar.',
       )
     }
 
     try {
-      await cloudfront
-        .createInvalidation({
-          DistributionId: process.env.CLOUDFRONT_DIS_ID!,
-          InvalidationBatch: {
-            CallerReference: `${Date.now()}`,
-            Paths: {
-              Quantity: 1,
-              Items: [`/${key}`],
-            },
+      const command = new CreateInvalidationCommand({
+        DistributionId: process.env.CLOUDFRONT_DIS_ID!,
+        InvalidationBatch: {
+          CallerReference: `${Date.now()}`,
+          Paths: {
+            Quantity: 1,
+            Items: [`/${key}`],
           },
-        })
-        .promise()
+        },
+      })
+
+      await cloudfront.send(command)
     } catch (err) {
-      console.log(err)
+      console.error('Erro ao invalidar cache do CloudFront:', err)
     }
 
     const document = await prisma.document.create({
       data: {
         title: originalName,
-        s3Key: key, // ou só a parte final
+        s3Key: key,
         sizeInBytes: Number(sizeInBytes),
         userId: String(userId),
         iframe: '',
       },
     })
+
     return document
   }
 }

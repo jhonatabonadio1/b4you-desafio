@@ -9,9 +9,9 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const client_1 = require("@prisma/client");
 const DefaultApplicationRules_1 = require("../../../config/DefaultApplicationRules");
 const prismaClient_1 = require("../../../database/prismaClient");
-const aws_sdk_1 = require("aws-sdk");
-const cloudfront = new aws_sdk_1.CloudFront();
+const client_cloudfront_1 = require("@aws-sdk/client-cloudfront");
 dotenv_1.default.config();
+const cloudfront = new client_cloudfront_1.CloudFrontClient({ region: process.env.AWS_REGION });
 const prisma = new client_1.PrismaClient();
 class CompleteUploadService {
     async checkUserStorage(userId, fileSize) {
@@ -81,11 +81,10 @@ class CompleteUploadService {
         }
         const isAllowed = await this.checkUserStorage(userId, sizeInBytes / 100 / 100);
         if (!isAllowed) {
-            throw new Error('Limite total de armazenamento atingido. Faça upgrade so seu plano para continuar.');
+            throw new Error('Limite total de armazenamento atingido. Faça upgrade do seu plano para continuar.');
         }
         try {
-            await cloudfront
-                .createInvalidation({
+            const command = new client_cloudfront_1.CreateInvalidationCommand({
                 DistributionId: process.env.CLOUDFRONT_DIS_ID,
                 InvalidationBatch: {
                     CallerReference: `${Date.now()}`,
@@ -94,16 +93,16 @@ class CompleteUploadService {
                         Items: [`/${key}`],
                     },
                 },
-            })
-                .promise();
+            });
+            await cloudfront.send(command);
         }
         catch (err) {
-            console.log(err);
+            console.error('Erro ao invalidar cache do CloudFront:', err);
         }
         const document = await prisma.document.create({
             data: {
                 title: originalName,
-                s3Key: key, // ou só a parte final
+                s3Key: key,
                 sizeInBytes: Number(sizeInBytes),
                 userId: String(userId),
                 iframe: '',
