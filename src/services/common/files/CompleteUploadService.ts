@@ -3,7 +3,9 @@ import dotenv from 'dotenv'
 import { PrismaClient } from '@prisma/client'
 import { defaultApplicationRules } from '../../../config/DefaultApplicationRules'
 import { prismaClient } from '../../../database/prismaClient'
+import { CloudFront } from 'aws-sdk'
 
+const cloudfront = new CloudFront()
 dotenv.config()
 
 const prisma = new PrismaClient()
@@ -115,6 +117,24 @@ class CompleteUploadService {
         'Limite total de armazenamento atingido. Faça upgrade so seu plano para continuar.',
       )
     }
+
+    try {
+      await cloudfront
+        .createInvalidation({
+          DistributionId: process.env.CLOUDFRONT_DIS_ID!,
+          InvalidationBatch: {
+            CallerReference: `${Date.now()}`,
+            Paths: {
+              Quantity: 1,
+              Items: [`/${key}`],
+            },
+          },
+        })
+        .promise()
+    } catch (err) {
+      console.log(err)
+    }
+
     const document = await prisma.document.create({
       data: {
         title: originalName,
@@ -124,7 +144,6 @@ class CompleteUploadService {
         iframe: '',
       },
     })
-
     return document
   }
 }

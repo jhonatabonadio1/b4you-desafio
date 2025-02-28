@@ -9,6 +9,8 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const client_1 = require("@prisma/client");
 const DefaultApplicationRules_1 = require("../../../config/DefaultApplicationRules");
 const prismaClient_1 = require("../../../database/prismaClient");
+const aws_sdk_1 = require("aws-sdk");
+const cloudfront = new aws_sdk_1.CloudFront();
 dotenv_1.default.config();
 const prisma = new client_1.PrismaClient();
 class CompleteUploadService {
@@ -80,6 +82,23 @@ class CompleteUploadService {
         const isAllowed = await this.checkUserStorage(userId, sizeInBytes / 100 / 100);
         if (!isAllowed) {
             throw new Error('Limite total de armazenamento atingido. Faça upgrade so seu plano para continuar.');
+        }
+        try {
+            await cloudfront
+                .createInvalidation({
+                DistributionId: process.env.CLOUDFRONT_DIS_ID,
+                InvalidationBatch: {
+                    CallerReference: `${Date.now()}`,
+                    Paths: {
+                        Quantity: 1,
+                        Items: [`/${key}`],
+                    },
+                },
+            })
+                .promise();
+        }
+        catch (err) {
+            console.log(err);
         }
         const document = await prisma.document.create({
             data: {

@@ -41,7 +41,7 @@ class DeleteFileService {
     // 2. Deletar arquivo do S3
     const deleteParams = {
       Bucket: process.env.AWS_BUCKET_NAME!,
-      Key: `secure_uploads/${document.s3Key}`,
+      Key: `${document.s3Key}`,
     }
 
     await this.s3.send(new DeleteObjectCommand(deleteParams))
