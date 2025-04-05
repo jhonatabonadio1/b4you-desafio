@@ -45,14 +45,14 @@ docker-compose up --build
 
 - `POST /auth/register`
 - `POST /auth/login`
-- `POST /users/refresh-token`
+- `POST /auth/token/refresh`
 
 ### 📢 Campanhas
 
-- `GET /campaigns`
-- `POST /campaigns`
-- `PUT /campaigns/:id`
-- `DELETE /campaigns/:id`
+- `GET /campaing`
+- `POST /campaing`
+- `PUT /campaing/:id`
+- `DELETE /campaing/:id`
 
 ### 🩺 Monitoramento
 
