@@ -3,7 +3,7 @@ import { FetchUserDataService } from '../../../services/common/users/FetchUserDa
 
 class FetchUserDataController {
   async handle(request: Request, response: Response) {
-    const { userId } = request // Obtido do middleware de autenticação
+    const { userId } = request
 
     try {
       const fetchUserDataService = new FetchUserDataService()

@@ -1,75 +1,63 @@
 import { hash } from 'bcryptjs'
 import { prismaClient } from '../../../database/prismaClient'
-import { stripe } from '../../../lib/stripe'
+import { logger } from '../../../config/logger'
 
 interface ICreateUserRequest {
   email: string
   password: string
   firstName: string
   lastName: string
-  empresa: string
 }
 
 class CreateUserService {
-  async execute({
-    email,
-    password,
-    firstName,
-    lastName,
-    empresa,
-  }: ICreateUserRequest) {
-    // Verifica se todos os campos obrigatórios foram preenchidos
+  async execute({ email, password, firstName, lastName }: ICreateUserRequest) {
+    logger.info('Iniciando criação de usuário', { email })
     if (!email || !password || !firstName || !lastName) {
+      logger.error('Campos obrigatórios não preenchidos.', {
+        email,
+        password: Boolean(password),
+        firstName,
+        lastName,
+      })
       throw new Error('Preencha os campos obrigatórios.')
     }
 
-    // Verifica se já existe um usuário com o mesmo e-mail
     const existingUser = await prismaClient.user.findUnique({
-      where: {
-        email,
-      },
+      where: { email },
     })
 
     if (!/(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?=.{8,})/.test(password)) {
+      logger.error('Senha inválida.', { email })
       throw new Error(
         'A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula e um caractere especial.',
       )
     }
 
     if (existingUser) {
+      logger.error('Usuário já existe.', {
+        userId: existingUser.id,
+        email: existingUser.email,
+      })
       throw new Error('Usuário já existe.')
     }
 
-    // Hash da senha
     const hashedPassword = await hash(password, 12)
-
     const capitalize = (str: string) =>
       str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
 
-    const customerName = `${capitalize(firstName)} ${capitalize(lastName)}`
-
-    const criaUsuarioStripe = await stripe.customers.create({
-      name: customerName,
-      email,
-    })
-
-    if (!criaUsuarioStripe) {
-      throw new Error('Não foi possível criar o usuário.')
-    }
-
-    // Criação do usuário no banco de dados
-    await prismaClient.user.create({
+    const createUser = await prismaClient.user.create({
       data: {
         email,
         firstName: capitalize(firstName),
         lastName: capitalize(lastName),
-        empresa,
         password: hashedPassword,
-        stripeCustomerId: criaUsuarioStripe.id,
       },
     })
 
-    // Retorno de sucesso
+    logger.info('Usuário criado com sucesso.', {
+      userId: createUser.id,
+      email: createUser.email,
+    })
     return { message: 'Sua conta foi criada, faça o login.' }
   }
 }

@@ -1,6 +1,8 @@
 import { compare } from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import { addDays } from 'date-fns'
 import { prismaClient } from '../../../database/prismaClient'
+import { logger } from '../../../config/logger'
 
 interface ISignInRequest {
   email: string
@@ -9,36 +11,28 @@ interface ISignInRequest {
 
 class SignInService {
   async execute({ email, password }: ISignInRequest) {
-    const { sign } = jwt
-
+    logger.info('Iniciando SignInService', { email })
     if (!email) {
+      logger.error('E-mail não fornecido')
       throw new Error('E-mail é obrigatório.')
     }
-
     if (!password) {
+      logger.error('Senha não fornecida', { email })
       throw new Error('Senha é obrigatória.')
     }
-
-    // Busca o usuário no banco de dados
     const user = await prismaClient.user.findFirst({
-      where: {
-        email,
-      },
+      where: { email },
     })
-
     if (!user) {
+      logger.error('Usuário não encontrado', { email })
       throw new Error('E-mail/Senha incorretos.')
     }
-
-    // Compara a senha informada com a senha armazenada
     const passwordMatch = await compare(password, user.password)
-
     if (!passwordMatch) {
+      logger.error('Senha incorreta', { email })
       throw new Error('E-mail/Senha incorretos.')
     }
-
-    // Geração do token JWT
-    const token = sign(
+    const accessToken = jwt.sign(
       {
         userId: user.id,
         email: user.email,
@@ -49,9 +43,27 @@ class SignInService {
         expiresIn: '7d',
       },
     )
-
+    const refreshToken = jwt.sign(
+      {
+        email: user.email,
+      },
+      process.env.JWT_REFRESH_SECRET as string,
+      {
+        subject: user.id,
+        expiresIn: '30d',
+      },
+    )
+    await prismaClient.refreshToken.create({
+      data: {
+        token: refreshToken,
+        userId: user.id,
+        expiresAt: addDays(new Date(), 30),
+      },
+    })
+    logger.info('Login realizado com sucesso', { userId: user.id })
     return {
-      token,
+      accessToken,
+      refreshToken,
       user,
     }
   }

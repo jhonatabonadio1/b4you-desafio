@@ -1,0 +1,60 @@
+version: "3.7"
+
+services:
+  api:
+    build: .
+    container_name: b4you-api
+    command: yarn start
+    volumes:
+      - .:/usr/src/app/b4you
+      - /usr/src/app/b4you/node_modules
+    ports:
+      - "3333:3333"
+    environment:
+      DATABASE_URL: mongodb://admin:admin123@mongo:27017/b4you?authSource=admin
+      JWT_SECRET: 695001d06d407bae6197bd1a8c4a4495483343c5f8fc45e625cb1389d6acd9c9c2b5f796
+      JWT_REFRESH_SECRET: 474ca9c394afc61627d94da21a7713716cff34c6fb21c365456090e0ab04df72
+      ENV: DEV
+      ALLOWED_ORIGINS: http://localhost:3000
+    depends_on:
+      - mongo
+    networks:
+      - b4you-net
+
+  monitor:
+    build: .
+    container_name: b4you-monitor
+    command: yarn monitor:prod
+    volumes:
+      - .:/usr/src/app/b4you
+      - /usr/src/app/b4you/node_modules
+    ports:
+      - "3001:3001" # Porta do painel de monitoramento
+    environment:
+      DATABASE_URL: mongodb://admin:admin123@mongo:27017/b4you?authSource=admin
+    depends_on:
+      - mongo
+    networks:
+      - b4you-net
+
+  mongo:
+    container_name: mongo
+    image: mongo:6
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: b4you
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    restart: always
+    networks:
+      - b4you-net
+
+volumes:
+  mongo-data:
+
+networks:
+  b4you-net:
+    driver: bridge

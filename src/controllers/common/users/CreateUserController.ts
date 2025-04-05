@@ -1,21 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express'
 import { CreateUserService } from '../../../services/common/users/CreateUserService'
-import { prismaClient } from '../../../database/prismaClient'
 
 class CreateUserController {
   async handle(request: Request, response: Response) {
-    const { email, password, firstName, lastName, empresa } = request.body
-
-    const verificaEmailBlacklist = await prismaClient.blacklist.findFirst({
-      where: { OR: [{ email }, { empresa }] },
-    })
-
-    if (verificaEmailBlacklist) {
-      return response
-        .status(401)
-        .json({ error: 'Usuário bloqueado no sistema.' })
-    }
+    const { email, password, firstName, lastName } = request.body
 
     const createUserService = new CreateUserService()
 
@@ -25,7 +14,6 @@ class CreateUserController {
         password,
         firstName,
         lastName,
-        empresa,
       })
       return response.status(201).json(user)
     } catch (error: any) {
