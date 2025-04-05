@@ -11,8 +11,8 @@ Sistema backend do projeto **B4YOU**, desenvolvido em Node.js com Express, Prism
 - **Prisma ORM**
 - **MongoDB**
 - **WebSocket (nativo)**
-- **EJS (para o monitoramento)**
-- **Docker + Docker Compose**
+- **EJS**
+- **Docker**
 
 ---
 
@@ -23,57 +23,28 @@ Sistema backend do projeto **B4YOU**, desenvolvido em Node.js com Express, Prism
 1. **Clone o repositório:**
 
 ```bash
-git clone https://github.com/seu-usuario/b4you-backend.git
+git clone https://github.com/jhonatabonadio1/b4you-desafio.git
 cd b4you-backend
 ```
 
-2. **Crie um `.env` com a estrutura:**
-
-```env
-DATABASE_URL=mongodb://admin:admin123@mongo:27017/b4you?authSource=admin
-JWT_SECRET=<sua_secret_key>
-JWT_REFRESH_SECRET=<sua_refresh_secret>
-ENV=DEV
-ALLOWED_ORIGINS=http://localhost:3000
-```
-
-3. **Inicie com Docker:**
+1. **Inicie com Docker:**
 
 ```bash
 docker-compose up --build
 ```
 
 - A API estará disponível em: [http://localhost:3333](http://localhost:3333)
-- O painel de monitoramento estará em: [http://localhost:3001/monitor](http://localhost:3001/monitor)
+- O painel de monitoramento estará em: [http://localhost:3333/monitor](http://localhost:3333/monitor)
 
 ---
-
-## 📁 Estrutura de Pastas
-
-```
-.
-├── src/
-│   ├── routes/
-│   ├── controllers/
-│   ├── services/
-│   ├── middlewares/
-│   ├── prisma/
-│   ├── monitor/
-│   └── server.ts
-├── docker-compose.yml
-├── Dockerfile
-├── README.md
-└── .env
-```
-
 ---
 
 ## 📡 Endpoints Principais
 
 ### 🔐 Autenticação (Users)
 
-- `POST /users/register`
-- `POST /users/login`
+- `POST /auth/register`
+- `POST /auth/login`
 - `POST /users/refresh-token`
 
 ### 📢 Campanhas
@@ -105,9 +76,3 @@ yarn prisma generate
 - [SECURITY.md](./SECURITY.md)
 - [SCALING.md](./SCALING.md)
 - [MONITORING.md](./MONITORING.md)
-
----
-
-## 📄 Licença
-
-MIT © [Seu Nome ou Organização]
