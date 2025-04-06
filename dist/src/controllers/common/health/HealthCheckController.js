@@ -10,7 +10,7 @@ class HealthCheckController {
             return response.status(200).json({ status: 'OK' });
         }
         catch (error) {
-            return response.status(400).json({ error: error.message });
+            return response.status(500).json({ error: error.message });
         }
     }
 }

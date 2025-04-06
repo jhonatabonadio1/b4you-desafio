@@ -22,8 +22,6 @@ const app = (0, express_1.default)();
 const allowedOrigins = ((_a = process.env.ALLOWED_ORIGINS) === null || _a === void 0 ? void 0 : _a.split(',')) || [
     'http://127.0.0.1:3000',
 ];
-app.set('views', path_1.default.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
 app.use((0, cors_1.default)({
     origin: (origin, callback) => {
         if (!origin || allowedOrigins.includes(origin)) {
