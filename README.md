@@ -1,75 +1,22 @@
-# B4YOU Backend
+# B4YOU - Desafio Técnico
 
-Sistema backend do projeto **B4YOU**, desenvolvido em Node.js com Express, Prisma ORM e MongoDB. Este backend fornece APIs RESTful para gerenciamento de campanhas e usuários, além de um painel de monitoramento com dados em tempo real via WebSocket.
+A arquitetura da aplicação B4you foi projetada para ser escalável, segura e modular. O frontend é desenvolvido em ReactJS, acessando um backend construído com Node.js e Express, que expõe as rotas da API. As tarefas demoradas, como envio de e-mails ou processamento de dados, são tratadas por workers usando BullMQ, que se comunica com o Redis para gerenciamento de filas.
 
----
+O banco de dados principal é o MongoDB, acessado através do Prisma ORM, garantindo consultas mais seguras e estruturadas. A aplicação está hospedada na Heroku, que permite escalabilidade automática por meio de dynos separados para o servidor web e os workers.
+
+Essa estrutura permite que a aplicação suporte alto volume de usuários, mantendo desempenho e organização, além de facilitar o monitoramento, segurança e manutenção de cada parte do sistema.
+
+![Logo da empresa](./diagrama_arquitetura_b4you.jpg)
 
 ## 🧱 Tecnologias Utilizadas
 
+- **Heroku**
 - **Node.js**
 - **Express.js**
 - **Prisma ORM**
 - **MongoDB**
-- **WebSocket (nativo)**
-- **EJS**
-- **Docker**
-
----
-
-## 📦 Instalação Local
-
-> Pré-requisitos: Node.js, Docker e Docker Compose instalados.
-
-1. **Clone o repositório:**
-
-```bash
-git clone https://github.com/jhonatabonadio1/b4you-desafio.git
-cd b4you-backend
-```
-
-1. **Inicie com Docker:**
-
-```bash
-docker-compose up --build
-```
-
-- A API estará disponível em: [http://localhost:3333](http://localhost:3333)
-- O painel de monitoramento estará em: [http://localhost:3333/monitor](http://localhost:3333/monitor)
-
----
----
-
-## 📡 Endpoints Principais
-
-### 🔐 Autenticação (Users)
-
-- `POST /auth/register`
-- `POST /auth/login`
-- `POST /auth/token/refresh`
-
-### 📢 Campanhas
-
-- `GET /campaing`
-- `POST /campaing`
-- `PUT /campaing/:id`
-- `DELETE /campaing/:id`
-
-### 🩺 Monitoramento
-
-- `GET /health` — Status da API (heartbeat)
-- `GET /monitor` — Painel com informações em tempo real (memória, uptime, DB...)
-
----
-
-## 🔄 Prisma
-
-Se precisar gerar o Prisma Client manualmente:
-
-```bash
-yarn prisma generate
-```
-
----
+- **Bull MQ**
+- **Redis**
 
 ## 🔐 Documentação de Segurança, Escalabilidade e Monitoramento
 

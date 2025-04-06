@@ -1,57 +1,73 @@
+
 # Segurança
 
-Este documento apresenta os principais riscos de segurança e as medidas preventivas para a aplicação desenvolvida em Node.js.
+Este documento mostra os principais riscos e as boas práticas de segurança para proteger a aplicação em Node.js.
 
-## Principais Riscos
+---
 
-1. **Injeção de Código (SQL, NoSQL, etc.)**  
-   - Ataques que exploram entradas não sanitizadas para manipular queries no banco de dados.
+## ⚠️ Principais Riscos
 
-2. **Autenticação e Gerenciamento de Sessão**  
-   - Uso inadequado de tokens JWT ou falhas na renovação de tokens podem comprometer a segurança das sessões.
+1. **Injeção de Código**
+   - Quando dados não tratados são usados em consultas ao banco, abrindo brechas de invasão.
 
-3. **Exposição de Dados Sensíveis**  
-   - Vazamento de informações como tokens, senhas e chaves de API.
+2. **Problemas com Autenticação**
+   - Tokens mal gerenciados podem permitir acessos não autorizados.
 
-4. **Cross-Site Scripting (XSS)**  
-   - Injeção de scripts maliciosos por meio de inputs não validados.
+3. **Exposição de Dados**
+   - Vazamento de senhas, tokens e chaves de API.
 
-5. **Cross-Site Request Forgery (CSRF)**  
-   - Execução não autorizada de ações por parte de usuários autenticados.
+4. **Ataques XSS e CSRF**
+   - Scripts maliciosos e requisições indevidas feitas por usuários autenticados.
 
-6. **Configurações Inseguras no Servidor**  
-   - Falta de HTTPS, cabeçalhos de segurança e configurações de CORS inadequadas.
+5. **Servidor Mal Configurado**
+   - Falta de HTTPS, CORS aberto e cabeçalhos inseguros.
 
-7. **Ataques de Força Bruta**  
-   - Tentativas repetidas de acesso a contas sem bloqueio adequado.
+6. **Força Bruta**
+   - Tentativas repetidas de login sem bloqueio.
 
-## Medidas Preventivas
+---
 
-1. **Validação e Sanitização de Dados**
-   - Utilizar bibliotecas e frameworks que garantam a sanitização dos dados de entrada.
-   - Uso de prepared statements e ORMs para interações com o banco de dados.
+## ✅ Boas Práticas de Segurança
+
+1. **Validação e Sanitização**
+   - Validar e limpar todos os dados recebidos. Usar ORMs e queries seguras.
 
 2. **Autenticação Segura**
-   - Implementar JWT com tokens de acesso de curta duração e refresh tokens seguros.
-   - Armazenar tokens de forma segura (ex.: cookies HTTPOnly).
+   - JWT com tempo curto e refresh token protegido.
 
-3. **Criptografia e HTTPS**
-   - Forçar o uso de HTTPS em todas as comunicações.
-   - Utilizar algoritmos de hashing seguros (ex.: bcrypt, Argon2) para senhas.
+3. **HTTPS e Criptografia**
+   - Usar HTTPS obrigatório.
+   - Hash seguro nas senhas (bcrypt ou Argon2).
+   - Implementar criptografia própria para dados sensíveis, quando necessário.
 
-4. **Proteções contra XSS e CSRF**
-   - Implementar escapes de HTML e tokens CSRF para requisições sensíveis.
-   - Utilizar bibliotecas como Helmet para configurar cabeçalhos de segurança.
+4. **Proteção contra XSS e CSRF**
+   - Escapar HTML, usar Helmet e tokens CSRF.
 
-5. **Configuração de Headers de Segurança**
-   - Utilizar `Content-Security-Policy`, `X-Frame-Options`, `X-Content-Type-Options` e `Strict-Transport-Security`.
+5. **Cabeçalhos de Segurança**
+   - Ativar: `Content-Security-Policy`, `X-Frame-Options`, etc.
 
-6. **Rate Limiting e Bloqueio de IP**
-   - Implementar limites de requisições por IP para mitigar ataques de força bruta.
-   - Utilizar middlewares como `express-rate-limit` no Node.js.
+6. **Limite de Requisições**
+   - `express-rate-limit` para evitar abusos e ataques.
 
-7. **Gerenciamento Seguro de Credenciais**
-   - Utilizar variáveis de ambiente e serviços de gerenciamento de segredos (ex.: Vault, AWS Secrets Manager).
+7. **Blacklists**
+   - Criar tabela de bloqueio para usuários, IPs ou dispositivos suspeitos.
 
-8. **Monitoramento e Logs de Segurança**
-   - Registrar e monitorar atividades críticas (login, alterações de dados) para identificar padrões suspeitos.
+8. **Gerenciamento de Segredos**
+   - Variáveis de ambiente e serviços seguros como AWS Secrets Manager.
+
+9. **Monitoramento**
+   - Logar tentativas de login, alterações e ações críticas.
+
+10. **Certificados Digitais**
+    - Garantir certificados SSL válidos e renovados automaticamente.
+
+11. **Ofuscação e Minificação**
+    - Esconder a lógica da aplicação no build de produção.
+
+12. **Rotas Falsas**
+    - Criar rotas "iscas" para detectar e enganar tentativas de invasão.
+
+---
+
+Seguindo essas práticas, a aplicação se torna mais segura e resiliente contra ataques.
+

@@ -1,55 +1,39 @@
+
 # Monitoramento e Logs
 
 Este documento descreve as práticas e ferramentas sugeridas para o monitoramento e logging da aplicação Node.js.
 
-## Ferramentas de Logs
+---
+
+## 📝 Ferramentas de Logs
 
 1. **Winston (Node.js)**
-   - Biblioteca robusta para logging, permitindo múltiplos transports (console, arquivos, serviços externos).
+   - Biblioteca robusta para logging, permitindo múltiplos *transports* (console, arquivos, serviços externos como LogDNA, Papertrail, etc.).
+   - Ideal para armazenar e organizar logs de erros e eventos importantes do sistema.
 
 2. **Morgan (Node.js)**
-   - Middleware para logging de requisições HTTP, útil para monitorar o tráfego e identificar anomalias.
+   - Middleware para logging de requisições HTTP.
+   - Útil para monitorar tráfego, tempos de resposta e identificar anomalias nas chamadas da API.
 
-3. **ELK Stack (Elasticsearch, Logstash, Kibana)**
-   - Conjunto de ferramentas para centralização, análise e visualização de logs.
-   - Permite a criação de dashboards customizados e alertas baseados em logs.
+---
 
-4. **Graylog / Splunk**
-   - Alternativas para centralização e análise avançada dos logs.
-
-## Monitoramento de Métricas
+## 📊 Monitoramento de Métricas
 
 1. **Prometheus**
-   - Ferramenta para coleta de métricas e monitoramento em tempo real.
-   - Permite configurar alertas com base em regras definidas.
+   - Ferramenta de coleta de métricas em tempo real.
+   - Permite criar alertas baseados em uso de CPU, memória, quantidade de requisições, filas, entre outros.
+   - Integra bem com Node.js via bibliotecas como `prom-client`.
 
 2. **Grafana**
-   - Plataforma para criação de dashboards que visualizam métricas coletadas pelo Prometheus ou outras fontes.
+   - Plataforma para criar dashboards com as métricas do Prometheus (ou outras fontes).
+   - Visualização intuitiva e personalizável com alertas visuais e históricos de desempenho.
 
-3. **APM (Application Performance Monitoring)**
-   - Ferramentas como New Relic ou Datadog para monitorar desempenho da aplicação, uso de recursos e rastreamento de transações.
+---
 
-## Configuração de Alertas
+## 📈 Business Intelligence
 
-1. **Alertmanager (Prometheus)**
-   - Gerencia e envia alertas via diversos canais (Slack, Email, PagerDuty).
-
-2. **Alertas Baseados em Logs**
-   - Configurar alertas em ferramentas como Kibana para identificar padrões de erro ou comportamento anômalo.
-
-3. **Integração com Serviços de Notificação**
-   - Utilizar integrações com Slack, Microsoft Teams, SMS, Email, etc., para alertas em tempo real.
-
-## Boas Práticas
-
-- **Centralização de Logs:**  
-  - Todos os serviços devem enviar logs para uma solução centralizada para facilitar a correlação de eventos.
-
-- **Estruturação de Logs:**  
-  - Utilizar formato estruturado (ex.: JSON) para facilitar o processamento e a indexação.
-
-- **Rotação e Retenção de Logs:**  
-  - Implementar políticas de rotação para evitar o acúmulo excessivo e definir períodos de retenção conforme a necessidade de compliance e auditoria.
-
-- **Definição de KPIs:**  
-  - Monitorar métricas essenciais como latência das requisições, uso de CPU/memória, taxa de erros, entre outras.
+1. **MongoDB Charts**
+   - Ferramenta de visualização oficial da MongoDB para dashboards e gráficos interativos.
+   - Permite criar gráficos diretamente a partir dos dados da aplicação, sem precisar mover os dados para outro sistema.
+   - Ideal para dashboards gerenciais e análises de negócio (ex: vendas, uso de funcionalidades, retenção de usuários).
+   - Pode ser incorporado via iframe em painéis administrativos internos.
