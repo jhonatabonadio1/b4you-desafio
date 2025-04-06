@@ -23,9 +23,6 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [
   'http://127.0.0.1:3000',
 ]
 
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'ejs')
-
 app.use(
   cors({
     origin: (origin, callback) => {

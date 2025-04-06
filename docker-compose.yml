@@ -20,23 +20,6 @@ services:
       - mongo
     networks:
       - b4you-net
-
-  monitor:
-    build: .
-    container_name: b4you-monitor
-    command: yarn monitor:prod
-    volumes:
-      - .:/usr/src/app/b4you
-      - /usr/src/app/b4you/node_modules
-    ports:
-      - "3001:3001" # Porta do painel de monitoramento
-    environment:
-      DATABASE_URL: mongodb://admin:admin123@mongo:27017/b4you?authSource=admin
-    depends_on:
-      - mongo
-    networks:
-      - b4you-net
-
   mongo:
     container_name: mongo
     image: mongo:6
@@ -51,9 +34,18 @@ services:
     restart: always
     networks:
       - b4you-net
-
+  redis:
+    image: redis:7
+    container_name: redis-bullmq
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    
 volumes:
   mongo-data:
+  redis-data:
 
 networks:
   b4you-net:
