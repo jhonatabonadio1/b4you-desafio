@@ -1,3 +1,4 @@
+/* eslint-disable no-throw-literal */
 import { sign, verify } from 'jsonwebtoken'
 import { addDays } from 'date-fns'
 import { prismaClient } from '../../../database/prismaClient'
@@ -21,16 +22,17 @@ class RefreshTokenService {
     const storedToken = await prismaClient.refreshToken.findFirst({
       where: { token: refreshToken },
     })
-
     if (!storedToken) {
-      logger.error(
-        'Refresh token inválido - token não encontrado no banco de dados',
-        { tokenPrefix: refreshToken.slice(0, 10) },
-      )
-      throw new Error('Refresh token inválido.')
+      logger.error('Refresh token inválido - não encontrado')
+      throw { code: 'token.invalid', message: 'Refresh token inválido.' }
     }
 
     let decoded: ITokenPayload
+    if (!refreshToken) {
+      logger.error('Refresh token não fornecido')
+      throw { code: 'token.missing', message: 'Refresh token é obrigatório.' }
+    }
+
     try {
       decoded = verify(
         refreshToken,
@@ -40,7 +42,10 @@ class RefreshTokenService {
       logger.error('Erro na verificação do refresh token', {
         error: error.message,
       })
-      throw new Error('Refresh token inválido.')
+      throw {
+        code: 'token.expired',
+        message: 'Refresh token inválido ou expirado.',
+      }
     }
 
     const userId = decoded.sub

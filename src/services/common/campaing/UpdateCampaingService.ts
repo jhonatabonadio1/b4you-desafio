@@ -44,27 +44,10 @@ class UpdateCampaingService {
 
     const VALOR_ORCAMENTO_CENTS = orcamento * 100
 
-    let statusMessage: string
-
-    switch (status) {
-      case 0:
-        statusMessage = 'inativo'
-        break
-      case 1:
-        statusMessage = 'ativo'
-        break
-      case 2:
-        statusMessage = 'pausado'
-        break
-      default:
-        statusMessage = 'inativo'
-        break
-    }
-
     const UPDATED_DATA = {
       nome: nome ?? buscaCampanha.nome,
       orcamento: orcamento ? VALOR_ORCAMENTO_CENTS : buscaCampanha.orcamento,
-      status: status ? statusMessage : buscaCampanha.status,
+      status: status ?? buscaCampanha.status,
     }
 
     const campaing = await prismaClient.campaing.update({

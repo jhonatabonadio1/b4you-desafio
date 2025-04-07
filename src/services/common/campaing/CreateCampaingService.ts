@@ -17,7 +17,13 @@ class CreateCampaingService {
       userId,
     })
 
-    if (!nome || !orcamento || !status) {
+    if (
+      !nome ||
+      status === null ||
+      status === undefined ||
+      orcamento === null ||
+      orcamento === undefined
+    ) {
       logger.error('Campos obrigatórios não preenchidos', {
         nome,
         orcamento,
@@ -25,24 +31,6 @@ class CreateCampaingService {
       })
       throw new Error('Preencha os campos obrigatórios.')
     }
-
-    let statusMessage: string
-
-    switch (status) {
-      case 0:
-        statusMessage = 'inativo'
-        break
-      case 1:
-        statusMessage = 'ativo'
-        break
-      case 2:
-        statusMessage = 'pausado'
-        break
-      default:
-        statusMessage = 'inativo'
-        break
-    }
-    logger.info('Status convertido', { status, statusMessage })
 
     const buscaUsuario = await prismaClient.user.findUnique({
       where: { id: userId, deleted: false },
@@ -59,7 +47,7 @@ class CreateCampaingService {
       data: {
         nome,
         orcamento: VALOR_ORCAMENTO_CENTS,
-        status: statusMessage,
+        status,
         user: {
           connect: buscaUsuario,
         },

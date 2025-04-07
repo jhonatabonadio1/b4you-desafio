@@ -11,6 +11,7 @@ class ReadCampaingService {
     const buscaCampanha = await prismaClient.campaing.findMany({
       where: { user: { id: userId, deleted: false }, deleted: false },
     })
+
     logger.info('Campanhas retornadas', { userId, total: buscaCampanha.length })
     return buscaCampanha
   }

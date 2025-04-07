@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RefreshTokenService = void 0;
+/* eslint-disable no-throw-literal */
 const jsonwebtoken_1 = require("jsonwebtoken");
 const date_fns_1 = require("date-fns");
 const prismaClient_1 = require("../../../database/prismaClient");
@@ -18,10 +19,14 @@ class RefreshTokenService {
             where: { token: refreshToken },
         });
         if (!storedToken) {
-            logger_1.logger.error('Refresh token inválido - token não encontrado no banco de dados', { tokenPrefix: refreshToken.slice(0, 10) });
-            throw new Error('Refresh token inválido.');
+            logger_1.logger.error('Refresh token inválido - não encontrado');
+            throw { code: 'token.invalid', message: 'Refresh token inválido.' };
         }
         let decoded;
+        if (!refreshToken) {
+            logger_1.logger.error('Refresh token não fornecido');
+            throw { code: 'token.missing', message: 'Refresh token é obrigatório.' };
+        }
         try {
             decoded = (0, jsonwebtoken_1.verify)(refreshToken, process.env.JWT_REFRESH_SECRET);
         }
@@ -29,7 +34,10 @@ class RefreshTokenService {
             logger_1.logger.error('Erro na verificação do refresh token', {
                 error: error.message,
             });
-            throw new Error('Refresh token inválido.');
+            throw {
+                code: 'token.expired',
+                message: 'Refresh token inválido ou expirado.',
+            };
         }
         const userId = decoded.sub;
         const newAccessToken = (0, jsonwebtoken_1.sign)({ userId, email: decoded.email }, process.env.JWT_SECRET, { subject: userId, expiresIn: '15m' });

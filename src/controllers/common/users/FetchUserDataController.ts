@@ -8,7 +8,7 @@ class FetchUserDataController {
     try {
       const fetchUserDataService = new FetchUserDataService()
 
-      const user = await fetchUserDataService.execute(userId)
+      const user = await fetchUserDataService.execute({ userId })
 
       return response.status(200).json(user)
     } catch (error: any) {

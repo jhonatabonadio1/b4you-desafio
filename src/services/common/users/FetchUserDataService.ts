@@ -1,14 +1,12 @@
+import { logger } from '../../../config/logger'
 import { prismaClient } from '../../../database/prismaClient'
-import winston from 'winston'
 
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.json(),
-  transports: [new winston.transports.Console()],
-})
+interface IFetchUserData {
+  userId: string
+}
 
 class FetchUserDataService {
-  async execute(userId: string) {
+  async execute({ userId }: IFetchUserData) {
     if (!userId) {
       logger.error('O ID do usuário é obrigatório.')
       throw new Error('O ID do usuário é obrigatório.')

@@ -7,7 +7,7 @@ class FetchUserDataController {
         const { userId } = request;
         try {
             const fetchUserDataService = new FetchUserDataService_1.FetchUserDataService();
-            const user = await fetchUserDataService.execute(userId);
+            const user = await fetchUserDataService.execute({ userId });
             return response.status(200).json(user);
         }
         catch (error) {

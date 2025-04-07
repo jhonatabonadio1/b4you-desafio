@@ -25,25 +25,10 @@ class UpdateCampaingService {
             throw new Error('Campanha não encontrada.');
         }
         const VALOR_ORCAMENTO_CENTS = orcamento * 100;
-        let statusMessage;
-        switch (status) {
-            case 0:
-                statusMessage = 'inativo';
-                break;
-            case 1:
-                statusMessage = 'ativo';
-                break;
-            case 2:
-                statusMessage = 'pausado';
-                break;
-            default:
-                statusMessage = 'inativo';
-                break;
-        }
         const UPDATED_DATA = {
             nome: nome !== null && nome !== void 0 ? nome : buscaCampanha.nome,
             orcamento: orcamento ? VALOR_ORCAMENTO_CENTS : buscaCampanha.orcamento,
-            status: status ? statusMessage : buscaCampanha.status,
+            status: status !== null && status !== void 0 ? status : buscaCampanha.status,
         };
         const campaing = await prismaClient_1.prismaClient.campaing.update({
             where: { id: buscaCampanha.id },
