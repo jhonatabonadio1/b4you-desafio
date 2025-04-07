@@ -10,7 +10,15 @@ class SignInController {
 
     try {
       const result = await signInService.execute({ email, password })
-      return response.json(result)
+      response.cookie('refreshToken', result.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/auth/token/refresh',
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+      })
+
+      return response.json({ accessToken: result.refreshToken })
     } catch (error: any) {
       return response.status(400).json({ error: error.message })
     }

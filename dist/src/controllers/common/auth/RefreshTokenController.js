@@ -8,7 +8,7 @@ class RefreshTokenController {
         const refreshTokenService = new RefreshTokenService_1.RefreshTokenService();
         try {
             const tokens = await refreshTokenService.execute(refreshToken);
-            response.cookie('refreshToken', tokens.accessToken, {
+            response.cookie('refreshToken', tokens.refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'lax',
