@@ -43,6 +43,7 @@ class SignInService {
         expiresIn: '7d',
       },
     )
+
     const refreshToken = jwt.sign(
       {
         email: user.email,
@@ -61,6 +62,7 @@ class SignInService {
       },
     })
     logger.info('Login realizado com sucesso', { userId: user.id })
+
     return {
       accessToken,
       refreshToken,

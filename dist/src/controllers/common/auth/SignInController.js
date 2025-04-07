@@ -15,7 +15,10 @@ class SignInController {
                 path: '/auth/token/refresh',
                 maxAge: 30 * 24 * 60 * 60 * 1000,
             });
-            return response.json({ accessToken: result.refreshToken });
+            return response.json({
+                accessToken: result.accessToken,
+                user: result.user,
+            });
         }
         catch (error) {
             return response.status(400).json({ error: error.message });
